@@ -1,0 +1,45 @@
+/* Shared styles for the group-booking iframe widget */
+
+.rr-group-booking .p-button:not(:disabled) {
+  cursor: pointer;
+}
+
+.rr-group-booking .p-tag {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  font-size: 0.6875rem;
+  font-weight: 600;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+}
+
+.rr-date-picker {
+  width: 100%;
+}
+
+.rr-date-picker .p-inputtext {
+  width: 100%;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  font-size: 0.875rem;
+}
+
+.rr-group-booking .p-inputnumber-input {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  font-size: 0.875rem;
+}
+
+.rr-booking-widget {
+  margin-top: 0.5rem;
+}
+
+.rr-booking-widget__note {
+  margin: 0.75rem 0 0;
+  font-family: var(--rr-font-sans);
+  font-size: 0.875rem;
+  color: var(--rr-sage);
+  text-align: center;
+}
+
+.rr-booking-widget__note a {
+  color: var(--rr-forest);
+  font-weight: 600;
+}

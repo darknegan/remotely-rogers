@@ -1,0 +1,17 @@
+<div class="rr-group-booking" [class.rr-group-booking--embed]="embedMode()">
+  <header class="rr-group-booking__header">
+    <p-tag value="Group booking" severity="secondary" [rounded]="true" />
+    <h2>Book multiple cabins together</h2>
+    <p>
+      Pick dates on each cabin row to build your group stay — every cabin can have a different
+      check-in, check-out, and number of nights.
+    </p>
+  </header>
+
+  <app-date-range-form />
+
+  <div class="rr-group-booking__layout">
+    <app-cabin-grid />
+    <app-cart-summary />
+  </div>
+</div>

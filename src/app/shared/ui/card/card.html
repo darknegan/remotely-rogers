@@ -1,0 +1,12 @@
+<article class="rr-card">
+  @if (imageUrl()) {
+    <img class="rr-card__image" [src]="imageUrl()" [alt]="imageAlt() || title()" loading="lazy" />
+  }
+  <div class="rr-card__body">
+    @if (badge()) {
+      <span class="rr-card__badge">{{ badge() }}</span>
+    }
+    <h3 class="rr-card__title">{{ title() }}</h3>
+    <p class="rr-card__text">{{ description() }}</p>
+  </div>
+</article>

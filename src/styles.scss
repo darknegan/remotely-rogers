@@ -1,0 +1,16 @@
+@import 'primeicons/primeicons.css';
+@import 'styles/tokens';
+@import 'styles/lodgify-export';
+@import 'styles/primeng-content';
+@import 'styles/group-booking';
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background: var(--rr-cream);
+}

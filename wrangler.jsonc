@@ -1,0 +1,15 @@
+{
+  "$schema": "./node_modules/wrangler/config-schema.json",
+  "name": "remotely-rogers-booking",
+  "main": "workers/booking-calendar/src/index.ts",
+  "compatibility_date": "2026-08-07",
+  "assets": {
+    "directory": "./dist/remotely-rogers/browser",
+    "not_found_handling": "single-page-application",
+    "binding": "ASSETS",
+    "run_worker_first": ["/api/*"]
+  },
+  "observability": {
+    "enabled": true
+  }
+}

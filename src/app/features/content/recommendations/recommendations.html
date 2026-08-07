@@ -1,0 +1,191 @@
+<div class="rr-page">
+  <p-panel styleClass="rr-hero-panel">
+    <div
+      class="rr-hero-banner"
+      style="background-image: url('https://upload.wikimedia.org/wikipedia/commons/4/45/Downtown_Rogers.jpg')"
+    >
+      <div class="rr-hero-banner__inner">
+        <p-tag value="Local picks" severity="secondary" [rounded]="true" />
+        <h1>Our Recommendations</h1>
+        <p>
+          Hand-picked favorites from the Remotely Rogers team — dining, culture, outdoor adventure,
+          and hidden gems across Northwest Arkansas.
+        </p>
+        <div class="rr-stat-row">
+          <div>
+            <strong>6</strong>
+            <span>Curated picks</span>
+          </div>
+          <div>
+            <strong>12 min</strong>
+            <span>To downtown Rogers</span>
+          </div>
+          <div>
+            <strong>NWA</strong>
+            <span>Day-trip region</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </p-panel>
+
+  <div class="rr-content-wrap">
+    <section class="rr-content-section">
+      <div class="rr-content-section__head">
+        <h2>Curated for your stay</h2>
+        <p>
+          Our team's go-to spots for guests — from slow weekend brunches to lake days and downtown
+          evenings.
+        </p>
+      </div>
+
+      <div class="rr-card-grid rr-card-grid--cols-3">
+        @for (item of picks; track item.title) {
+          <a
+            [href]="item.websiteUrl"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="rr-card-link"
+            [attr.aria-label]="'Visit ' + item.title + ' website'"
+          >
+            <p-card styleClass="rr-pick-card">
+              <ng-template #header>
+                <img [src]="item.imageUrl" [alt]="item.title" loading="lazy" />
+              </ng-template>
+              <ng-template #title>{{ item.title }}</ng-template>
+              <p-tag [value]="item.badge" [severity]="item.severity" [rounded]="true" />
+              <p class="mt-3">{{ item.description }}</p>
+              <p class="rr-card-meta mt-3">{{ item.detail }}</p>
+            </p-card>
+          </a>
+        }
+      </div>
+    </section>
+
+    <section class="rr-content-section">
+      <p-panel styleClass="rr-split-panel">
+        <div class="rr-split">
+          <div class="rr-split__media">
+            <img
+              src="https://upload.wikimedia.org/wikipedia/commons/d/df/Crystal_Bridges_Museum_of_American_Art_May_2017_17.jpg"
+              alt="Crystal Bridges Museum of American Art in Bentonville, Arkansas"
+              loading="lazy"
+            />
+          </div>
+          <div class="rr-split__copy">
+            <p-tag value="From our team" severity="success" [rounded]="true" />
+            <h3>How we recommend exploring</h3>
+            <p>
+              These aren't generic travel lists — they're the places we send guests who want the best
+              of Rogers, Bentonville, and the surrounding Ozarks without overplanning.
+            </p>
+            <p-divider />
+            <ul class="rr-feature-list">
+              @for (tip of localTips; track tip.text) {
+                <li class="rr-feature-list__item">
+                  <span class="rr-feature-list__icon">
+                    <i [class]="tip.icon"></i>
+                  </span>
+                  <span>
+                    <strong>{{ tip.text }}</strong>
+                    <span class="rr-feature-list__detail">{{ tip.detail }}</span>
+                  </span>
+                </li>
+              }
+            </ul>
+          </div>
+        </div>
+      </p-panel>
+    </section>
+
+    <section class="rr-content-section">
+      <div class="rr-content-section__head">
+        <h2>Plan a day out</h2>
+        <p>A simple rhythm many guests follow — adjust based on season, weather, and your group.</p>
+      </div>
+      <div class="rr-step-grid">
+        @for (step of dayPlan; track step.label) {
+          <div class="rr-step-card">
+            <span
+              class="rr-step-card__label"
+              [class.rr-step-card__label--accent]="step.accent"
+            >
+              {{ step.label }}
+            </span>
+            <h3>{{ step.title }}</h3>
+            <p>{{ step.description }}</p>
+          </div>
+        }
+      </div>
+    </section>
+
+    <section class="rr-content-section">
+      <div class="rr-content-section__head">
+        <h2>Pick your vibe</h2>
+        <p>Three easy itineraries depending on what kind of day you're after.</p>
+      </div>
+      <div class="rr-card-grid rr-card-grid--cols-3">
+        @for (idea of tripIdeas; track idea.title) {
+          <a
+            [href]="idea.websiteUrl"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="rr-card-link"
+            [attr.aria-label]="'Explore ' + idea.title + ' itinerary'"
+          >
+            <p-card styleClass="rr-pick-card">
+              <ng-template #header>
+                <img [src]="idea.imageUrl" [alt]="idea.title" loading="lazy" />
+              </ng-template>
+              <ng-template #title>{{ idea.title }}</ng-template>
+              <ng-template #subtitle>{{ idea.subtitle }}</ng-template>
+              <p-tag [value]="idea.badge" [severity]="idea.severity" [rounded]="true" />
+              <p class="mt-3">{{ idea.description }}</p>
+            </p-card>
+          </a>
+        }
+      </div>
+    </section>
+
+    <section class="rr-content-section">
+      <div class="rr-content-section__head">
+        <h2>Explore the area</h2>
+        <p>
+          Replace the iframe URL with your Google My Maps embed — pin favorites, drive times, and
+          guest-only tips.
+        </p>
+      </div>
+      <p-panel header="Rogers &amp; Northwest Arkansas">
+        <iframe
+          class="rr-map-frame"
+          title="Remotely Rogers area map"
+          src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d103532!2d-94.118!3d36.332!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2sRogers%2C%20AR!5e0!3m2!1sen!2sus!4v1234567890"
+          loading="lazy"
+          referrerpolicy="no-referrer-when-downgrade"
+        ></iframe>
+      </p-panel>
+      <p class="rr-note mt-4">
+        Want trails, biking, and more outdoor ideas?
+        <a href="/preview/activities">Browse activities</a>
+        for the full adventure guide.
+      </p>
+    </section>
+  </div>
+
+  <p-panel styleClass="rr-cta-panel">
+    <h2>Ready to explore Northwest Arkansas?</h2>
+    <p>
+      Book your stay at Remotely Rogers and use these picks as a starting point — we'll help you
+      make the most of your time in the Ozarks.
+    </p>
+    <a
+      href="https://remotelyrogers.com/en/all-properties/"
+      target="_blank"
+      rel="noopener"
+      class="p-button rr-accent-btn p-button-rounded"
+    >
+      <i class="pi pi-calendar p-button-icon p-button-icon-left"></i>
+      <span class="p-button-label">Book Your Stay</span>
+    </a>
+  </p-panel>
+</div>

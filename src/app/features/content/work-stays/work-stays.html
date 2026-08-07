@@ -1,0 +1,154 @@
+<div class="rr-page">
+  <p-panel styleClass="rr-hero-panel">
+    <div
+      class="rr-hero-banner"
+      style="background-image: url('https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&w=1600&q=80')"
+    >
+      <div class="rr-hero-banner__inner">
+        <p-tag value="Remote work" severity="secondary" [rounded]="true" />
+        <h1>Work Stays at Remotely Rogers</h1>
+        <p>
+          Private A-frame cabins on 70 acres — built for focused remote work, extended stays, and
+          team retreats with room to breathe between meetings.
+        </p>
+        <div class="rr-stat-row">
+          <div>
+            <strong>6</strong>
+            <span>Private cabins</span>
+          </div>
+          <div>
+            <strong>70</strong>
+            <span>Work-ready acres</span>
+          </div>
+          <div>
+            <strong>Wi‑Fi</strong>
+            <span>In every cabin</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </p-panel>
+
+  <div class="rr-content-wrap">
+    <section class="rr-content-section">
+      <div class="rr-content-section__head">
+        <h2>Your cabin, your office</h2>
+        <p>
+          Trade the hotel desk for a private A-frame with dedicated workspace, fast internet, and
+          nature outside your door — minutes from Rogers and Bentonville.
+        </p>
+      </div>
+
+      <div class="rr-card-grid rr-card-grid--cols-3">
+        @for (item of amenities; track item.title) {
+          <p-card styleClass="rr-pick-card">
+            <ng-template #header>
+              <img [src]="item.imageUrl" [alt]="item.title" loading="lazy" />
+            </ng-template>
+            <ng-template #title>{{ item.title }}</ng-template>
+            <p-tag [value]="item.badge" [severity]="item.severity" [rounded]="true" />
+            <p class="mt-3">{{ item.description }}</p>
+            <p class="rr-card-meta mt-3">{{ item.detail }}</p>
+          </p-card>
+        }
+      </div>
+    </section>
+
+    <section class="rr-content-section">
+      <p-panel styleClass="rr-split-panel">
+        <div class="rr-split">
+          <div class="rr-split__media">
+            <img
+              src="https://images.unsplash.com/photo-1486312338219-ce68d2c6f44d?auto=format&fit=crop&w=1000&q=80"
+              alt="Laptop workspace with natural light"
+              loading="lazy"
+            />
+          </div>
+          <div class="rr-split__copy">
+            <p-tag value="Built for productivity" severity="success" [rounded]="true" />
+            <h3>Everything you need to get work done</h3>
+            <p>
+              Extended stays for freelancers, remote teams, and corporate retreats who want more
+              than a hotel room — without sacrificing comfort or connection.
+            </p>
+            <p-divider />
+            <ul class="rr-feature-list">
+              @for (feature of features; track feature.text) {
+                <li class="rr-feature-list__item">
+                  <span class="rr-feature-list__icon">
+                    <i [class]="feature.icon"></i>
+                  </span>
+                  <span>
+                    <strong>{{ feature.text }}</strong>
+                    <span class="rr-feature-list__detail">{{ feature.detail }}</span>
+                  </span>
+                </li>
+              }
+            </ul>
+          </div>
+        </div>
+      </p-panel>
+    </section>
+
+    <section class="rr-content-section">
+      <div class="rr-content-section__head">
+        <h2>A balanced workday</h2>
+        <p>How guests typically structure a productive day at Remotely Rogers.</p>
+      </div>
+      <div class="rr-workday-grid">
+        @for (step of workdayFlow; track step.time) {
+          <div class="rr-workday-step">
+            <span class="rr-workday-step__time">{{ step.time }}</span>
+            <h3>{{ step.title }}</h3>
+            <p>{{ step.description }}</p>
+          </div>
+        }
+      </div>
+    </section>
+
+    <section class="rr-content-section">
+      <div class="rr-content-section__head">
+        <h2>Choose your stay</h2>
+        <p>Flexible options for solo workers, long-term remote stays, and team offsites.</p>
+      </div>
+      <div class="rr-card-grid rr-card-grid--cols-3">
+        @for (option of stayOptions; track option.title) {
+          <p-card styleClass="rr-pick-card">
+            <ng-template #header>
+              <img [src]="option.imageUrl" [alt]="option.title" loading="lazy" />
+            </ng-template>
+            <ng-template #title>{{ option.title }}</ng-template>
+            <ng-template #subtitle>{{ option.subtitle }}</ng-template>
+            <p-tag [value]="option.badge" [severity]="option.severity" [rounded]="true" />
+            <p class="mt-3">{{ option.description }}</p>
+          </p-card>
+        }
+      </div>
+    </section>
+
+    <section class="rr-content-section">
+      <p class="rr-note">
+        Booking multiple cabins for a team?
+        <a href="/preview/multi-cabin-stays">Explore multi-cabin stays</a>
+        for group booking options.
+      </p>
+    </section>
+  </div>
+
+  <p-panel styleClass="rr-cta-panel">
+    <h2>Ready for a better work stay?</h2>
+    <p>
+      Book a private A-frame cabin and experience remote work surrounded by nature — with
+      downtown Rogers and Bentonville just minutes away.
+    </p>
+    <a
+      href="https://remotelyrogers.com/en/all-properties/"
+      target="_blank"
+      rel="noopener"
+      class="p-button rr-accent-btn p-button-rounded"
+    >
+      <i class="pi pi-calendar p-button-icon p-button-icon-left"></i>
+      <span class="p-button-label">Inquire About a Work Stay</span>
+    </a>
+  </p-panel>
+</div>

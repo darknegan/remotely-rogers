@@ -1,0 +1,57 @@
+<form class="rr-date-form" (ngSubmit)="search()">
+  <div class="rr-date-form__fields">
+    <div class="rr-date-form__field rr-date-form__field--dates">
+      <label for="calendar-start">Start date</label>
+      <p-date-picker
+        inputId="calendar-start"
+        [ngModel]="startDate()"
+        (ngModelChange)="onStartDateChange($event)"
+        name="startDate"
+        [minDate]="minDate"
+        dateFormat="M d, yy"
+        placeholder="Calendar start date"
+        [showIcon]="true"
+        iconDisplay="input"
+        styleClass="rr-date-picker"
+        [readonlyInput]="true"
+      />
+    </div>
+
+    <div class="rr-date-form__field rr-date-form__field--guests">
+      <label for="group-guests">Guests</label>
+      <p-input-number
+        inputId="group-guests"
+        [ngModel]="state.guestCount()"
+        (ngModelChange)="onGuestsChange($event)"
+        name="guests"
+        [min]="1"
+        [max]="state.config.maxGuestsPerCabin"
+        [showButtons]="true"
+        buttonLayout="horizontal"
+        incrementButtonIcon="pi pi-plus"
+        decrementButtonIcon="pi pi-minus"
+      />
+    </div>
+
+    <div class="rr-date-form__field rr-date-form__field--action">
+      <label class="rr-date-form__action-label" aria-hidden="true">&nbsp;</label>
+      <p-button
+        type="submit"
+        label="Update"
+        icon="pi pi-refresh"
+        styleClass="rr-date-form__submit"
+        [loading]="state.loading()"
+        [disabled]="!!state.dateError() || !state.viewStartDate()"
+      />
+    </div>
+  </div>
+
+  @if (state.dateError(); as dateError) {
+    <p-message severity="warn" [text]="dateError" styleClass="rr-date-form__message" />
+  }
+
+  <p class="rr-date-form__hint">
+    Click available nights on a cabin row to build a stay one day at a time. Click a second night
+    2–5 days away to fill the dates in between. Click a selected night again to clear that cabin.
+  </p>
+</form>

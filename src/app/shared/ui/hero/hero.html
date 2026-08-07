@@ -1,0 +1,9 @@
+<section class="rr-hero">
+  @if (eyebrow()) {
+    <span class="rr-hero__eyebrow">{{ eyebrow() }}</span>
+  }
+  <h1 class="rr-hero__title">{{ title() }}</h1>
+  @if (subtitle()) {
+    <p class="rr-hero__subtitle">{{ subtitle() }}</p>
+  }
+</section>

@@ -1,0 +1,4 @@
+/preview/activities
+/preview/recommendations
+/preview/work-stays
+/preview/multi-cabin-stays

@@ -1,0 +1,87 @@
+<div class="rr-page">
+  <p-panel styleClass="rr-hero-panel">
+    <div
+      class="rr-hero-banner"
+      style="background-image: url('https://images.unsplash.com/photo-1520250497591-112f2f40a3f4?auto=format&fit=crop&w=1600&q=80')"
+    >
+      <div class="rr-hero-banner__inner">
+        <p-tag value="Group stays" severity="secondary" [rounded]="true" />
+        <h1>Multi-Cabin Stays</h1>
+        <p>
+          Book multiple private A-frame cabins together on 70 acres in Rogers, Arkansas — families,
+          wedding parties, and corporate retreats with one combined checkout.
+        </p>
+        <div class="rr-stat-row">
+          <div>
+            <strong>6</strong>
+            <span>Private cabins</span>
+          </div>
+          <div>
+            <strong>70</strong>
+            <span>Shared acres</span>
+          </div>
+          <div>
+            <strong>1</strong>
+            <span>Combined checkout*</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </p-panel>
+
+  <div class="rr-content-wrap">
+    <section class="rr-content-section">
+      <div class="rr-content-section__head">
+        <h2>How group booking works</h2>
+        <p>
+          Our custom multi-cabin calendar replaces booking cabins one at a time — here's what guests
+          will experience.
+        </p>
+      </div>
+      <div class="rr-step-grid">
+        @for (step of bookingSteps; track step.step) {
+          <div class="rr-step-card">
+            <span class="rr-step-card__label">{{ step.step }}</span>
+            <h3>{{ step.title }}</h3>
+            <p>{{ step.description }}</p>
+          </div>
+        }
+      </div>
+    </section>
+
+    <section class="rr-content-section rr-content-section--calendar">
+      <p-panel header="Group booking calendar" styleClass="rr-booking-widget-panel">
+        <div class="rr-booking-widget">
+          <app-group-booking-shell />
+        </div>
+        <p class="rr-booking-widget__note">
+          Prefer full screen?
+          <a href="/group-booking" target="_blank" rel="noopener">Open the booking calendar</a>
+        </p>
+      </p-panel>
+
+      <p class="rr-note mt-4">
+        Planning a work-focused group trip?
+        <a href="/preview/work-stays">See work stays</a>
+        for remote-work amenities and team retreat details.
+      </p>
+    </section>
+  </div>
+
+  <p-panel styleClass="rr-cta-panel">
+    <h2>Ready to book for your group?</h2>
+    <p>
+      Start planning a multi-cabin stay on 70 private acres — or inquire about availability while
+      our group booking calendar is being finalized.
+    </p>
+    <a
+      href="https://remotelyrogers.com/en/all-properties/"
+      target="_blank"
+      rel="noopener"
+      class="p-button rr-accent-btn p-button-rounded"
+    >
+      <i class="pi pi-calendar p-button-icon p-button-icon-left"></i>
+      <span class="p-button-label">Inquire About a Group Stay</span>
+    </a>
+  </p-panel>
+</div>

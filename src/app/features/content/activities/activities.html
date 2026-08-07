@@ -1,0 +1,323 @@
+<div class="rr-page">
+  <!-- Hero -->
+  <p-panel styleClass="rr-hero-panel">
+    <div
+      class="rr-hero-banner"
+      style="background-image: url('https://upload.wikimedia.org/wikipedia/commons/7/76/Lake_Atalanta.jpg')"
+    >
+      <div class="rr-hero-banner__inner">
+        <p-tag value="Explore Rogers, Arkansas" severity="secondary" [rounded]="true" />
+        <h1>Activities &amp; Adventures</h1>
+        <p>
+          From world-class biking and Beaver Lake to historic downtown Rogers — the perfect balance
+          of productivity and play during your stay.
+        </p>
+        <div class="rr-stat-row">
+          <div>
+            <strong>70</strong>
+            <span>Private acres</span>
+          </div>
+          <div>
+            <strong>6</strong>
+            <span>A-frame cabins</span>
+          </div>
+          <div>
+            <strong>15 min</strong>
+            <span>To downtown</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </p-panel>
+
+  <div class="rr-content-wrap">
+    <section class="rr-content-section">
+      <div class="rr-content-section__head">
+        <h2>Your basecamp for adventure</h2>
+        <p>
+          Remotely Rogers puts you minutes from lakes, world-class bike trails, and historic downtown
+          Rogers — filter below to plan your kind of day.
+        </p>
+      </div>
+    </section>
+
+    <!-- Category filter -->
+    <section class="rr-content-section">
+      <div class="rr-content-section__head">
+        <h2>Browse by category</h2>
+        <p>Filter experiences near Remotely Rogers</p>
+      </div>
+      <div
+        class="rr-chip-row"
+        data-rr-filter-bar
+        aria-label="Activity categories"
+      >
+        @for (opt of categoryOptions; track opt.value) {
+          <button
+            type="button"
+            class="rr-chip"
+            [class.rr-chip--active]="selectedCategory === opt.value"
+            [attr.data-rr-filter]="opt.value"
+            (click)="selectedCategory = opt.value"
+          >
+            {{ opt.label }}
+          </button>
+        }
+      </div>
+      <p class="rr-filter-empty" data-rr-filter-empty>
+        Nothing is tagged for this category yet. Try another filter or choose All.
+      </p>
+    </section>
+
+    <!-- Featured -->
+    @if (filteredFeatured.length > 0) {
+      <section class="rr-content-section">
+        <div class="rr-content-section__head">
+          <h2>Featured experiences</h2>
+          <p>Hand-picked adventures to anchor your stay — from state parks to premier bike trails.</p>
+        </div>
+        <div
+          class="rr-card-grid"
+          data-rr-featured-grid
+          [class.rr-card-grid--featured]="showFeaturedLayout"
+        >
+          @for (item of filteredFeatured; track item.title) {
+            <a
+              [href]="item.websiteUrl"
+              target="_blank"
+              rel="noopener noreferrer"
+              class="rr-card-link"
+              [class.rr-card-link--featured-large]="isFeaturedLarge(item)"
+              [attr.data-rr-categories]="item.categories.join(',')"
+              [attr.aria-label]="'Visit ' + item.title + ' website'"
+            >
+              <p-card
+                styleClass="rr-feature-card"
+                [class.rr-feature-card--large]="isFeaturedLarge(item)"
+              >
+                <ng-template #header>
+                  <img [src]="item.imageUrl" [alt]="item.title" loading="lazy" />
+                </ng-template>
+                <ng-template #title>{{ item.title }}</ng-template>
+                <p-tag [value]="item.badge" [severity]="item.severity" [rounded]="true" />
+                <p class="mt-3">{{ item.description }}</p>
+                <p class="rr-card-meta mt-3">{{ item.detail }}</p>
+              </p-card>
+            </a>
+          }
+        </div>
+      </section>
+    }
+
+    @if (!hasVisibleContent) {
+      <section class="rr-content-section">
+        <p-panel header="No matches yet">
+          <p class="m-0">
+            Nothing is tagged for {{ selectedCategory }} yet. Try another category or choose All.
+          </p>
+        </p-panel>
+      </section>
+    }
+
+    <!-- Outdoor -->
+    @if (showOutdoorSection) {
+      <section class="rr-content-section" data-rr-categories="Outdoor,Weekend trips">
+        <p-panel styleClass="rr-split-panel">
+        <div class="rr-split">
+          <div class="rr-split__media">
+            <img
+              src="https://upload.wikimedia.org/wikipedia/commons/1/16/Sinking_Stream_in_Hobbs_State_Park_%26_Conservation_Area.jpg"
+              alt="Sinking Stream Trail at Hobbs State Park near Beaver Lake"
+              loading="lazy"
+            />
+          </div>
+          <div class="rr-split__copy">
+            <p-tag value="Outdoor Adventure" severity="success" [rounded]="true" />
+            <h3>Nature at your doorstep</h3>
+            <p>
+              Northwest Arkansas is known for its natural beauty. Explore lakes, caverns, and state
+              park trails — all within easy reach of your cabin.
+            </p>
+            <p-divider />
+            <ul class="rr-feature-list">
+              @for (spot of outdoorSpots; track spot.label) {
+                <li class="rr-feature-list__item">
+                  <span class="rr-feature-list__icon">
+                    <i [class]="spot.icon"></i>
+                  </span>
+                  <span>
+                    <strong>{{ spot.label }}</strong>
+                    <span class="rr-feature-list__detail">{{ spot.detail }}</span>
+                  </span>
+                </li>
+              }
+            </ul>
+          </div>
+        </div>
+      </p-panel>
+    </section>
+    }
+
+    <!-- Biking -->
+    @if (showBikingSection) {
+      <section class="rr-content-section" data-rr-categories="Biking">
+        <div class="rr-content-section__head">
+          <p-tag value="World-Class Biking" severity="warn" [rounded]="true" />
+          <h2 class="mt-2">Pedal the Ozarks</h2>
+          <p>
+            Northwest Arkansas is a mountain-biking destination — from flow trails minutes from
+            downtown Rogers to Bentonville’s nationally ranked networks. Bring your bike or rent
+            locally; most trailheads have parking and are rideable year-round.
+          </p>
+        </div>
+        <div class="rr-card-grid rr-card-grid--cols-2">
+          @for (trail of trails; track trail.name) {
+            <a
+              [href]="trail.websiteUrl"
+              target="_blank"
+              rel="noopener noreferrer"
+              class="rr-card-link"
+              [attr.aria-label]="'Visit ' + trail.name + ' website'"
+            >
+              <p-card styleClass="rr-pick-card">
+                <ng-template #header>
+                  <img [src]="trail.imageUrl" [alt]="trail.name" loading="lazy" />
+                </ng-template>
+                <ng-template #title>{{ trail.name }}</ng-template>
+                <ng-template #subtitle>{{ trail.type }}</ng-template>
+                <p-tag [value]="trail.note" [severity]="trail.severity" [rounded]="true" />
+                <p class="mt-3">{{ trail.description }}</p>
+                <p class="rr-card-meta mt-3">
+                  <i class="pi pi-map-marker"></i>
+                  {{ trail.distance }}
+                </p>
+              </p-card>
+            </a>
+          }
+        </div>
+      </section>
+    }
+
+    <!-- Culture & dining -->
+    @if (showCultureSection) {
+      <section class="rr-content-section">
+        @if (filteredCultureSpots.length > 0) {
+          <div class="rr-content-section__head" data-rr-categories="History,Nightlife,Dining">
+            <h2>History, culture &amp; local flavor</h2>
+            <p>
+              Downtown Rogers blends small-town charm with a growing arts scene — museums, live
+              music, and walkable streets all within an easy drive from your cabin.
+            </p>
+          </div>
+          <div class="rr-card-grid rr-card-grid--cols-3">
+            @for (spot of filteredCultureSpots; track spot.title) {
+              <a
+                [href]="spot.websiteUrl"
+                target="_blank"
+                rel="noopener noreferrer"
+                class="rr-card-link"
+                [attr.data-rr-categories]="spot.categories.join(',')"
+                [attr.aria-label]="'Visit ' + spot.title + ' website'"
+              >
+                <p-card styleClass="rr-pick-card">
+                  <ng-template #header>
+                    <img [src]="spot.imageUrl" [alt]="spot.title" loading="lazy" />
+                  </ng-template>
+                  <ng-template #title>{{ spot.title }}</ng-template>
+                  <p-tag [value]="spot.badge" [severity]="spot.severity" [rounded]="true" />
+                  <p class="mt-3">{{ spot.description }}</p>
+                  <p class="rr-card-meta mt-3">
+                    <i [class]="spot.icon"></i>
+                    {{ spot.detail }}
+                  </p>
+                </p-card>
+              </a>
+            }
+          </div>
+        }
+
+        @if (showDiningSection && filteredCultureSpots.length > 0) {
+          <p-divider />
+        }
+
+        @if (showDiningSection) {
+          <div class="rr-content-section__head" data-rr-categories="Dining">
+            <h2>Local dining favorites</h2>
+            <p>
+              Team picks for breakfast, BBQ, and date-night dinners — all within a short drive of
+              Remotely Rogers.
+            </p>
+          </div>
+          <div class="rr-card-grid rr-card-grid--cols-3">
+            @for (spot of diningSpots; track spot.name) {
+              <a
+                [href]="spot.websiteUrl"
+                target="_blank"
+                rel="noopener noreferrer"
+                class="rr-card-link"
+                data-rr-categories="Dining"
+                [attr.aria-label]="'Visit ' + spot.name + ' website'"
+              >
+                <p-card styleClass="rr-pick-card">
+                  <ng-template #header>
+                    <img [src]="spot.imageUrl" [alt]="spot.name" loading="lazy" />
+                  </ng-template>
+                  <ng-template #title>{{ spot.name }}</ng-template>
+                  <p-tag [value]="spot.cuisine" [severity]="spot.severity" [rounded]="true" />
+                  <p class="mt-3">{{ spot.description }}</p>
+                </p-card>
+              </a>
+            }
+          </div>
+        }
+      </section>
+    }
+
+    <section class="rr-content-section">
+      <div class="rr-content-section__head">
+        <h2>Sample adventure day</h2>
+        <p>
+          A full-day rhythm many guests love — mix and match based on season, fitness, and whether
+          you're traveling solo or with family.
+        </p>
+      </div>
+      <div class="rr-step-grid">
+        @for (step of adventureDay; track step.label) {
+          <div class="rr-step-card">
+            <span
+              class="rr-step-card__label"
+              [class.rr-step-card__label--accent]="step.accent"
+            >
+              {{ step.label }}
+            </span>
+            <h3>{{ step.title }}</h3>
+            <p>{{ step.description }}</p>
+          </div>
+        }
+      </div>
+      <p class="rr-note mt-4">
+        Looking for dining and local favorites?
+        <a href="/preview/recommendations">See our recommendations</a>
+        for team picks around Rogers and Bentonville.
+      </p>
+    </section>
+  </div>
+
+  <!-- CTA -->
+  <p-panel styleClass="rr-cta-panel">
+    <h2>Work Hard. Explore More.</h2>
+    <p>
+      Start your morning on the trails, take meetings with a view, and end your day with live music
+      downtown.
+    </p>
+    <a
+      href="https://remotelyrogers.com/en/all-properties/"
+      target="_blank"
+      rel="noopener"
+      class="p-button rr-accent-btn p-button-rounded"
+    >
+      <i class="pi pi-calendar p-button-icon p-button-icon-left"></i>
+      <span class="p-button-label">Book Your Stay</span>
+    </a>
+  </p-panel>
+</div>

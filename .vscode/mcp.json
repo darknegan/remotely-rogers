@@ -1,0 +1,13 @@
+{
+  // For more information, visit: https://angular.dev/ai/mcp and docs/primeng-mcp-setup.md
+  "servers": {
+    "angular-cli": {
+      "command": "npx",
+      "args": ["-y", "@angular/cli", "mcp"]
+    },
+    "primeng": {
+      "command": "npx",
+      "args": ["-y", "@primeng/mcp"]
+    }
+  }
+}

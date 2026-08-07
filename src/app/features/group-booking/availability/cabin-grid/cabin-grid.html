@@ -1,0 +1,170 @@
+<section class="rr-cabin-grid" aria-label="Cabin availability calendar">
+  @if (!state.hasSearched()) {
+    <div class="rr-cabin-grid__empty">
+      <i class="pi pi-calendar" aria-hidden="true"></i>
+      <p>Loading calendar…</p>
+    </div>
+  } @else if (state.loading()) {
+    <div class="rr-cabin-grid__loading">
+      <p-progress-spinner strokeWidth="4" ariaLabel="Loading availability" />
+      <p>Loading availability across all cabins…</p>
+    </div>
+  } @else if (state.error(); as error) {
+    <p-message severity="error" [text]="error" />
+  } @else {
+    <header class="rr-cabin-grid__toolbar">
+      <div class="rr-cabin-grid__toolbar-start">
+        <h3 class="rr-cabin-grid__month">{{ state.headerMonth() }}</h3>
+        <div class="rr-cabin-grid__nav" role="group" aria-label="Calendar navigation">
+          <p-button
+            type="button"
+            icon="pi pi-chevron-left"
+            [rounded]="true"
+            [text]="true"
+            severity="secondary"
+            styleClass="rr-cabin-grid__nav-btn"
+            (onClick)="shiftView(-1)"
+            ariaLabel="Previous dates"
+          />
+          <p-button
+            type="button"
+            icon="pi pi-chevron-right"
+            [rounded]="true"
+            [text]="true"
+            severity="secondary"
+            styleClass="rr-cabin-grid__nav-btn"
+            (onClick)="shiftView(1)"
+            ariaLabel="Next dates"
+          />
+          <p-button
+            type="button"
+            label="Today"
+            icon="pi pi-calendar"
+            [rounded]="true"
+            severity="secondary"
+            styleClass="rr-cabin-grid__today-btn"
+            (onClick)="goToToday()"
+          />
+        </div>
+      </div>
+
+      <div class="rr-cabin-grid__legend" aria-hidden="true">
+        <span><i class="rr-legend-swatch rr-legend-swatch--available"></i> Available</span>
+        <span><i class="rr-legend-swatch rr-legend-swatch--booked"></i> Reserved</span>
+        <span><i class="rr-legend-swatch rr-legend-swatch--blocked"></i> Closed</span>
+        <span><i class="rr-legend-swatch rr-legend-swatch--selected"></i> Selected</span>
+      </div>
+    </header>
+
+    @if (state.selectionError(); as selectionError) {
+      <p-message severity="warn" [text]="selectionError" styleClass="rr-cabin-grid__selection-error" />
+    }
+
+    <div class="rr-cabin-grid__scroll">
+      <table class="rr-cabin-grid__table">
+        <thead>
+          <tr>
+            <th scope="col" class="rr-cabin-grid__cabin-col">
+              <span class="rr-cabin-grid__sort-label">Cabins</span>
+            </th>
+            @for (date of state.timelineDates(); track toDateKey(date)) {
+              <th
+                scope="col"
+                class="rr-cabin-grid__day-col"
+                [class.rr-cabin-grid__day-col--today]="isToday(date)"
+                [class.rr-cabin-grid__day-col--weekend]="isWeekend(date)"
+              >
+                <span class="rr-cabin-grid__weekday">{{ formatWeekday(date) }}</span>
+                <span class="rr-cabin-grid__date">{{ date.getDate() }}</span>
+              </th>
+            }
+          </tr>
+        </thead>
+        <tbody>
+          @for (cabin of state.cabins; track cabin.id) {
+            @let quote = state.availabilityMap()[cabin.id];
+            @let selection = state.getCabinSelection(cabin.id);
+            <tr
+              class="rr-cabin-grid__row"
+              [class.rr-cabin-grid__row--selected]="state.isCabinSelected(cabin.id)"
+            >
+              <th scope="row" class="rr-cabin-grid__cabin">
+                <div class="rr-cabin-grid__cabin-info">
+                  @if (cabin.imageUrl) {
+                    <img [src]="cabin.imageUrl" [alt]="cabin.name" loading="lazy" />
+                  }
+                  <div class="rr-cabin-grid__cabin-copy">
+                    <strong [attr.title]="cabin.name">{{ cabin.name }}</strong>
+                    <span class="rr-cabin-grid__cabin-id">{{ cabin.lodgifyPropertyId }}</span>
+                    @if (selection) {
+                      <span class="rr-cabin-grid__rate">
+                        {{ formatDateRangeLabel(selection.arrival, selection.departure) }}
+                      </span>
+                    }
+                  </div>
+                </div>
+              </th>
+
+              @for (segment of getSegments(quote, state.timelineDates()); track segmentTrack(segment)) {
+                @if (segment.status === 'available') {
+                  @let date = segment.dates[0];
+                  @let selectable = state.isCellSelectable(cabin.id, date);
+                  @let selected = state.isDateInCabinSelection(cabin.id, date);
+                  @let pending = state.isPendingAnchor(cabin.id, date);
+                  <td
+                    class="rr-cabin-grid__cell rr-cabin-grid__cell--available"
+                    [class.rr-cabin-grid__cell--selected]="selected"
+                    [class.rr-cabin-grid__cell--pending]="pending"
+                    [class.rr-cabin-grid__cell--today]="isToday(date)"
+                    [class.rr-cabin-grid__cell--weekend]="isWeekend(date)"
+                    [class.rr-cabin-grid__cell--past]="isPast(date)"
+                    [class.rr-cabin-grid__cell--disabled]="!selectable"
+                  >
+                    <button
+                      type="button"
+                      class="rr-cabin-grid__cell-btn"
+                      [disabled]="!selectable"
+                      [attr.aria-pressed]="selected"
+                      [attr.aria-label]="
+                        cabin.name +
+                        ', ' +
+                        formatShortDate(date) +
+                        (selected ? ', selected' : selectable ? ', available' : ', unavailable')
+                      "
+                      (click)="onCellClick(cabin.id, date)"
+                    >
+                      @if (quote) {
+                        <span class="rr-cabin-grid__price">
+                          {{ quote.nightlyRate | currency: quote.currency : 'symbol' : '1.0-0' }}
+                        </span>
+                        <span class="rr-cabin-grid__min-stay" title="Minimum stay">
+                          <i class="pi pi-moon" aria-hidden="true"></i>
+                          1
+                        </span>
+                      }
+                    </button>
+                  </td>
+                } @else {
+                  <td
+                    class="rr-cabin-grid__cell rr-cabin-grid__cell--bar"
+                    [attr.colspan]="segment.colspan"
+                    [class.rr-cabin-grid__cell--booked]="segment.status === 'booked'"
+                    [class.rr-cabin-grid__cell--blocked]="segment.status === 'blocked'"
+                  >
+                    <div
+                      class="rr-cabin-grid__bar"
+                      [class.rr-cabin-grid__bar--booked]="segment.status === 'booked'"
+                      [class.rr-cabin-grid__bar--blocked]="segment.status === 'blocked'"
+                    >
+                      {{ barLabel(segment.status) }}
+                    </div>
+                  </td>
+                }
+              }
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  }
+</section>
