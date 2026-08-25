@@ -1,7 +1,7 @@
 # Cabin review carousel
 
 Date: 2026-08-22  
-Status: approved for planning
+Status: superseded by `docs/superpowers/specs/2026-08-24-home-reviews-showcase-design.md`
 
 ## Problem
 
