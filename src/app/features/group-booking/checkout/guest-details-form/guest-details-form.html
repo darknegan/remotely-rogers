@@ -1,0 +1,53 @@
+<form class="rr-guest-form" [formGroup]="form" (ngSubmit)="submit()">
+  <h3>Guest details</h3>
+  <p class="rr-guest-form__lead">
+    You’ll pay for every selected cabin in one Stripe checkout. After payment we create one Lodgify
+    reservation per cabin.
+  </p>
+
+  <label for="guest-first-name">First name</label>
+  <input id="guest-first-name" pInputText formControlName="firstName" autocomplete="given-name" />
+  @if (invalid('firstName')) {
+    <p class="rr-guest-form__error">First name is required.</p>
+  }
+
+  <label for="guest-last-name">Last name</label>
+  <input id="guest-last-name" pInputText formControlName="lastName" autocomplete="family-name" />
+  @if (invalid('lastName')) {
+    <p class="rr-guest-form__error">Last name is required.</p>
+  }
+
+  <label for="guest-email">Email</label>
+  <input id="guest-email" pInputText type="email" formControlName="email" autocomplete="email" />
+  @if (invalid('email')) {
+    <p class="rr-guest-form__error">Enter a valid email.</p>
+  }
+
+  <label for="guest-phone">Phone <span>(optional)</span></label>
+  <input id="guest-phone" pInputText type="tel" formControlName="phone" autocomplete="tel" />
+
+  <label for="guest-notes">Notes <span>(optional)</span></label>
+  <textarea id="guest-notes" pTextarea formControlName="notes" rows="3"></textarea>
+
+  @if (state.checkoutError(); as checkoutError) {
+    <p-message severity="error" [text]="checkoutError" styleClass="rr-guest-form__message" />
+  }
+
+  <div class="rr-guest-form__actions">
+    <p-button
+      type="button"
+      label="Back"
+      severity="secondary"
+      [outlined]="true"
+      [disabled]="state.checkoutLoading()"
+      (onClick)="backToCalendar()"
+    />
+    <p-button
+      type="submit"
+      label="Pay now"
+      styleClass="rr-accent-btn"
+      [loading]="state.checkoutLoading()"
+      [disabled]="state.cartItems().length === 0"
+    />
+  </div>
+</form>

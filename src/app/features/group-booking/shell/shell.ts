@@ -1,49 +1,22 @@
-import { AfterViewInit, Component, ElementRef, inject } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { ActivatedRoute } from '@angular/router';
 import { map } from 'rxjs';
 import { Tag } from 'primeng/tag';
 
-import { BookingStateService } from '../booking-state.service';
 import { CabinGrid } from '../availability/cabin-grid/cabin-grid';
 import { CartSummary } from '../cart/cart-summary/cart-summary';
 import { DateRangeForm } from '../availability/date-range-form/date-range-form';
 
 @Component({
   selector: 'app-group-booking-shell',
-  providers: [BookingStateService],
   imports: [Tag, DateRangeForm, CabinGrid, CartSummary],
   templateUrl: './shell.html',
   styleUrl: './shell.scss',
 })
-export class GroupBookingShell implements AfterViewInit {
-  private readonly host = inject(ElementRef<HTMLElement>);
-  private lastPostedHeight = 0;
+export class GroupBookingShell {
   protected readonly embedMode = toSignal(
     inject(ActivatedRoute).queryParamMap.pipe(map((params) => params.get('embed') === '1')),
     { initialValue: false },
   );
-
-  ngAfterViewInit(): void {
-    if (typeof window === 'undefined' || typeof ResizeObserver === 'undefined') {
-      return;
-    }
-
-    this.postHeight();
-    new ResizeObserver(() => this.postHeight()).observe(this.host.nativeElement);
-  }
-
-  private postHeight(): void {
-    if (typeof window === 'undefined' || window.parent === window) {
-      return;
-    }
-
-    const height = Math.ceil(this.host.nativeElement.getBoundingClientRect().height);
-    if (Math.abs(height - this.lastPostedHeight) < 4) {
-      return;
-    }
-
-    this.lastPostedHeight = height;
-    window.parent.postMessage({ type: 'rr-group-booking-height', height }, '*');
-  }
 }

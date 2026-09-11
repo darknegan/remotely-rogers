@@ -4,14 +4,16 @@
   --lf-border-light: #f0f0f0;
   --lf-text: #1a1a1a;
   --lf-text-muted: #8a8a8a;
-  --lf-today-bg: #3d3d3d;
+  --lf-forest: #2d4a3e;
+  --lf-today-bg: #2d4a3e;
   --lf-today-text: #ffffff;
-  --lf-bar-booked-bg: #ffffff;
-  --lf-bar-booked-border: #d4d4d4;
+  --lf-bar-booked-bg: #f4d7cc;
+  --lf-bar-booked-border: #c45c3e;
+  --lf-bar-booked-text: #7a2e1c;
   --lf-bar-blocked-bg: #3d3d3d;
   --lf-bar-blocked-text: #ffffff;
-  --lf-stay-bg: rgba(59, 130, 246, 0.06);
-  --lf-stripe: rgba(0, 0, 0, 0.03);
+  --lf-stay-bg: rgba(45, 74, 62, 0.06);
+  --lf-weekend-bg: #f7f4ef;
   --lf-font: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
 
   display: block;
@@ -117,12 +119,12 @@
 
 .rr-legend-swatch--stay {
   background: var(--lf-stay-bg);
-  border: 1px solid rgba(59, 130, 246, 0.25);
+  border: 1px solid rgba(45, 74, 62, 0.25);
 }
 
 .rr-legend-swatch--selected {
-  background: rgba(59, 130, 246, 0.18);
-  border: 1px solid rgba(59, 130, 246, 0.45);
+  background: rgba(45, 74, 62, 0.16);
+  border: 1px solid rgba(45, 74, 62, 0.4);
 }
 
 .rr-cabin-grid__selection-error {
@@ -201,13 +203,7 @@
 }
 
 .rr-cabin-grid__day-col--weekend {
-  background: repeating-linear-gradient(
-    -45deg,
-    transparent,
-    transparent 6px,
-    var(--lf-stripe) 6px,
-    var(--lf-stripe) 12px
-  );
+  background: var(--lf-weekend-bg);
 }
 
 .rr-cabin-grid__day-col--stay {
@@ -305,15 +301,12 @@
   text-align: center;
 }
 
-.rr-cabin-grid__cell--weekend,
+.rr-cabin-grid__cell--weekend {
+  background: var(--lf-weekend-bg);
+}
+
 .rr-cabin-grid__cell--past {
-  background: repeating-linear-gradient(
-    -45deg,
-    transparent,
-    transparent 6px,
-    var(--lf-stripe) 6px,
-    var(--lf-stripe) 12px
-  );
+  background: #f3f3f3;
 }
 
 .rr-cabin-grid__cell--stay {
@@ -325,12 +318,12 @@
 }
 
 .rr-cabin-grid__cell--selected {
-  background-color: rgba(59, 130, 246, 0.14);
+  background-color: rgba(45, 74, 62, 0.14);
 }
 
 .rr-cabin-grid__cell--pending {
-  background-color: rgba(59, 130, 246, 0.08);
-  box-shadow: inset 0 0 0 2px rgba(59, 130, 246, 0.55);
+  background-color: rgba(45, 74, 62, 0.08);
+  box-shadow: inset 0 0 0 2px rgba(45, 74, 62, 0.55);
 }
 
 .rr-cabin-grid__cell--disabled {
@@ -358,11 +351,11 @@
 }
 
 .rr-cabin-grid__cell-btn:not(:disabled):hover {
-  background: rgba(59, 130, 246, 0.08);
+  background: rgba(45, 74, 62, 0.08);
 }
 
 .rr-cabin-grid__cell--selected .rr-cabin-grid__cell-btn:not(:disabled):hover {
-  background: rgba(59, 130, 246, 0.2);
+  background: rgba(45, 74, 62, 0.2);
 }
 
 .rr-cabin-grid__price {
@@ -395,21 +388,27 @@
 .rr-cabin-grid__bar {
   display: flex;
   align-items: center;
+  justify-content: center;
+  gap: 0.35rem;
   height: 1.85rem;
   padding: 0 0.65rem;
   border-radius: 999px;
   font-family: var(--lf-font);
   font-size: 0.75rem;
-  font-weight: 500;
+  font-weight: 600;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
 }
 
+.rr-cabin-grid__bar i {
+  font-size: 0.7rem;
+}
+
 .rr-cabin-grid__bar--booked {
   background: var(--lf-bar-booked-bg);
   border: 1px solid var(--lf-bar-booked-border);
-  color: var(--lf-text);
+  color: var(--lf-bar-booked-text);
 }
 
 .rr-cabin-grid__bar--blocked {

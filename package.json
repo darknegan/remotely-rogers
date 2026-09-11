@@ -9,7 +9,8 @@
     "test": "ng test",
     "export:lodgify-snippets": "node tools/export-lodgify-snippets.mjs",
     "build:booking-worker": "ng build --configuration=booking-worker && node tools/prepare-booking-worker-assets.mjs",
-    "deploy:booking-worker": "npm run build:booking-worker && wrangler deploy"
+    "deploy:booking-worker": "npm run build:booking-worker && wrangler deploy",
+    "sync-properties": "node tools/sync-properties.mjs"
   },
   "private": true,
   "packageManager": "npm@11.8.0",

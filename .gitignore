@@ -39,6 +39,11 @@ testem.log
 /typings
 __screenshots__/
 
+# Secrets — never commit API keys
+.env
+.env.local
+.dev.vars
+
 # System files
 .DS_Store
 Thumbs.db

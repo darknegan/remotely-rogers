@@ -12,6 +12,7 @@ import { JSDOM } from 'jsdom';
 import { flattenForLodgify } from './lodgify-flatten.mjs';
 import { ACTIVITIES_FILTER_SCRIPT } from './lodgify-activities-filter.mjs';
 import { BOOKING_EMBED_RESIZE_SCRIPT } from './lodgify-booking-embed-resize.mjs';
+import { REVIEWS_CAROUSEL_SCRIPT } from './lodgify-reviews-carousel.mjs';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const root = path.resolve(__dirname, '..');
@@ -29,6 +30,16 @@ const PAGES = [
   { route: 'preview/recommendations', file: 'recommendations.html', host: 'app-recommendations' },
   { route: 'preview/work-stays', file: 'work-stays.html', host: 'app-work-stays' },
   { route: 'preview/multi-cabin-stays', file: 'multi-cabin-stays.html', host: 'app-multi-cabin-stays' },
+  { route: 'preview/reviews', file: 'reviews-home.html', host: 'app-reviews' },
+];
+
+const REVIEW_SLUGS = [
+  'black-gum-getaway-cozy-forest-a-frame-near-bentonville',
+  'dogwood-den--cozy-forest-a-frame-near-bentonville',
+  'running-spring-retreat-cozy-forest-a-frame-near-bentonville',
+  'black-walnut-bungalow-cozy-forest-a-frame-near-bentonville',
+  'white-oak-haven-cozy-forest-a-frame-near-bentonville',
+  'post-oak-perch-cozy-forest-a-frame-near-bentonville',
 ];
 
 function log(message) {
@@ -76,8 +87,32 @@ function extractHostHtml(fullHtml, hostTag) {
   return host.innerHTML;
 }
 
+function assertHomeReviewsSnippet(html) {
+  for (const slug of REVIEW_SLUGS) {
+    if (!html.includes(`data-cabin-slug="${slug}"`)) {
+      throw new Error(`reviews-home.html missing cabin ${slug}`);
+    }
+  }
+  if (!html.includes('rr-review-band--image-right')) {
+    throw new Error('reviews-home.html missing alternating image-right bands');
+  }
+  if ((html.match(/class="rr-review-band/g) || []).length < 6) {
+    throw new Error('reviews-home.html does not include six review bands');
+  }
+}
+
 function rewritePreviewLinks(html) {
   return html.replace(/href="\/preview\/([^"]+)"/g, 'href="https://remotelyrogers.com/en/$1/"');
+}
+
+function inlineReviewAvatars(html) {
+  return html.replace(/src="(\/reviews\/avatars\/[^"]+)"/g, (_, src) => {
+    const filePath = path.join(root, 'public', src.replace(/^\//, '').replace(/\//g, path.sep));
+    if (!fs.existsSync(filePath)) {
+      throw new Error(`Missing review avatar: ${filePath}`);
+    }
+    return `src="data:image/jpeg;base64,${fs.readFileSync(filePath).toString('base64')}"`;
+  });
 }
 
 function assertCompiledHtml(html, label) {
@@ -89,13 +124,16 @@ function assertCompiledHtml(html, label) {
     { re: /<p-tag[\s>]/, name: 'p-tag' },
     { re: /<p-selectbutton[\s>]/, name: 'p-selectbutton' },
     { re: /\{\{/, name: '{{' },
-    { re: /<script[\s>]/, name: 'script (only allowed in activities export)' },
+    { re: /<script[\s>]/, name: 'script (only allowed in activities, multi-cabin, reviews exports)' },
   ];
   const found = patterns.filter(({ re }) => re.test(html)).map(({ name }) => name);
   const scriptOnly =
     found.length === 1 && found[0].includes('script') && /script/i.test(found[0]);
   const allowsScript =
-    (label === 'activities.html' || label === 'multi-cabin-stays.html') && scriptOnly;
+    (label === 'activities.html' ||
+      label === 'multi-cabin-stays.html' ||
+      label === 'reviews-home.html') &&
+    scriptOnly;
   if (found.length > 0 && !allowsScript) {
     throw new Error(
       `${label} still contains non-Lodgify markup (${found.join(', ')}). Flatten step failed.`,
@@ -106,15 +144,22 @@ function assertCompiledHtml(html, label) {
 function wrapSnippet(
   bodyHtml,
   css,
-  { withActivitiesFilter = false, withBookingEmbedResize = false } = {},
+  {
+    withActivitiesFilter = false,
+    withBookingEmbedResize = false,
+    withReviewsCarousel = false,
+    homeContained = false,
+  } = {},
 ) {
   let script = '';
   if (withActivitiesFilter) script += ACTIVITIES_FILTER_SCRIPT;
   if (withBookingEmbedResize) script += BOOKING_EMBED_RESIZE_SCRIPT;
+  if (withReviewsCarousel) script += REVIEWS_CAROUSEL_SCRIPT;
+  const rootClass = homeContained ? 'rr-lodgify-root rr-lodgify-root--home' : 'rr-lodgify-root';
   return (
     `${PASTE_BANNER}` +
     `<style>${css}</style>` +
-    `<div class="rr-lodgify-root">${bodyHtml}</div>` +
+    `<div class="${rootClass}">${bodyHtml}</div>` +
     script
   );
 }
@@ -135,17 +180,42 @@ function exportSnippets() {
     log(`Packaging /${entry.route}...`);
     const fullHtml = readPrerenderedPage(entry.route);
     const rawBody = extractHostHtml(fullHtml, entry.host);
-    const flatBody = rewritePreviewLinks(flattenForLodgify(rawBody));
+    const flatBody = inlineReviewAvatars(rewritePreviewLinks(flattenForLodgify(rawBody)));
     const html = wrapSnippet(flatBody, lodgifyCss, {
       withActivitiesFilter: entry.file === 'activities.html',
       withBookingEmbedResize: entry.file === 'multi-cabin-stays.html',
+      withReviewsCarousel: entry.file === 'reviews-home.html',
+      homeContained: entry.file === 'reviews-home.html',
     });
 
     assertCompiledHtml(html, entry.file);
+    if (entry.file === 'reviews-home.html') {
+      assertHomeReviewsSnippet(html);
+      if (html.includes('/reviews/avatars/')) {
+        throw new Error('reviews-home.html still has /reviews/avatars/ URLs');
+      }
+    }
 
     const outPath = path.join(outDir, entry.file);
     fs.writeFileSync(outPath, html, 'utf8');
     log(`Wrote ${outPath} (${(html.length / 1024).toFixed(1)} KB)`);
+  }
+
+  const staleReviewFiles = [
+    'cabin-reviews.html',
+    'reviews-black-gum.html',
+    'reviews-dogwood.html',
+    'reviews-running-spring.html',
+    'reviews-black-walnut.html',
+    'reviews-white-oak.html',
+    'reviews-post-oak.html',
+  ];
+  for (const name of staleReviewFiles) {
+    const stalePath = path.join(outDir, name);
+    if (fs.existsSync(stalePath)) {
+      fs.unlinkSync(stalePath);
+      log(`Removed stale ${name}`);
+    }
   }
 
   fs.writeFileSync(
@@ -159,8 +229,11 @@ function exportSnippets() {
       '  dist/lodgify-snippets/work-stays.html',
       '  dist/lodgify-snippets/multi-cabin-stays.html',
       '',
+      'Guest reviews — paste onto the Home page Raw HTML widget:',
+      '  dist/lodgify-snippets/reviews-home.html',
+      '',
       'Each file is plain HTML + a single <style> block (~11 KB).',
-      'All pages share the same full-width layout (1rem side padding, breaks out of Lodgify margins).',
+      'Guest reviews on Home sit in the same content column as other Home widgets (no extra right gap).',
       'No external fonts or CSS files required — uses your Lodgify site font.',
       '',
       'DO NOT paste from src/app/features/content/ (Angular templates).',
@@ -176,6 +249,7 @@ function exportSnippets() {
       '  Recommendations   → recommendations.html',
       '  Work Stays        → work-stays.html',
       '  Multi-Cabin Stays → multi-cabin-stays.html',
+      '  Home              → reviews-home.html',
       '',
       'Multi-Cabin Stays calendar:',
       '  The snippet embeds the interactive calendar via iframe.',

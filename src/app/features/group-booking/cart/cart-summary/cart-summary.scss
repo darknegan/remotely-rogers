@@ -102,3 +102,36 @@
 .rr-cart__note {
   margin-top: 0.85rem;
 }
+
+.rr-cart__results {
+  margin: 0 0 0.75rem;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+}
+
+.rr-cart__results li {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  font-size: 0.875rem;
+}
+
+.rr-cart__result--ok .rr-cart__item-dates {
+  color: #2d6a4f;
+}
+
+.rr-cart__result--fail .rr-cart__item-dates {
+  color: #b42318;
+}
+
+.rr-cart__group {
+  margin: 0 0 0.75rem;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  font-size: 0.75rem;
+  color: #8a8a8a;
+  word-break: break-all;
+}

@@ -1,0 +1,74 @@
+:host {
+  display: block;
+}
+
+.rr-guest-form {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  padding: 1.25rem;
+  border: 1px solid var(--rr-border);
+  border-radius: var(--rr-radius);
+  background: var(--rr-white);
+  box-shadow: var(--rr-shadow);
+}
+
+.rr-guest-form h3 {
+  margin: 0 0 0.25rem;
+  font-family: Georgia, 'Times New Roman', serif;
+  font-size: 1.15rem;
+  color: #1a1a1a;
+}
+
+.rr-guest-form__lead {
+  margin: 0 0 0.5rem;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  font-size: 0.8125rem;
+  line-height: 1.5;
+  color: #666666;
+}
+
+.rr-guest-form label {
+  margin-top: 0.45rem;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  font-size: 0.6875rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: #8a8a8a;
+}
+
+.rr-guest-form label span {
+  font-weight: 500;
+  text-transform: none;
+  letter-spacing: 0;
+}
+
+.rr-guest-form input,
+.rr-guest-form textarea {
+  width: 100%;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  font-size: 0.875rem;
+}
+
+.rr-guest-form__error {
+  margin: 0.15rem 0 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  font-size: 0.75rem;
+  color: #b42318;
+}
+
+.rr-guest-form__message {
+  margin-top: 0.65rem;
+}
+
+.rr-guest-form__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: 0.85rem;
+}
+
+.rr-guest-form__actions .p-button {
+  flex: 1 1 7rem;
+}

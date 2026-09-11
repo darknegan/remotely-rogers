@@ -1,0 +1,26 @@
+<div class="rr-page" id="rr-cabin-reviews" data-rr-host="app-reviews">
+  <div class="rr-content-wrap">
+    <section class="rr-content-section">
+      <div
+        class="rr-content-section__head rr-reviews-head"
+        style="margin: 0; padding: 0 0 2.5rem;"
+      >
+        <h2 class="rr-reviews-title" style="margin: 0;">Guest Reviews</h2>
+        <p class="rr-reviews-lede" style="margin: 0; padding: 1.75rem 0 0;">
+          What guests say about the six A-frame cabins at Remotely Rogers.
+        </p>
+      </div>
+
+      <div class="rr-review-gallery" style="margin: 0; padding: 0;">
+        @for (cabin of cabins; track cabin.slug) {
+          <app-review-carousel
+            [slug]="cabin.slug"
+            [name]="cabin.name"
+            [imageUrl]="cabin.imageUrl"
+            [imageOnLeft]="cabin.imageOnLeft"
+          />
+        }
+      </div>
+    </section>
+  </div>
+</div>

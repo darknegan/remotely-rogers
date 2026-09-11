@@ -257,6 +257,15 @@ function flattenTree(doc, root) {
     replaceElement(div.parentNode, div, hr);
   }
 
+  for (const el of [...root.querySelectorAll('app-review-carousel')]) {
+    const parent = el.parentNode;
+    if (!parent) continue;
+    while (el.firstChild) {
+      parent.insertBefore(el.firstChild, el);
+    }
+    el.remove();
+  }
+
   for (const tagName of [
     'p-card',
     'p-panel',

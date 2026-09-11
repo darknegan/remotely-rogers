@@ -54,6 +54,18 @@ For each content page (Activities, Recommendations, Work Stays, Multi-Cabin Stay
 - **Page title / SEO title:** `Multi-Cabin Stays | Remotely Rogers`
 - **Meta description:** `Book multiple private A-frame cabins together on 70 acres in Rogers, Arkansas. Perfect for families, groups, and corporate retreats.`
 
+## Guest reviews (Home Raw HTML)
+
+Default rental pages cannot take Raw HTML. After `npm run export:lodgify-snippets`:
+
+1. Open `dist/lodgify-snippets/reviews-home.html`
+2. Copy the entire file
+3. Lodgify → **Home** → **Add new widget → Raw HTML**
+4. Paste → Save → **Publish website**
+5. Confirm on the live home URL
+
+Airbnb **Still Spring** reviews belong to Lodgify **Running Spring Retreat**.
+
 ## Header custom HTML (optional)
 
 To load shared styles site-wide, add to **Settings → Advanced → Header – Custom HTML**:

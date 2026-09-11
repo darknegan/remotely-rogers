@@ -30,6 +30,7 @@ The multi-cabin admin calendar at https://app.lodgify.com/calendar/multi must be
 | Recommendations | Pages → Recommendations | `src/app/features/content/recommendations/` | Raw HTML + optional Google My Maps iframe |
 | Work Stays | Pages → Work Stays | `src/app/features/content/work-stays/` | Raw HTML **above** existing inquiry form |
 | Multi-Cabin Stays | Pages → Multi-Cabin Stays | Hero: content component; Booking: `group-booking` feature | Raw HTML hero + iframe embed for calendar |
+| Cabin reviews | Home | `src/app/features/content/reviews/` | Raw HTML widget on **Home** — paste `reviews-home.html` |
 
 ## Phase 1 — Content pages (Activities, Recommendations, Work Stays)
 
@@ -68,6 +69,7 @@ This runs `ng build` (SSR prerender for the four `/preview/*` routes), then pack
 - `recommendations.html`
 - `work-stays.html`
 - `multi-cabin-stays.html`
+- `reviews-home.html` — paste into the **Home** page Raw HTML widget
 
 Each file is plain HTML with a single compact `<style>` block (~9 KB). No external fonts, CSS files, or custom Angular/PrimeNG tags required — it uses your Lodgify site font (Vollkorn if configured under Styles → Fonts).
 
@@ -145,6 +147,29 @@ ng serve
 ```
 
 Do not edit files in `dist/lodgify-snippets/` by hand — regenerate from Angular source.
+
+## Guest reviews on Home
+
+Lodgify rental pages cannot take Raw HTML. Airbnb reviews are transcribed in Angular (`src/app/features/content/reviews/`) and exported as **one Home gallery**.
+
+1. Preview locally at `/preview/reviews`.
+2. Run `npm run export:lodgify-snippets`.
+3. Open `dist/lodgify-snippets/reviews-home.html`, select all, copy.
+4. Lodgify → **Home** → **Add new widget → Raw HTML**.
+5. Paste → Save → **Publish website**, then check the live home URL.
+
+Each cabin photo links to that rental page. Odd rows put the photo on the left; even rows put it on the right.
+
+Airbnb listing titles do not match Lodgify names:
+
+| Airbnb prefix | Lodgify cabin | URL slug |
+| --- | --- | --- |
+| Black Gum | Black Gum Getaway | `black-gum-getaway-cozy-forest-a-frame-near-bentonville` |
+| Dogwood Den | Dogwood Den | `dogwood-den--cozy-forest-a-frame-near-bentonville` |
+| Still Spring | Running Spring Retreat | `running-spring-retreat-cozy-forest-a-frame-near-bentonville` |
+| Black Walnut | Black Walnut Bungalow | `black-walnut-bungalow-cozy-forest-a-frame-near-bentonville` |
+| White Oak | White Oak Haven | `white-oak-haven-cozy-forest-a-frame-near-bentonville` |
+| Post Oak | Post Oak Perch | `post-oak-perch-cozy-forest-a-frame-near-bentonville` |
 
 ## Optional: Google My Maps
 

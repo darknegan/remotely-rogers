@@ -1,0 +1,11 @@
+<div class="rr-checkout" [class.rr-checkout--embed]="embedMode()">
+  <header class="rr-checkout__header">
+    <h2>Checkout</h2>
+    <p>Enter guest details, then pay for every selected cabin in one Stripe checkout.</p>
+  </header>
+
+  <div class="rr-checkout__layout">
+    <app-guest-details-form />
+    <app-cart-summary mode="checkout" />
+  </div>
+</div>

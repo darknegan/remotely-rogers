@@ -12,7 +12,7 @@ import {
   startOfDay,
   toDateKey,
 } from '../../../../core/utils/date-utils';
-import { CabinAvailability, DayStatus } from '../../../../core/models/booking.models';
+import { CabinAvailability, DayRate, DayStatus } from '../../../../core/models/booking.models';
 
 export interface DaySegment {
   status: DayStatus | 'available';
@@ -46,6 +46,10 @@ export class CabinGrid {
 
   isPast(date: Date): boolean {
     return toDateKey(date) < toDateKey(this.today);
+  }
+
+  dayRate(quote: CabinAvailability | undefined, date: Date): DayRate | undefined {
+    return quote?.dayRates?.[toDateKey(date)];
   }
 
   segmentTrack(segment: DaySegment): string {

@@ -1,4 +1,4 @@
-import { Component, computed, inject, OnInit } from '@angular/core';
+import { afterNextRender, Component, computed, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Button } from 'primeng/button';
 import { DatePicker } from 'primeng/datepicker';
@@ -14,17 +14,19 @@ import { startOfDay } from '../../../../core/utils/date-utils';
   templateUrl: './date-range-form.html',
   styleUrl: './date-range-form.scss',
 })
-export class DateRangeForm implements OnInit {
+export class DateRangeForm {
   protected readonly state = inject(BookingStateService);
 
   readonly minDate = startOfDay(new Date());
   readonly startDate = computed(() => this.state.viewStartDate());
 
-  ngOnInit(): void {
+  constructor() {
     this.state.initializeDefaultView();
-    if (!this.state.dateError() && this.state.viewStartDate()) {
-      this.state.searchAvailability();
-    }
+    afterNextRender(() => {
+      if (!this.state.dateError() && this.state.viewStartDate() && !this.state.hasSearched()) {
+        this.state.searchAvailability();
+      }
+    });
   }
 
   onStartDateChange(value: Date | Date[] | null): void {

@@ -2,3 +2,4 @@
 /preview/recommendations
 /preview/work-stays
 /preview/multi-cabin-stays
+/preview/reviews

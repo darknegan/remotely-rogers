@@ -1,6 +1,8 @@
 /* Shared styles for the group-booking iframe widget */
 
-.rr-group-booking .p-button:not(:disabled) {
+.rr-group-booking .p-button:not(:disabled),
+.rr-checkout .p-button:not(:disabled),
+.rr-checkout-success .p-button:not(:disabled) {
   cursor: pointer;
 }
 

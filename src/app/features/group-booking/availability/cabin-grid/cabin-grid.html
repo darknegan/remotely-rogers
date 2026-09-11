@@ -133,14 +133,16 @@
                       "
                       (click)="onCellClick(cabin.id, date)"
                     >
-                      @if (quote) {
-                        <span class="rr-cabin-grid__price">
-                          {{ quote.nightlyRate | currency: quote.currency : 'symbol' : '1.0-0' }}
-                        </span>
-                        <span class="rr-cabin-grid__min-stay" title="Minimum stay">
-                          <i class="pi pi-moon" aria-hidden="true"></i>
-                          1
-                        </span>
+                      @if (quote; as cabinQuote) {
+                        @if (dayRate(cabinQuote, date); as rate) {
+                          <span class="rr-cabin-grid__price">
+                            {{ rate.price | currency: cabinQuote.currency : 'symbol' : '1.0-0' }}
+                          </span>
+                          <span class="rr-cabin-grid__min-stay" title="Minimum stay">
+                            <i class="pi pi-moon" aria-hidden="true"></i>
+                            {{ rate.minStay }}
+                          </span>
+                        }
                       }
                     </button>
                   </td>
@@ -156,6 +158,12 @@
                       [class.rr-cabin-grid__bar--booked]="segment.status === 'booked'"
                       [class.rr-cabin-grid__bar--blocked]="segment.status === 'blocked'"
                     >
+                      <i
+                        class="pi"
+                        [class.pi-lock]="segment.status === 'booked'"
+                        [class.pi-ban]="segment.status === 'blocked'"
+                        aria-hidden="true"
+                      ></i>
                       {{ barLabel(segment.status) }}
                     </div>
                   </td>

@@ -25,8 +25,34 @@ export const routes: Routes = [
       ),
   },
   {
+    path: 'preview/reviews',
+    loadComponent: () =>
+      import('./features/content/reviews/reviews').then((m) => m.Reviews),
+  },
+  {
     path: 'group-booking',
     loadComponent: () =>
-      import('./features/group-booking/shell/shell').then((m) => m.GroupBookingShell),
+      import('./features/group-booking/layout/booking-layout').then((m) => m.BookingLayout),
+    children: [
+      {
+        path: '',
+        loadComponent: () =>
+          import('./features/group-booking/shell/shell').then((m) => m.GroupBookingShell),
+      },
+      {
+        path: 'checkout',
+        loadComponent: () =>
+          import('./features/group-booking/checkout/checkout-page/checkout-page').then(
+            (m) => m.CheckoutPage,
+          ),
+      },
+      {
+        path: 'checkout/success',
+        loadComponent: () =>
+          import('./features/group-booking/checkout/checkout-success/checkout-success').then(
+            (m) => m.CheckoutSuccessPage,
+          ),
+      },
+    ],
   },
 ];

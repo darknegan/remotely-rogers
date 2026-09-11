@@ -7,6 +7,15 @@ export function toDateKey(date: Date): string {
   return `${year}-${month}-${day}`;
 }
 
+export function parseDateKey(key: string): Date {
+  const [year, month, day] = key.split('-').map(Number);
+  return startOfDay(new Date(year, month - 1, day));
+}
+
+export function dateKeyFromIso(value: string): string {
+  return value.slice(0, 10);
+}
+
 export function startOfDay(date: Date): Date {
   const normalized = new Date(date);
   normalized.setHours(0, 0, 0, 0);

@@ -7,7 +7,11 @@ import {
   AvailabilityResponse,
   BookingConfig,
   CabinAvailability,
+  DayRate,
   DayStatus,
+  CheckoutSessionResponse,
+  GroupCheckoutRequest,
+  StripeCheckoutResponse,
 } from '../models/booking.models';
 import { eachNight, startOfDay, toDateKey } from '../utils/date-utils';
 import { CABIN_CONFIG } from '../../../environments/cabin-config';
@@ -32,6 +36,16 @@ export class BookingApiService {
     );
   }
 
+  createStripeCheckout(request: GroupCheckoutRequest): Observable<StripeCheckoutResponse> {
+    return this.http.post<StripeCheckoutResponse>(`${environment.apiBaseUrl}/api/checkout`, request);
+  }
+
+  getCheckoutSession(sessionId: string): Observable<CheckoutSessionResponse> {
+    return this.http.get<CheckoutSessionResponse>(`${environment.apiBaseUrl}/api/checkout/session`, {
+      params: { session_id: sessionId },
+    });
+  }
+
   /** Deterministic mock blocks until the BFF + Lodgify quotes are wired. */
   private buildMockAvailability(request: AvailabilityRequest): AvailabilityResponse {
     const arrival = startOfDay(new Date(request.arrival));
@@ -44,23 +58,33 @@ export class BookingApiService {
     const windowNights = eachNight(windowStart, windowEnd);
 
     const cabins = CABIN_CONFIG.cabins.map((cabin) => {
-      const nightlyRate = 132;
       const days: Record<string, DayStatus> = {};
+      const dayRates: Record<string, DayRate> = {};
 
       for (const night of windowNights) {
         days[toDateKey(night)] = mockDayStatus(cabin.id, night);
+        const weekend = night.getDay() === 0 || night.getDay() === 6;
+        dayRates[toDateKey(night)] = {
+          price: weekend ? 235 : 132,
+          minStay: weekend ? 2 : 1,
+        };
       }
 
       const stayAvailable = nights.every((night) => days[toDateKey(night)] === 'available');
-      const totalPrice = nightlyRate * nights.length;
+      const nightsTotal = nights.reduce((sum, night) => {
+        return sum + (dayRates[toDateKey(night)]?.price ?? 132);
+      }, 0);
+      const cleaningFee = 75;
 
       return {
         cabinId: cabin.id,
-        nightlyRate,
-        totalPrice,
+        nightlyRate: nights.length > 0 ? nightsTotal / nights.length : 132,
+        totalPrice: nightsTotal + cleaningFee,
         currency: 'USD',
         available: stayAvailable,
         days,
+        dayRates,
+        cleaningFee,
         bookingUrl: `${environment.siteBaseUrl}/en/${cabin.slug}/`,
       } satisfies CabinAvailability;
     });

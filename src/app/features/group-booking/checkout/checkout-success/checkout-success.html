@@ -1,0 +1,19 @@
+<div class="rr-checkout-success" [class.rr-checkout-success--embed]="embedMode()">
+  <header class="rr-checkout-success__header">
+    <h2>Payment received</h2>
+    <p>We’re confirming each cabin reservation in Lodgify.</p>
+  </header>
+
+  @if (bookingState.checkoutLoading()) {
+    <div class="rr-checkout-success__loading">
+      <p-progressspinner ariaLabel="Confirming payment" strokeWidth="4" />
+      <p>Confirming your payment and creating reservations…</p>
+    </div>
+  } @else if (bookingState.checkoutError(); as checkoutError) {
+    <p-message severity="error" [text]="checkoutError" />
+  }
+
+  @if (bookingState.checkoutResult()) {
+    <app-cart-summary mode="result" />
+  }
+</div>

@@ -1,51 +1,84 @@
 <aside class="rr-cart" aria-label="Booking summary">
-  <h3>Your group cart</h3>
-
-  @if (state.cartItems().length === 0) {
+  @if (mode() === 'result') {
+    <h3>Reservation result</h3>
     <p class="rr-cart__empty">
-      Click available nights on a cabin row to build a stay. Click another night 2–5 days away to
-      fill the dates in between. Click a selected night again to clear that cabin.
+      Payment was collected in Stripe. One Lodgify reservation was created for each cabin that
+      succeeded.
     </p>
+
+    @if (state.checkoutResult(); as checkout) {
+      <ul class="rr-cart__results">
+        @for (result of checkout.results; track result.cabinId) {
+          <li [class.rr-cart__result--ok]="result.ok" [class.rr-cart__result--fail]="!result.ok">
+            <span class="rr-cart__item-name">{{ cabinName(result.cabinId) }}</span>
+            @if (result.ok) {
+              <span class="rr-cart__item-dates">Booked · #{{ result.bookingId }}</span>
+            } @else {
+              <span class="rr-cart__item-dates">{{ result.error }}</span>
+            }
+          </li>
+        }
+      </ul>
+      <p class="rr-cart__group">Group {{ checkout.groupId }}</p>
+    }
+
+    <p-button
+      label="Book more cabins"
+      styleClass="rr-cart__checkout rr-accent-btn"
+      (onClick)="bookMoreCabins()"
+    />
   } @else {
-    <ul class="rr-cart__list">
-      @for (item of state.cartItems(); track item.cabin.id) {
-        <li>
-          <div class="rr-cart__item-copy">
-            <span class="rr-cart__item-name">{{ item.cabin.name }}</span>
-            <span class="rr-cart__item-dates">
-              {{ formatDateRangeLabel(item.selection.arrival, item.selection.departure) }}
-            </span>
-          </div>
-          <strong>{{ item.totalPrice | currency: item.currency : 'symbol' : '1.0-0' }}</strong>
-        </li>
-      }
-    </ul>
+    <h3>Your group cart</h3>
 
-    <p-divider />
+    @if (state.cartItems().length === 0) {
+      <p class="rr-cart__empty">
+        Click available nights on a cabin row to build a stay. Click another night 2–5 days away to
+        fill the dates in between. Click a selected night again to clear that cabin.
+      </p>
+    } @else {
+      <ul class="rr-cart__list">
+        @for (item of state.cartItems(); track item.cabin.id) {
+          <li>
+            <div class="rr-cart__item-copy">
+              <span class="rr-cart__item-name">{{ item.cabin.name }}</span>
+              <span class="rr-cart__item-dates">
+                {{ formatDateRangeLabel(item.selection.arrival, item.selection.departure) }}
+              </span>
+            </div>
+            <strong>{{ item.totalPrice | currency: item.currency : 'symbol' : '1.0-0' }}</strong>
+          </li>
+        }
+      </ul>
 
-    <div class="rr-cart__totals">
-      <div>
-        <span>{{ state.cartItems().length }} cabin(s)</span>
-        <span>{{ state.cartItems().length }} unique stay(s)</span>
+      <p-divider />
+
+      <div class="rr-cart__totals">
+        <div>
+          <span>{{ state.cartItems().length }} cabin(s)</span>
+          <span>{{ state.cartItems().length }} unique stay(s)</span>
+        </div>
+        <div class="rr-cart__total">
+          <span>Estimated total</span>
+          <strong>{{ state.selectedTotal() | currency: 'USD' : 'symbol' : '1.0-0' }}</strong>
+        </div>
       </div>
-      <div class="rr-cart__total">
-        <span>Estimated total</span>
-        <strong>{{ state.selectedTotal() | currency: 'USD' : 'symbol' : '1.0-0' }}</strong>
-      </div>
-    </div>
+    }
+
+    @if (mode() === 'calendar') {
+      <p-button
+        label="Continue to checkout"
+        icon="pi pi-arrow-right"
+        iconPos="right"
+        styleClass="rr-cart__checkout rr-accent-btn"
+        [disabled]="!state.canCheckout()"
+        (onClick)="continueToCheckout()"
+      />
+
+      <p-message
+        severity="info"
+        text="You’ll pay for every selected cabin in one Stripe checkout."
+        styleClass="rr-cart__note"
+      />
+    }
   }
-
-  <p-button
-    label="Continue to checkout"
-    icon="pi pi-arrow-right"
-    iconPos="right"
-    styleClass="rr-cart__checkout rr-accent-btn"
-    [disabled]="!state.canCheckout()"
-  />
-
-  <p-message
-    severity="info"
-    text="Combined checkout via Stripe is coming next — your selections are saved in this session."
-    styleClass="rr-cart__note"
-  />
 </aside>
