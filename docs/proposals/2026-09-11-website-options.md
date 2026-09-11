@@ -1,7 +1,7 @@
 ## Option 1 — Rebuild the six cabin pages inside Lodgify
 
 **Cost: $750**  
-**Time: about 1 to 2 weeks**  
+**Time: about 2 to 3 weeks**  
 **Downpayment: $250**
 
 I rebuild just the six cabin pages inside Lodgify so reviews can go on them. The rest of the site stays as it is.
@@ -26,11 +26,13 @@ Future changes on the website pages will still be slow. We would still be workin
 
 ## Option 2 — Build your website ourselves (recommended)
 
-**Cost: $1,500**  
-**Time: about 2 to 3 weeks**  
+**Cost: $2000**  
+**Time: about 4 to 6 weeks**  
 **Downpayment: $500**
 
-This will be a fully customizable website that grows with you. Guests still book through the same calendars. Your Airbnb and Booking.com listings stay connected. We keep Lodgify for reservations.
+This will be a fully customizable website that grows with you. Guests still book through the same calendars. Your Airbnb and Booking.com listings stay connected. We keep Lodgify for reservations or move to a different service like Bookingmood.
+
+The monthly payment for Lodgify is ~$300 a month, where as a service like Bookingmood that doesn't offer website creation is much cheaper. Currently Bookingmood is only $45 billed monthly and $36 billed annually.
 
 The site can still look like it does today, but if theres anything you want to change for the better we can work together to make it look and feel exactly how you want it to.
 
@@ -54,11 +56,11 @@ The site can still look like it does today, but if theres anything you want to c
 
 |                                   | Option 1                                | Option 2                                      |
 | --------------------------------- | --------------------------------------- | --------------------------------------------- |
-| Cost                              | $750                                    | $1,500                                        |
-| Time                              | 1 to 2 weeks                            | 2 to 3 weeks                                  |
+| Cost                              | $750                                    | $2,000                                        |
+| Time                              | 2 to 3 weeks                            | 4 to 6 weeks                                  |
 | Reviews on each cabin page        | Yes                                     | Yes                                           |
 | What we rebuild                   | Only the six cabin pages                | The whole public website                      |
-| Bookings and Airbnb / Booking.com | Stay with Lodgify                       | Stay with Lodgify                             |
+| Bookings and Airbnb / Booking.com | Stay with Lodgify                       | Stay with Lodgify or Bookingmood              |
 | Next time you want a change       | Often slow, because of Lodgify’s locks  | A normal website change                       |
 | After this job                    | You still live inside Lodgify’s website | You have a website we can shape to your needs |
 
@@ -69,4 +71,4 @@ The site can still look like it does today, but if theres anything you want to c
 
 *Option 1* will get reviews on the cabin pages, but we will still run into the same limitations in the future for any new features that you want to add.
 
-*Option 2* costs more, but gives you more control on the look and feel of your website and allows for more flexibility when adding new features in the future. With access to the Lodgify apis, your Airbnb and Booking.com listings will stay connected the same way that they do today.
+*Option 2* costs more, but gives you more control on the look and feel of your website and allows for more flexibility when adding new features in the future. With access to the Lodgify or Bookingmood apis, your Airbnb and Booking.com listings will stay connected the same way that they do today.
