@@ -97,3 +97,55 @@ The attached current-homepage screenshot is what we are leaving, not copying. Fa
 ## After the three homepages
 
 Pick one direction with the client. Then expand that **same** project: cabin listing, one cabin detail (Black Gum Getaway), Activities, Work Stays, Multi-Cabin, FAQ / guest info, Maps & getting here. Desktop first, then a 375px homepage.
+
+## Round 2 — three richer homepages
+
+Option B (Quiet Scandinavian A-frame) was the strongest of round 1. Round 2 should keep that calm, architectural intelligence, but the first three mocks were too sparse / template. These three must look like finished 2026 hospitality sites — Kinfolk, Aesop, Inness, AutoCamp — not a SaaS landing page with cabin photos dropped in.
+
+| | D — Cinematic dusk lodge | E — Paper and cedar | F — Ozark maison |
+|---|---|---|---|
+| Mood | Film still, golden hour, quiet luxury | Japanese-Ozark retreat, ink on paper | Design hotel / inn, gallery-rich |
+| Photography | Full-viewport heroes, dark timber, window glow, overlapping crops | Architecture as art, lots of wood grain, negative space that still feels lush | Large gallery grids, pull-quote over photo, art-directed stills |
+| Type | Wide elegant sans + a single display serif word | Refined grotesque + a calligraphic or high-contrast serif | Big editorial serif + thin sans |
+| Palette | Charcoal, warm black, honey, fog | Rice paper, cedar, sumi, one vermilion mark | Limestone, walnut, oxblood, brass |
+| Layout | Immersive, layered, type on photography | Asymmetric, very considered, not a 3-up card stack | Magazine: varied rhythm, bento, full-bleed then quiet |
+
+### Round 2 prompt
+
+Save the Option B file. New project (or “save this and try a completely different approach”). Attach the same real cabin photos. Paste:
+
+```
+Round 2 of homepage mocks for Remotely Rogers. Keep the same content as before. I liked Option B from round 1 (quiet Scandinavian A-frame — calm, architectural, pale oak, whitespace) for its restraint, but those three designs were not visually rich enough. I need three NEW homepage directions that are clearly more beautiful: cinematic photography, distinctive type, varied section rhythm, finished hospitality craft. Not another white page of equal cards.
+
+PROPERTY: six private A-frame cabins on 70 acres in Rogers, Arkansas, near Bentonville. Couples, families, groups, remote workers. Primary CTA: Check availability. Real copy only — no lorem ipsum. Use ONLY the attached Remotely Rogers cabin photos (homepage/01 as a possible hero; each cabin’s 01 as its card). No Unsplash, no stock cabins, no generic forest-green rental template, no Fancy Hill visual language.
+
+CONTENT to include (helpful info, rewritten for this property):
+- Full-bleed photo hero with headline, subhead, Check availability
+- The six cabins: Black Gum Getaway, Dogwood Den, Running Spring Retreat, Black Walnut Bungalow, White Oak Haven, Post Oak Perch — who each stay is for
+- Nearby with drive times: Lake Atalanta ~8 min, downtown Rogers ~15 min, Bentonville trails ~20 min, Beaver Lake ~20 min, Crystal Bridges ~25 min
+- How far from home: Fayetteville ~30 min, Tulsa ~1.5 hr, Springfield ~2 hr, Little Rock ~3 hr, Kansas City ~3.5 hr, Dallas ~5 hr
+- What we offer: private A-frames, 70 acres, pet-friendly, Wi-Fi, book one cabin or several
+- Pets + groups (short, practical)
+- Short “our story” / host note (Jeff)
+- Reviews from Jordan, Dakota, Daniel, Lorna (real quotes)
+- Easy contact — not a stack of “book direct and save” banners
+
+VISUAL BAR: every option must feel like a finished boutique-stay website, not a wireframe with photos. Required in all three:
+- At least one full-viewport photo hero (real attached photo, not a tinted color block)
+- Cabin presentation that is NOT six identical cards in a row — mix sizes, overlap, a featured cabin, a horizontal gallery, a bento, something designed
+- Varied rhythm: large photo, then quiet type, then a different layout — never three stacked clones
+- Distinctive typography you can name (not Inter / system UI / generic Airbnb)
+- Hover/pressed states on buttons
+- Sticky nav with logo, links, Check availability
+- Desktop 1440 wide, polished, lots of craft: grain, soft shadow, careful crops, generous but not empty space
+
+Give me three distinct homepages on the canvas:
+
+D) Cinematic dusk lodge — still calm like Option B, but atmospheric. Full-bleed dusk/interior photos, type over imagery, charcoal / honey / fog, filmic. Quiet luxury, not camping brochure.
+
+E) Paper and cedar — Japanese-inspired Ozark retreat. Rice-paper ground, cedar and sumi, one vermilion mark. Asymmetric, architectural photography, extremely considered. More beautiful than sparse Scandinavian.
+
+F) Ozark maison — design-hotel / inn. Limestone, walnut, oxblood, brass. Big editorial serif, gallery grids, pull quotes on photos. Rich and inviting, not rustic-campground.
+
+Do not reuse round 1’s cream/ink/oxblood magazine, pale-oak card grid, or bold condensed outdoor look. Do not invent checkout chrome. Label each artboard D, E, and F.
+```
