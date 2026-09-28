@@ -1,0 +1,16 @@
+<header class="rr-mobile-header">
+  <a class="rr-mobile-header__brand" routerLink="/preview/foundations">Remotely Rogers</a>
+  <div class="rr-mobile-header__actions">
+    <a class="rr-mobile-header__book" routerLink="/cabins">Book</a>
+    <button
+      type="button"
+      class="rr-mobile-header__menu"
+      aria-label="Open menu"
+      (click)="menuOpenChange.emit(true)"
+    >
+      <span></span>
+      <span></span>
+      <span></span>
+    </button>
+  </div>
+</header>

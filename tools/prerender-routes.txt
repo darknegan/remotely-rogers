@@ -1,3 +1,4 @@
+/preview/foundations
 /preview/activities
 /preview/recommendations
 /preview/work-stays
