@@ -26,10 +26,10 @@ const PASTE_BANNER =
 
 /** @type {{ route: string; file: string; host: string }[]} */
 const PAGES = [
-  { route: 'preview/activities', file: 'activities.html', host: 'app-activities' },
-  { route: 'preview/recommendations', file: 'recommendations.html', host: 'app-recommendations' },
-  { route: 'preview/work-stays', file: 'work-stays.html', host: 'app-work-stays' },
-  { route: 'preview/multi-cabin-stays', file: 'multi-cabin-stays.html', host: 'app-multi-cabin-stays' },
+  { route: 'activities', file: 'activities.html', host: 'app-activities' },
+  { route: 'recommendations', file: 'recommendations.html', host: 'app-recommendations' },
+  { route: 'work-stays', file: 'work-stays.html', host: 'app-work-stays' },
+  { route: 'multi-cabin', file: 'multi-cabin-stays.html', host: 'app-multi-cabin-stays' },
   { route: 'preview/reviews', file: 'reviews-home.html', host: 'app-reviews' },
 ];
 

@@ -1,6 +1,5 @@
-import { Component } from '@angular/core';
-import { Panel } from 'primeng/panel';
-import { Tag } from 'primeng/tag';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { RouterLink } from '@angular/router';
 
 import { BookingStateService } from '../../group-booking/booking-state.service';
 import { GroupBookingShell } from '../../group-booking/shell/shell';
@@ -13,10 +12,10 @@ interface BookingStep {
 
 @Component({
   selector: 'app-multi-cabin-stays',
+  changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [BookingStateService],
-  imports: [GroupBookingShell, Panel, Tag],
+  imports: [GroupBookingShell, RouterLink],
   templateUrl: './multi-cabin-stays.html',
-  styleUrl: './multi-cabin-stays.scss',
 })
 export class MultiCabinStays {
   readonly bookingSteps: BookingStep[] = [

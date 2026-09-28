@@ -4,9 +4,9 @@
 
 .rr-date-form {
   padding: 0.75rem 1rem;
-  border: 1px solid #e6e6e6;
-  border-radius: 8px;
-  background: #ffffff;
+  border: 1px solid var(--rr-line);
+  border-radius: 0;
+  background: var(--rr-paper);
 }
 
 .rr-date-form__fields {
@@ -27,12 +27,12 @@
 .rr-date-form__action-label {
   display: block;
   margin-bottom: 0.35rem;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  font-family: var(--rr-font-sans);
   font-size: 0.6875rem;
   font-weight: 600;
   letter-spacing: 0.04em;
   text-transform: uppercase;
-  color: #8a8a8a;
+  color: var(--rr-muted);
 }
 
 .rr-date-form__field :is(.p-datepicker) {
@@ -61,8 +61,8 @@
 
 .rr-date-form__hint {
   margin: 0.65rem 0 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  font-family: var(--rr-font-sans);
   font-size: 0.8125rem;
   line-height: 1.5;
-  color: #8a8a8a;
+  color: var(--rr-muted);
 }

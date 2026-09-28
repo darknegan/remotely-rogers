@@ -1,0 +1,97 @@
+<form class="rr-book-bar" (ngSubmit)="searchCabins()">
+  <label class="rr-field">
+    Check-in
+    <p-datepicker
+      [ngModel]="search.checkIn()"
+      (ngModelChange)="search.setCheckIn($event)"
+      name="checkIn"
+      [minDate]="search.minDate"
+      dateFormat="M d, yy"
+      placeholder="Add date"
+      [showIcon]="true"
+      appendTo="body"
+      inputId="check-in"
+    />
+  </label>
+  <label class="rr-field">
+    Check-out
+    <p-datepicker
+      [ngModel]="search.checkOut()"
+      (ngModelChange)="search.setCheckOut($event)"
+      name="checkOut"
+      [minDate]="search.checkIn() ?? search.minDate"
+      dateFormat="M d, yy"
+      placeholder="Add date"
+      [showIcon]="true"
+      appendTo="body"
+      inputId="check-out"
+    />
+  </label>
+  <div class="rr-field">
+    <span>Guests</span>
+    <p-button
+      type="button"
+      [label]="search.partySize() + ' guests'"
+      [outlined]="true"
+      (onClick)="guests.toggle($event)"
+    />
+    <p-popover #guests>
+      <div class="rr-guest-pop">
+        <div class="rr-guest-row">
+          <span>Adults</span>
+          <p-inputnumber
+            [ngModel]="search.adults()"
+            (ngModelChange)="search.setAdults($event)"
+            name="adults"
+            [min]="1"
+            [max]="4"
+            [showButtons]="true"
+            buttonLayout="horizontal"
+          />
+        </div>
+        <div class="rr-guest-row">
+          <span>Children</span>
+          <p-inputnumber
+            [ngModel]="search.children()"
+            (ngModelChange)="search.setChildren($event)"
+            name="children"
+            [min]="0"
+            [max]="4"
+            [showButtons]="true"
+            buttonLayout="horizontal"
+          />
+        </div>
+        <div class="rr-guest-row">
+          <span>Infants</span>
+          <p-inputnumber
+            [ngModel]="search.infants()"
+            (ngModelChange)="search.setInfants($event)"
+            name="infants"
+            [min]="0"
+            [max]="4"
+            [showButtons]="true"
+            buttonLayout="horizontal"
+          />
+        </div>
+        <div class="rr-guest-row">
+          <span>Pets</span>
+          <p-inputnumber
+            [ngModel]="search.pets()"
+            (ngModelChange)="search.setPets($event)"
+            name="pets"
+            [min]="0"
+            [max]="1"
+            [showButtons]="true"
+            buttonLayout="horizontal"
+          />
+        </div>
+        <p>Up to 4 guests per cabin. One pet, arranged first.</p>
+        <p-button type="button" label="Reset" [text]="true" (onClick)="search.resetGuests()" />
+      </div>
+    </p-popover>
+  </div>
+  <p-button type="submit" label="Search" [disabled]="!search.canSearch()" (onClick)="searchCabins()" />
+  @if (search.checkIn() && search.checkOut() && search.dateError(); as error) {
+    <p class="rr-error">{{ error }}</p>
+  }
+</form>

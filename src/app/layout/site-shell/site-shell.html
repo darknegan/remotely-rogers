@@ -1,0 +1,11 @@
+@if (showChrome()) {
+  <div class="rr-shell">
+    <app-site-header />
+    <main>
+      <ng-content />
+    </main>
+    <app-site-footer />
+  </div>
+} @else {
+  <ng-content />
+}
