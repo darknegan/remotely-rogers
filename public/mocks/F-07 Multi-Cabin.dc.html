@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<meta name="design_doc_mode" content="canvas">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Young+Serif&family=Spectral:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Archivo:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  body { margin: 0; background: #8C8275; }
+  a { color: #6C2029; text-decoration: none; }
+  a:hover { color: #882A34; }
+  * { box-sizing: border-box; }
+</style>
+</helmet>
+
+<section style="display:flex;flex-wrap:nowrap;width:max-content;gap:120px 80px;align-items:flex-start;padding:110px 80px 120px">
+
+  <!-- F-07 -->
+  <div id="F-07" data-screen-label="F-07 Multi-Cabin" style="flex:none;width:1440px;position:relative;background:#F5F0E6;font-family:Spectral,serif;color:#3E2C22">
+    <div style="position:absolute;top:-46px;left:0;display:flex;gap:12px;align-items:baseline;font-family:Archivo,sans-serif;color:#F7F2E7"><span style="font-size:16px;font-weight:600;letter-spacing:.08em">F-07</span><span style="font-size:12px;letter-spacing:.16em;text-transform:uppercase;opacity:.85">Multi-Cabin stays + group calendar · 1440 · calendar is clickable</span></div>
+    <dc-import name="RRNav" active="Multi-Cabin" style="position:sticky;top:0;z-index:30" hint-size="100%,78px"></dc-import>
+    <div style="position:relative;height:760px;overflow:hidden">
+      <img src="img/10.jpg" alt="The A-frames together on the hill" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:50% 55%">
+      <div style="position:absolute;inset:0;background:linear-gradient(to top,rgba(36,27,21,.9) 0%,rgba(36,27,21,.2) 55%,rgba(36,27,21,.35))"></div>
+      <div style="position:absolute;left:60px;right:60px;bottom:64px;display:flex;justify-content:space-between;align-items:flex-end;gap:60px">
+        <div>
+          <div style="display:flex;align-items:center;gap:16px;margin-bottom:24px"><span style="width:52px;height:2px;background:#B08A4A"></span><span style="font-family:Archivo,sans-serif;font-size:11px;letter-spacing:.28em;text-transform:uppercase;color:#E6D3AE">Families · friends · weddings · retreats</span></div>
+          <h1 style="margin:0;font-family:'Young Serif',serif;font-weight:400;font-size:96px;line-height:1;color:#F7F2E7">Multi-Cabin Stays</h1>
+          <p style="margin:22px 0 0;max-width:600px;font-size:20px;line-height:1.6;color:#E8E0D2">Private A-frames for everyone, shared land in between, and one checkout for the lot.</p>
+        </div>
+        <div style="display:flex;border-top:1px solid rgba(230,211,174,.4);font-family:Archivo,sans-serif">
+          <div style="padding:18px 34px 0 0"><div style="font-family:'Young Serif',serif;font-size:44px;color:#E6D3AE">6</div><div style="font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:#F7F2E7">Private cabins</div></div>
+          <div style="padding:18px 34px 0;border-left:1px solid rgba(230,211,174,.4)"><div style="font-family:'Young Serif',serif;font-size:44px;color:#E6D3AE">70</div><div style="font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:#F7F2E7">Shared acres</div></div>
+          <div style="padding:18px 0 0 34px;border-left:1px solid rgba(230,211,174,.4)"><div style="font-family:'Young Serif',serif;font-size:44px;color:#E6D3AE">1</div><div style="font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:#F7F2E7">Combined checkout</div></div>
+        </div>
+      </div>
+    </div>
+    <div style="padding:100px 60px 70px;display:grid;grid-template-columns:360px 1fr;gap:70px">
+      <div><div style="font-family:Archivo,sans-serif;font-size:11px;letter-spacing:.26em;text-transform:uppercase;color:#6C2029">How it works</div><h2 style="margin:16px 0 0;font-family:'Young Serif',serif;font-weight:400;font-size:46px;line-height:1.1">Three steps, one payment.</h2></div>
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);border-top:2px solid #B08A4A">
+        <div style="padding:28px 30px 0 0"><div style="font-family:'Young Serif',serif;font-size:80px;line-height:1;color:#6C2029">1</div><h3 style="margin:14px 0 0;font-family:'Young Serif',serif;font-weight:400;font-size:26px">Pick dates</h3><p style="margin:10px 0 0;font-size:16.5px;line-height:1.65;color:#4A382C">Set a start date and guests per cabin.</p></div>
+        <div style="padding:28px 30px 0;border-left:1px solid rgba(62,44,34,.16)"><div style="font-family:'Young Serif',serif;font-size:80px;line-height:1;color:#6C2029">2</div><h3 style="margin:14px 0 0;font-family:'Young Serif',serif;font-weight:400;font-size:26px">Select cabins</h3><p style="margin:10px 0 0;font-size:16.5px;line-height:1.65;color:#4A382C">Click nights on each cabin's row. Dates can differ by cabin.</p></div>
+        <div style="padding:28px 0 0 30px;border-left:1px solid rgba(62,44,34,.16)"><div style="font-family:'Young Serif',serif;font-size:80px;line-height:1;color:#6C2029">3</div><h3 style="margin:14px 0 0;font-family:'Young Serif',serif;font-weight:400;font-size:26px">One combined checkout</h3><p style="margin:10px 0 0;font-size:16.5px;line-height:1.65;color:#4A382C">Pay for every cabin together; we book each one.</p></div>
+      </div>
+    </div>
+    <div style="padding:0 60px 120px">
+      <dc-import name="RRGroupCalendar" initial="empty" hint-size="100%,1px"></dc-import>
+    </div>
+    <dc-import name="RRFooter" hint-size="100%,360px"></dc-import>
+  </div>
+
+  <!-- F-07b -->
+  <div id="F-07b" data-screen-label="F-07b Calendar two cabins selected" style="flex:none;width:1440px;position:relative;background:#F5F0E6;font-family:Spectral,serif;color:#3E2C22">
+    <div style="position:absolute;top:-46px;left:0;display:flex;gap:12px;align-items:baseline;font-family:Archivo,sans-serif;color:#F7F2E7"><span style="font-size:16px;font-weight:600;letter-spacing:.08em">F-07b</span><span style="font-size:12px;letter-spacing:.16em;text-transform:uppercase;opacity:.85">Two cabins selected · different dates · cart filled</span></div>
+    <dc-import name="RRNav" active="Multi-Cabin" hint-size="100%,78px"></dc-import>
+    <div style="padding:56px 60px 34px"><h2 style="margin:0;font-family:'Young Serif',serif;font-weight:400;font-size:52px">Group booking calendar</h2></div>
+    <div style="padding:0 60px 90px"><dc-import name="RRGroupCalendar" initial="selected" hint-size="100%,1px"></dc-import></div>
+  </div>
+
+  <!-- F-07c -->
+  <div id="F-07c" data-screen-label="F-07c Calendar loading error conflict" style="flex:none;width:1440px;position:relative;background:#F5F0E6;font-family:Spectral,serif;color:#3E2C22">
+    <div style="position:absolute;top:-46px;left:0;display:flex;gap:12px;align-items:baseline;font-family:Archivo,sans-serif;color:#F7F2E7"><span style="font-size:16px;font-weight:600;letter-spacing:.08em">F-07c</span><span style="font-size:12px;letter-spacing:.16em;text-transform:uppercase;opacity:.85">Calendar states · loading / error / min-night conflict</span></div>
+    <dc-import name="RRNav" active="Multi-Cabin" hint-size="100%,78px"></dc-import>
+    <div style="padding:56px 60px 90px;display:flex;flex-direction:column;gap:30px">
+      <div style="font-family:Archivo,sans-serif;font-size:11px;letter-spacing:.26em;text-transform:uppercase;color:#6C2029">A · Loading</div>
+      <dc-import name="RRGroupCalendar" status="loading" hint-size="100%,1px"></dc-import>
+      <div style="margin-top:40px;font-family:Archivo,sans-serif;font-size:11px;letter-spacing:.26em;text-transform:uppercase;color:#6C2029">B · Availability error</div>
+      <dc-import name="RRGroupCalendar" status="error" initial="selected" hint-size="100%,1px"></dc-import>
+      <div style="margin-top:40px;font-family:Archivo,sans-serif;font-size:11px;letter-spacing:.26em;text-transform:uppercase;color:#6C2029">C · Selection conflict — one night picked, 2-night minimum</div>
+      <dc-import name="RRGroupCalendar" initial="conflict" hint-size="100%,1px"></dc-import>
+    </div>
+  </div>
+
+  <!-- F-M04 -->
+  <div id="F-M04" data-screen-label="F-M04 Group calendar 375" style="flex:none;width:375px;height:1500px;overflow:hidden;position:relative;background:#F5F0E6;font-family:Spectral,serif;color:#3E2C22">
+    <div style="position:absolute;top:-46px;left:0;display:flex;gap:12px;align-items:baseline;font-family:Archivo,sans-serif;color:#F7F2E7"><span style="font-size:16px;font-weight:600;letter-spacing:.08em">F-M04</span><span style="font-size:12px;letter-spacing:.16em;text-transform:uppercase;opacity:.85">Group calendar · 375</span></div>
+    <dc-import name="RRMobileHeader" style="position:sticky;top:0;z-index:30" hint-size="100%,64px"></dc-import>
+    <div style="padding:28px 20px 22px;background:#3E2C22">
+      <h1 style="margin:0;font-family:'Young Serif',serif;font-weight:400;font-size:36px;line-height:1.05;color:#F7F2E7">Multi-Cabin Stays</h1>
+      <p style="margin:10px 0 0;font-family:Archivo,sans-serif;font-size:13px;color:#E6D3AE">Pick dates · Select cabins · One checkout</p>
+    </div>
+    <div style="margin:16px 0 0"><dc-import name="RRGroupCalendar" initial="selected" hide-cart="{{ true }}" narrow="{{ true }}" hint-size="100%,1px"></dc-import></div>
+    <div style="position:absolute;left:0;right:0;bottom:0;background:#FBF8F1;border-top:3px solid #6C2029;box-shadow:0 -14px 40px rgba(43,31,23,.2);padding:10px 20px 22px;font-family:Archivo,sans-serif">
+      <div style="width:40px;height:4px;border-radius:2px;background:rgba(62,44,34,.2);margin:0 auto 12px"></div>
+      <div style="display:flex;justify-content:space-between;align-items:baseline"><span style="font-family:'Young Serif',serif;font-size:20px">2 cabins · 5 nights</span><span style="font-family:'Young Serif',serif;font-size:24px">$748</span></div>
+      <div style="margin-top:6px;font-size:12.5px;color:#7A6552">Black Gum Oct 16–19 · Dogwood Oct 17–19</div>
+      <a href="F-08 Checkout.dc.html" style="display:block;margin-top:14px;padding:16px 0;text-align:center;background:#6C2029;color:#F7F2E7;font-size:12px;font-weight:600;letter-spacing:.14em;text-transform:uppercase" style-active="background:#561920">Continue to checkout</a>
+      <p style="margin:10px 0 0;font-size:11.5px;color:#7A6552;text-align:center">One Stripe checkout for every cabin</p>
+    </div>
+  </div>
+</section>
+</x-dc>
+</body>
+</html>

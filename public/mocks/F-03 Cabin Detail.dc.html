@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<meta name="design_doc_mode" content="canvas">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Young+Serif&family=Spectral:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Archivo:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  body { margin: 0; background: #8C8275; }
+  a { color: #6C2029; text-decoration: none; }
+  a:hover { color: #882A34; }
+  * { box-sizing: border-box; }
+</style>
+</helmet>
+
+<section style="display:flex;flex-wrap:nowrap;width:max-content;gap:120px 80px;align-items:flex-start;padding:110px 80px 120px">
+
+  <!-- F-03 -->
+  <div id="F-03" data-screen-label="F-03 Cabin detail" style="flex:none;width:1440px;position:relative;background:#F5F0E6;font-family:Spectral,serif;color:#3E2C22">
+    <div style="position:absolute;top:-46px;left:0;display:flex;gap:12px;align-items:baseline;font-family:Archivo,sans-serif;color:#F7F2E7"><span style="font-size:16px;font-weight:600;letter-spacing:.08em">F-03</span><span style="font-size:12px;letter-spacing:.16em;text-transform:uppercase;opacity:.85">Cabin detail · Black Gum Getaway (template for all six) · 1440</span></div>
+    <dc-import name="RRNav" active="Cabins" style="position:sticky;top:0;z-index:30" hint-size="100%,78px"></dc-import>
+
+    <div style="padding:34px 60px 26px;display:flex;justify-content:space-between;align-items:flex-end;gap:40px">
+      <div>
+        <div style="font-family:Archivo,sans-serif;font-size:12.5px;color:#7A6552"><a href="F-02 Cabins.dc.html" style="color:#7A6552;border-bottom:1px solid rgba(122,101,82,.35)" style-hover="color:#6C2029">Cabins</a> <span style="margin:0 8px">/</span> Black Gum Getaway</div>
+        <h1 style="margin:14px 0 0;font-family:'Young Serif',serif;font-weight:400;font-size:68px;line-height:1.02">Black Gum Getaway</h1>
+        <div style="margin-top:14px;display:flex;gap:18px;font-family:Archivo,sans-serif;font-size:14px;color:#4A382C"><span>Vacation Home</span><span style="color:#B08A4A">·</span><span>Rogers, Arkansas</span><span style="color:#B08A4A">·</span><span><span style="color:#B08A4A">★</span> 5.0 · <a href="#reviews" style="color:#4A382C;border-bottom:1px solid rgba(74,56,44,.35)">12 reviews</a></span></div>
+      </div>
+      <div style="display:flex;gap:10px;font-family:Archivo,sans-serif">
+        <span style="padding:12px 18px;border:1px solid rgba(62,44,34,.25);font-size:12px;letter-spacing:.1em;text-transform:uppercase;cursor:pointer" style-hover="border-color:#6C2029;color:#6C2029" style-active="background:#EDE5D6">Share</span>
+        <span style="padding:12px 18px;border:1px solid rgba(62,44,34,.25);font-size:12px;letter-spacing:.1em;text-transform:uppercase;cursor:pointer" style-hover="border-color:#6C2029;color:#6C2029" style-active="background:#EDE5D6">Save</span>
+      </div>
+    </div>
+    <div style="position:relative;margin:0 60px;height:620px;display:grid;grid-template-columns:2fr 1fr 1fr;grid-template-rows:1fr 1fr;gap:10px">
+      <a href="#F-03b" style="grid-row:span 2;overflow:hidden" style-hover="opacity:.94"><img src="img/black-gum.jpg" alt="Black Gum Getaway living room" style="width:100%;height:100%;object-fit:cover"></a>
+      <a href="#F-03b" style="grid-row:span 2;overflow:hidden" style-hover="opacity:.94"><img src="img/01.jpg" alt="Spiral stair" style="width:100%;height:100%;object-fit:cover"></a>
+      <a href="#F-03b" style="overflow:hidden" style-hover="opacity:.94"><img src="img/03.jpg" alt="Loft" style="width:100%;height:100%;object-fit:cover"></a>
+      <a href="#F-03b" style="overflow:hidden" style-hover="opacity:.94"><img src="img/10.jpg" alt="Winter" style="width:100%;height:100%;object-fit:cover"></a>
+      <a href="#F-03b" style="position:absolute;right:20px;bottom:20px;padding:13px 20px;background:#FBF8F1;color:#3E2C22;font-family:Archivo,sans-serif;font-size:11.5px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;box-shadow:0 8px 24px rgba(0,0,0,.25);white-space:nowrap" style-hover="background:#FFFFFF;color:#6C2029" style-active="background:#EDE5D6">View more pictures</a>
+    </div>
+
+    <div style="padding:64px 60px 100px;display:grid;grid-template-columns:1fr 410px;gap:80px;align-items:start">
+      <div>
+        <div style="display:grid;grid-template-columns:repeat(4,1fr);border-top:2px solid #B08A4A;border-bottom:1px solid rgba(62,44,34,.16)">
+          <div style="padding:22px 0"><div style="font-family:'Young Serif',serif;font-size:44px;line-height:1;color:#6C2029">4</div><div style="margin-top:8px;font-family:Archivo,sans-serif;font-size:11.5px;letter-spacing:.18em;text-transform:uppercase">Guests</div></div>
+          <div style="padding:22px 0 22px 26px;border-left:1px solid rgba(62,44,34,.16)"><div style="font-family:'Young Serif',serif;font-size:44px;line-height:1;color:#6C2029">2</div><div style="margin-top:8px;font-family:Archivo,sans-serif;font-size:11.5px;letter-spacing:.18em;text-transform:uppercase">Bedrooms</div></div>
+          <div style="padding:22px 0 22px 26px;border-left:1px solid rgba(62,44,34,.16)"><div style="font-family:'Young Serif',serif;font-size:44px;line-height:1;color:#6C2029">3</div><div style="margin-top:8px;font-family:Archivo,sans-serif;font-size:11.5px;letter-spacing:.18em;text-transform:uppercase">Beds</div></div>
+          <div style="padding:22px 0 22px 26px;border-left:1px solid rgba(62,44,34,.16)"><div style="font-family:'Young Serif',serif;font-size:44px;line-height:1;color:#6C2029">1</div><div style="margin-top:8px;font-family:Archivo,sans-serif;font-size:11.5px;letter-spacing:.18em;text-transform:uppercase">Bathroom</div></div>
+        </div>
+
+        <div style="margin-top:56px">
+          <p style="margin:0 0 20px;font-family:'Young Serif',serif;font-size:30px;line-height:1.35;color:#3E2C22">Welcome to Remotely Rogers, a six-cabin modern A-frame retreat.</p>
+          <p style="margin:0 0 18px;font-size:19px;line-height:1.8;color:#4A382C">We're in central Rogers, Arkansas — close to Beaver Lake, Crystal Bridges and the mountain bike trails around Bentonville.</p>
+          <p style="margin:0;font-size:19px;line-height:1.8;color:#4A382C">Traveling with friends or extended family? <a href="F-07 Multi-Cabin.dc.html" style="border-bottom:1px solid rgba(108,32,41,.35)">Book multiple cabins</a> on the same property.</p>
+          <div style="margin-top:28px;padding:22px 26px;background:#E9E2D6;border-left:3px solid #B08A4A;display:flex;gap:18px;align-items:flex-start">
+            <span style="font-family:Archivo,sans-serif;font-size:10.5px;font-weight:600;letter-spacing:.22em;text-transform:uppercase;color:#6C2029;padding-top:4px;white-space:nowrap">Please note</span>
+            <p style="margin:0;font-size:17px;line-height:1.65;color:#3E2C22">Two friendly, free-range German Shorthaired Pointers live on site. They may come say hello.</p>
+          </div>
+        </div>
+
+        <div style="margin-top:56px;display:flex;gap:14px;font-family:Archivo,sans-serif">
+          <span style="flex:1;padding:20px 22px;background:#FBF8F1;border-top:2px solid #6C2029"><span style="display:block;font-size:10.5px;letter-spacing:.2em;text-transform:uppercase;color:#7A6552">Highlight</span><span style="display:block;margin-top:6px;font-family:'Young Serif',serif;font-size:20px">Parking</span></span>
+          <span style="flex:1;padding:20px 22px;background:#FBF8F1;border-top:2px solid #6C2029"><span style="display:block;font-size:10.5px;letter-spacing:.2em;text-transform:uppercase;color:#7A6552">Highlight</span><span style="display:block;margin-top:6px;font-family:'Young Serif',serif;font-size:20px">Pets welcome</span></span>
+          <span style="flex:1;padding:20px 22px;background:#FBF8F1;border-top:2px solid #6C2029"><span style="display:block;font-size:10.5px;letter-spacing:.2em;text-transform:uppercase;color:#7A6552">Highlight</span><span style="display:block;margin-top:6px;font-family:'Young Serif',serif;font-size:20px">Wireless internet</span></span>
+        </div>
+
+        <h2 style="margin:72px 0 26px;font-family:'Young Serif',serif;font-weight:400;font-size:38px">Amenities</h2>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:0 48px">
+          <sc-for list="{{ amen }}" as="g" hint-placeholder-count="8">
+            <div style="padding:20px 0 22px;border-top:1px solid rgba(62,44,34,.16)">
+              <div style="font-family:Archivo,sans-serif;font-size:11px;letter-spacing:.22em;text-transform:uppercase;color:#6C2029">{{ g.t }}</div>
+              <p style="margin:10px 0 0;font-size:16.5px;line-height:1.7;color:#4A382C">{{ g.items }}</p>
+            </div>
+          </sc-for>
+        </div>
+
+        <div style="margin-top:72px;display:grid;grid-template-columns:1fr 1fr;gap:48px">
+          <div>
+            <h2 style="margin:0 0 20px;font-family:'Young Serif',serif;font-weight:400;font-size:32px">House rules</h2>
+            <div style="font-family:Archivo,sans-serif;font-size:14.5px">
+              <div style="display:flex;justify-content:space-between;padding:13px 0;border-top:1px solid rgba(62,44,34,.16)"><span style="color:#7A6552">Check-in</span><span>3:00 PM</span></div>
+              <div style="display:flex;justify-content:space-between;padding:13px 0;border-top:1px solid rgba(62,44,34,.16)"><span style="color:#7A6552">Check-out</span><span>11:00 AM</span></div>
+              <div style="display:flex;justify-content:space-between;padding:13px 0;border-top:1px solid rgba(62,44,34,.16)"><span style="color:#7A6552">Quiet hours</span><span>10:00 PM – 8:00 AM</span></div>
+              <div style="display:flex;justify-content:space-between;padding:13px 0;border-top:1px solid rgba(62,44,34,.16)"><span style="color:#7A6552">Pets</span><span>By arrangement</span></div>
+              <div style="display:flex;justify-content:space-between;padding:13px 0;border-top:1px solid rgba(62,44,34,.16)"><span style="color:#7A6552">Smoking</span><span>Not allowed</span></div>
+              <div style="display:flex;justify-content:space-between;padding:13px 0;border-top:1px solid rgba(62,44,34,.16);border-bottom:1px solid rgba(62,44,34,.16)"><span style="color:#7A6552">Children</span><span>Welcome</span></div>
+            </div>
+          </div>
+          <div>
+            <h2 style="margin:0 0 20px;font-family:'Young Serif',serif;font-weight:400;font-size:32px">Location</h2>
+            <div style="height:236px"><dc-import name="RRMap" card="{{ false }}" hint-size="100%,236px"></dc-import></div>
+            <p style="margin:14px 0 0;font-family:Archivo,sans-serif;font-size:14px;line-height:1.6;color:#4A382C">Rogers, Benton County, Arkansas · 12.6 mi to the airport</p>
+          </div>
+        </div>
+
+        <h2 style="margin:72px 0 22px;font-family:'Young Serif',serif;font-weight:400;font-size:38px">Rates &amp; policies</h2>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px">
+          <div style="padding:24px 26px;background:#FBF8F1"><div style="font-family:Archivo,sans-serif;font-size:11px;letter-spacing:.22em;text-transform:uppercase;color:#6C2029">Rates</div><p style="margin:10px 0 0;font-size:16.5px;line-height:1.65;color:#4A382C">Prices vary by date. Select a period to see your rate — from $132 per night.</p></div>
+          <div style="padding:24px 26px;background:#FBF8F1"><div style="font-family:Archivo,sans-serif;font-size:11px;letter-spacing:.22em;text-transform:uppercase;color:#6C2029">Payment</div><p style="margin:10px 0 0;font-size:16.5px;line-height:1.65;color:#4A382C">50% due at reservation. The remainder is due 7 days before arrival.</p></div>
+          <div style="padding:24px 26px;background:#FBF8F1"><div style="font-family:Archivo,sans-serif;font-size:11px;letter-spacing:.22em;text-transform:uppercase;color:#6C2029">Cancellation</div><p style="margin:10px 0 0;font-size:16.5px;line-height:1.65;color:#4A382C">100% refund 30+ days out · 50% at 14+ days · no refund after that.</p></div>
+          <div style="padding:24px 26px;background:#FBF8F1"><div style="font-family:Archivo,sans-serif;font-size:11px;letter-spacing:.22em;text-transform:uppercase;color:#6C2029">Security deposit</div><p style="margin:10px 0 0;font-size:16.5px;line-height:1.65;color:#4A382C">$250 pre-authorization, voided 2 days after departure.</p></div>
+        </div>
+
+        <h2 style="margin:72px 0 22px;font-family:'Young Serif',serif;font-weight:400;font-size:38px">Availability</h2>
+        <div style="padding:26px 28px;background:#FBF8F1;box-shadow:0 14px 36px rgba(62,44,34,.08)">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;font-family:Archivo,sans-serif">
+            <span style="width:36px;height:36px;display:flex;align-items:center;justify-content:center;border:1px solid rgba(62,44,34,.22);cursor:pointer" style-hover="border-color:#6C2029;color:#6C2029">‹</span>
+            <span style="display:flex;gap:20px;font-size:12.5px;color:#4A382C"><span><span style="text-decoration:line-through;color:#BDB09C">24</span> Booked</span><span>☾ 2-night minimum</span></span>
+            <span style="width:36px;height:36px;display:flex;align-items:center;justify-content:center;border:1px solid rgba(62,44,34,.22);cursor:pointer" style-hover="border-color:#6C2029;color:#6C2029">›</span>
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:40px;font-family:Archivo,sans-serif">
+            <sc-for list="{{ months }}" as="m" hint-placeholder-count="2">
+              <div>
+                <div style="text-align:center;font-family:'Young Serif',serif;font-size:20px;margin-bottom:12px">{{ m.title }}</div>
+                <div style="display:grid;grid-template-columns:repeat(7,1fr);font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:#7A6552;text-align:center;margin-bottom:6px"><span>Su</span><span>Mo</span><span>Tu</span><span>We</span><span>Th</span><span>Fr</span><span>Sa</span></div>
+                <div style="display:grid;grid-template-columns:repeat(7,1fr);row-gap:2px">
+                  <sc-for list="{{ m.cells }}" as="c" hint-placeholder-count="35">
+                    <sc-if value="{{ c.blank }}"><span style="height:40px"></span></sc-if>
+                    <sc-if value="{{ c.plain }}" hint-placeholder-val="{{ true }}"><span style="height:40px;display:flex;align-items:center;justify-content:center;font-size:14px;cursor:pointer;border-radius:50%" style-hover="background:#EFE0C4">{{ c.d }}</span></sc-if>
+                    <sc-if value="{{ c.blocked }}"><span style="height:40px;display:flex;align-items:center;justify-content:center;font-size:14px;color:#BDB09C;text-decoration:line-through">{{ c.d }}</span></sc-if>
+                    <sc-if value="{{ c.edge }}"><span style="height:40px;display:flex;align-items:center;justify-content:center;background:#F1E4CC"><span style="width:40px;height:40px;border-radius:50%;background:#6C2029;color:#F7F2E7;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:600">{{ c.d }}</span></span></sc-if>
+                    <sc-if value="{{ c.mid }}"><span style="height:40px;display:flex;align-items:center;justify-content:center;background:#F1E4CC;font-size:14px">{{ c.d }}</span></sc-if>
+                  </sc-for>
+                </div>
+              </div>
+            </sc-for>
+          </div>
+        </div>
+
+        <div id="reviews" style="margin-top:72px;display:flex;justify-content:space-between;align-items:flex-end">
+          <h2 style="margin:0;font-family:'Young Serif',serif;font-weight:400;font-size:38px">Guest reviews</h2>
+          <span style="font-family:Archivo,sans-serif;font-size:14px;color:#4A382C"><span style="color:#B08A4A">★★★★★</span> 5.0 · 12 reviews · Airbnb</span>
+        </div>
+        <div style="margin-top:22px;display:grid;grid-template-columns:1fr 1fr;gap:16px">
+          <div style="padding:30px 30px 26px;background:#FBF8F1;border-top:2px solid #B08A4A">
+            <p style="margin:0;font-size:21px;font-style:italic;line-height:1.55">“Couldn’t recommend this place more! 11/10. Not only is it clean, peaceful, and beautiful, it feels like a piece of home.”</p>
+            <div style="margin-top:18px;font-family:Archivo,sans-serif;font-size:13px"><b>Jordan</b> <span style="color:#7A6552">· June 2026</span></div>
+          </div>
+          <div style="padding:30px 30px 26px;background:#FBF8F1;border-top:2px solid rgba(176,138,74,.4)">
+            <p style="margin:0;font-size:21px;font-style:italic;line-height:1.55;color:#A8977F">Alex’s Airbnb review goes here — paste verbatim.</p>
+            <div style="margin-top:18px;font-family:Archivo,sans-serif;font-size:13px"><b>Alex</b> <span style="color:#7A6552">· May 2026</span></div>
+          </div>
+        </div>
+        <div style="margin-top:16px;display:flex;justify-content:space-between;align-items:center;font-family:Archivo,sans-serif">
+          <span style="display:flex;gap:8px;align-items:center">
+            <span style="width:40px;height:40px;border:1px solid rgba(62,44,34,.22);display:flex;align-items:center;justify-content:center;cursor:pointer" style-hover="border-color:#6C2029;color:#6C2029" style-active="background:#EDE5D6">‹</span>
+            <span style="width:40px;height:40px;border:1px solid rgba(62,44,34,.22);display:flex;align-items:center;justify-content:center;cursor:pointer" style-hover="border-color:#6C2029;color:#6C2029" style-active="background:#EDE5D6">›</span>
+            <span style="margin-left:8px;font-size:12.5px;color:#7A6552">1–2 of 12</span>
+          </span>
+          <a href="F-01 Home.dc.html#F-01b" style="font-size:11.5px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;border-bottom:1px solid rgba(108,32,41,.35);padding-bottom:3px" style-hover="border-bottom-color:#6C2029">Show all 12 reviews</a>
+        </div>
+
+        <div style="margin-top:72px;display:grid;grid-template-columns:160px 1fr;gap:34px;padding:36px;background:#3E2C22;color:#F7F2E7">
+          <div style="width:160px;height:160px;overflow:hidden"><img src="img/post-oak.jpg" alt="Remotely Rogers" style="width:100%;height:100%;object-fit:cover"></div>
+          <div>
+            <div style="font-family:Archivo,sans-serif;font-size:11px;letter-spacing:.24em;text-transform:uppercase;color:#B08A4A">About the host</div>
+            <div style="margin-top:10px;font-family:'Young Serif',serif;font-size:32px">Jeff Wolfe</div>
+            <p style="margin:10px 0 18px;font-size:17px;line-height:1.65;color:#D9CFBD">Jeff lives nearby and answers questions himself — directions, dinner, dogs, or adding a second cabin.</p>
+            <div style="display:flex;gap:28px;font-family:Archivo,sans-serif;font-size:15px">
+              <a href="mailto:Jeff@remotelyrogers.com" style="color:#E6D3AE;border-bottom:1px solid rgba(230,211,174,.4)" style-hover="color:#F7F2E7">Jeff@remotelyrogers.com</a>
+              <a href="tel:4794405011" style="color:#E6D3AE;border-bottom:1px solid rgba(230,211,174,.4)" style-hover="color:#F7F2E7">479-440-5011</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <aside style="position:sticky;top:110px;background:#FBF8F1;box-shadow:0 24px 60px rgba(62,44,34,.16);border-top:3px solid #6C2029;font-family:Archivo,sans-serif">
+        <div style="padding:26px 26px 0;display:flex;justify-content:space-between;align-items:baseline">
+          <span style="font-size:13px;color:#4A382C">from <span style="font-family:'Young Serif',serif;font-size:34px;color:#3E2C22">$132</span> / night</span>
+          <span style="font-size:13px;color:#4A382C"><span style="color:#B08A4A">★</span> 5.0 · 12</span>
+        </div>
+        <div style="margin:20px 26px 0;border:1px solid rgba(62,44,34,.24)">
+          <div style="display:grid;grid-template-columns:1fr 1fr;border-bottom:1px solid rgba(62,44,34,.24)">
+            <a href="F-00 Foundations.dc.html#F-00c" style="padding:12px 14px;border-right:1px solid rgba(62,44,34,.24)" style-hover="background:#F1EBDF"><div style="font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:#7A6552">Check-in</div><div style="margin-top:4px;font-size:15px;color:#7A6552">Add date</div></a>
+            <a href="F-00 Foundations.dc.html#F-00c" style="padding:12px 14px" style-hover="background:#F1EBDF"><div style="font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:#7A6552">Check-out</div><div style="margin-top:4px;font-size:15px;color:#7A6552">Add date</div></a>
+          </div>
+          <a href="F-00 Foundations.dc.html#F-00b" style="display:flex;justify-content:space-between;align-items:center;padding:12px 14px" style-hover="background:#F1EBDF"><span><span style="display:block;font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:#7A6552">Guests</span><span style="display:block;margin-top:4px;font-size:15px;color:#3E2C22">2 guests</span></span><span style="color:#B08A4A;font-size:12px">▾</span></a>
+        </div>
+        <div style="margin:20px 26px 0;font-size:14px;color:#7A6552">
+          <div style="display:flex;justify-content:space-between;padding:10px 0;border-bottom:1px solid rgba(62,44,34,.12)"><span>Nights</span><span>—</span></div>
+          <div style="display:flex;justify-content:space-between;padding:12px 0"><span style="font-size:11px;letter-spacing:.2em;text-transform:uppercase">Estimated total</span><span>Select dates</span></div>
+        </div>
+        <div style="padding:6px 26px 26px">
+          <span style="display:block;padding:17px 0;text-align:center;background:#D9CFBD;color:#7A6552;font-size:12px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;cursor:not-allowed">Book now</span>
+          <p style="margin:12px 0 0;font-size:12.5px;line-height:1.55;color:#7A6552;text-align:center">2-night minimum · check-in 3:00 PM</p>
+        </div>
+        <div style="padding:16px 26px;border-top:1px solid rgba(62,44,34,.12);background:#F1EBDF;font-size:13px;color:#4A382C">Bringing a group? <a href="F-07 Multi-Cabin.dc.html" style="font-weight:600;border-bottom:1px solid rgba(108,32,41,.35)">Book several cabins</a></div>
+      </aside>
+    </div>
+
+    <div style="padding:90px 0 110px 60px;background:#E9E2D6">
+      <div style="padding-right:60px;display:flex;justify-content:space-between;align-items:flex-end">
+        <h2 style="margin:0;font-family:'Young Serif',serif;font-weight:400;font-size:42px">More cabins on this property</h2>
+        <a href="F-02 Cabins.dc.html" style="font-family:Archivo,sans-serif;font-size:11.5px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;border-bottom:1px solid rgba(108,32,41,.35);padding-bottom:3px">All cabins</a>
+      </div>
+      <div style="margin-top:34px;display:flex;gap:22px;overflow:hidden;align-items:flex-end">
+        <sc-for list="{{ more }}" as="c" hint-placeholder-count="5">
+          <a href="#F-03" style="flex:0 0 {{ c.w }};display:block" style-hover="opacity:.92">
+            <div style="height:{{ c.h }};overflow:hidden"><img src="{{ c.img }}" alt="{{ c.name }}" style="width:100%;height:100%;object-fit:cover"></div>
+            <div style="padding-top:14px;display:flex;justify-content:space-between;align-items:baseline;font-family:Archivo,sans-serif"><span style="font-family:'Young Serif',serif;font-size:22px;color:#3E2C22">{{ c.name }}</span><span style="font-size:13px;color:#4A382C">from $132</span></div>
+          </a>
+        </sc-for>
+      </div>
+    </div>
+    <dc-import name="RRFooter" hint-size="100%,360px"></dc-import>
+  </div>
+
+  <!-- F-03b -->
+  <div id="F-03b" data-screen-label="F-03b Gallery lightbox" style="flex:none;width:1440px;height:1000px;position:relative;overflow:hidden;background:#1E1611;font-family:Archivo,sans-serif;color:#F7F2E7">
+    <div style="position:absolute;top:-46px;left:0;display:flex;gap:12px;align-items:baseline;color:#F7F2E7"><span style="font-size:16px;font-weight:600;letter-spacing:.08em">F-03b</span><span style="font-size:12px;letter-spacing:.16em;text-transform:uppercase;opacity:.85">Gallery lightbox</span></div>
+    <div style="height:84px;padding:0 40px;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid rgba(176,138,74,.25)">
+      <span style="font-family:'Young Serif',serif;font-size:22px">Black Gum Getaway</span>
+      <span style="font-size:13px;letter-spacing:.14em;color:#D9CFBD">1 / 4</span>
+      <span style="display:flex;gap:10px">
+        <span style="padding:12px 18px;border:1px solid rgba(230,211,174,.35);font-size:11.5px;letter-spacing:.14em;text-transform:uppercase;cursor:pointer" style-hover="border-color:#E6D3AE;background:rgba(230,211,174,.08)">Grid</span>
+        <span style="width:46px;height:46px;border:1px solid rgba(230,211,174,.35);display:flex;align-items:center;justify-content:center;font-size:18px;cursor:pointer" style-hover="border-color:#E6D3AE;background:rgba(230,211,174,.08)" style-active="background:rgba(230,211,174,.18)">✕</span>
+      </span>
+    </div>
+    <div style="position:absolute;top:84px;left:0;right:0;bottom:170px;display:flex;align-items:center;justify-content:center;padding:34px 130px">
+      <img src="img/black-gum.jpg" alt="Black Gum Getaway" style="max-width:100%;max-height:100%;object-fit:contain;box-shadow:0 30px 80px rgba(0,0,0,.5)">
+      <span style="position:absolute;left:40px;top:50%;transform:translateY(-50%);width:60px;height:60px;border-radius:50%;border:1px solid rgba(230,211,174,.4);display:flex;align-items:center;justify-content:center;font-size:24px;cursor:pointer" style-hover="background:#6C2029;border-color:#6C2029" style-active="background:#561920">‹</span>
+      <span style="position:absolute;right:40px;top:50%;transform:translateY(-50%);width:60px;height:60px;border-radius:50%;border:1px solid rgba(230,211,174,.4);display:flex;align-items:center;justify-content:center;font-size:24px;cursor:pointer" style-hover="background:#6C2029;border-color:#6C2029" style-active="background:#561920">›</span>
+    </div>
+    <div style="position:absolute;left:0;right:0;bottom:0;height:170px;padding:24px 40px;display:flex;gap:12px;justify-content:center;border-top:1px solid rgba(176,138,74,.25)">
+      <sc-for list="{{ thumbs }}" as="t" hint-placeholder-count="4">
+        <span style="flex:0 0 170px;height:120px;overflow:hidden;opacity:{{ t.o }};outline:{{ t.ol }};outline-offset:3px;cursor:pointer" style-hover="opacity:1"><img src="{{ t.img }}" alt="" style="width:100%;height:100%;object-fit:cover"></span>
+      </sc-for>
+    </div>
+  </div>
+
+  <!-- F-03c -->
+  <div id="F-03c" data-screen-label="F-03c Booking widget with dates" style="flex:none;width:560px;padding:60px 75px;position:relative;background:#F5F0E6;font-family:Archivo,sans-serif;color:#3E2C22">
+    <div style="position:absolute;top:-46px;left:0;display:flex;gap:12px;align-items:baseline;color:#F7F2E7"><span style="font-size:16px;font-weight:600;letter-spacing:.08em">F-03c</span><span style="font-size:12px;letter-spacing:.16em;text-transform:uppercase;opacity:.85">Booking widget · dates chosen</span></div>
+    <aside style="background:#FBF8F1;box-shadow:0 24px 60px rgba(62,44,34,.16);border-top:3px solid #6C2029">
+      <div style="padding:26px 26px 0;display:flex;justify-content:space-between;align-items:baseline">
+        <span style="font-size:13px;color:#4A382C"><span style="font-family:'Young Serif',serif;font-size:34px;color:#3E2C22">$142</span> / night avg.</span>
+        <span style="font-size:13px;color:#4A382C"><span style="color:#B08A4A">★</span> 5.0 · 12</span>
+      </div>
+      <div style="margin:20px 26px 0;border:1px solid rgba(62,44,34,.24)">
+        <div style="display:grid;grid-template-columns:1fr 1fr;border-bottom:1px solid rgba(62,44,34,.24)">
+          <div style="padding:12px 14px;border-right:1px solid rgba(62,44,34,.24)"><div style="font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:#7A6552">Check-in</div><div style="margin-top:4px;font-size:15px">Fri, Oct 16</div></div>
+          <div style="padding:12px 14px"><div style="font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:#7A6552">Check-out</div><div style="margin-top:4px;font-size:15px">Mon, Oct 19</div></div>
+        </div>
+        <div style="padding:12px 14px"><div style="font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:#7A6552">Guests</div><div style="margin-top:4px;font-size:15px">2 adults · 1 pet</div></div>
+      </div>
+      <div style="margin:20px 26px 0;font-size:14.5px;color:#4A382C">
+        <div style="display:flex;justify-content:space-between;padding:9px 0"><span>$158 × 2 nights (Fri, Sat)</span><span>$316</span></div>
+        <div style="display:flex;justify-content:space-between;padding:9px 0;border-bottom:1px solid rgba(62,44,34,.12)"><span>$132 × 1 night (Sun)</span><span>$132</span></div>
+        <div style="display:flex;justify-content:space-between;align-items:baseline;padding:14px 0 6px"><span style="font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:#7A6552">Estimated total · 3 nights</span><span style="font-family:'Young Serif',serif;font-size:28px;color:#3E2C22">$448</span></div>
+        <div style="display:flex;justify-content:space-between;padding:6px 0;font-size:13px;color:#7A6552"><span>Due today (50%)</span><span>$224</span></div>
+        <div style="display:flex;justify-content:space-between;padding:6px 0;font-size:13px;color:#7A6552"><span>Due Oct 9</span><span>$224</span></div>
+      </div>
+      <div style="padding:16px 26px 26px">
+        <a href="#F-03c" style="display:block;padding:17px 0;text-align:center;background:#6C2029;color:#F7F2E7;font-size:12px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;transition:all .18s" style-hover="background:#882A34;color:#F7F2E7;box-shadow:0 10px 24px rgba(108,32,41,.28)" style-active="background:#561920;box-shadow:none">Book now</a>
+        <p style="margin:12px 0 0;font-size:12.5px;line-height:1.55;color:#7A6552;text-align:center">$250 security deposit is pre-authorized, not charged.</p>
+      </div>
+    </aside>
+  </div>
+
+  <!-- F-M02 -->
+  <div id="F-M02" data-screen-label="F-M02 Cabin detail 375" style="flex:none;width:375px;position:relative;background:#F5F0E6;font-family:Spectral,serif;color:#3E2C22">
+    <div style="position:absolute;top:-46px;left:0;display:flex;gap:12px;align-items:baseline;font-family:Archivo,sans-serif;color:#F7F2E7"><span style="font-size:16px;font-weight:600;letter-spacing:.08em">F-M02</span><span style="font-size:12px;letter-spacing:.16em;text-transform:uppercase;opacity:.85">Cabin detail · 375</span></div>
+    <dc-import name="RRMobileHeader" style="position:sticky;top:0;z-index:30" hint-size="100%,64px"></dc-import>
+    <div style="position:relative;height:300px;overflow:hidden">
+      <img src="img/black-gum.jpg" alt="Black Gum Getaway" style="width:100%;height:100%;object-fit:cover">
+      <a href="#F-03b" style="position:absolute;right:14px;bottom:14px;padding:8px 12px;background:rgba(30,22,17,.75);color:#F7F2E7;font-family:Archivo,sans-serif;font-size:12px">1 / 4</a>
+      <span style="position:absolute;left:0;right:0;bottom:14px;display:flex;justify-content:center;gap:6px"><span style="width:18px;height:3px;background:#F7F2E7"></span><span style="width:6px;height:3px;background:rgba(247,242,231,.5)"></span><span style="width:6px;height:3px;background:rgba(247,242,231,.5)"></span><span style="width:6px;height:3px;background:rgba(247,242,231,.5)"></span></span>
+    </div>
+    <div style="padding:26px 20px 0">
+      <h1 style="margin:0;font-family:'Young Serif',serif;font-weight:400;font-size:34px;line-height:1.08">Black Gum Getaway</h1>
+      <div style="margin-top:8px;font-family:Archivo,sans-serif;font-size:13px;color:#4A382C"><span style="color:#B08A4A">★</span> 5.0 · 12 reviews · Rogers, AR</div>
+      <div style="margin-top:20px;display:grid;grid-template-columns:repeat(4,1fr);border-top:2px solid #B08A4A;border-bottom:1px solid rgba(62,44,34,.16);font-family:Archivo,sans-serif;text-align:center">
+        <div style="padding:12px 0"><div style="font-family:'Young Serif',serif;font-size:26px;color:#6C2029">4</div><div style="font-size:10px;letter-spacing:.12em;text-transform:uppercase">Guests</div></div>
+        <div style="padding:12px 0"><div style="font-family:'Young Serif',serif;font-size:26px;color:#6C2029">2</div><div style="font-size:10px;letter-spacing:.12em;text-transform:uppercase">Bedrooms</div></div>
+        <div style="padding:12px 0"><div style="font-family:'Young Serif',serif;font-size:26px;color:#6C2029">3</div><div style="font-size:10px;letter-spacing:.12em;text-transform:uppercase">Beds</div></div>
+        <div style="padding:12px 0"><div style="font-family:'Young Serif',serif;font-size:26px;color:#6C2029">1</div><div style="font-size:10px;letter-spacing:.12em;text-transform:uppercase">Bath</div></div>
+      </div>
+      <p style="margin:22px 0 0;font-size:17px;line-height:1.72;color:#4A382C">Welcome to Remotely Rogers, a six-cabin modern A-frame retreat in central Rogers — close to Beaver Lake, Crystal Bridges and the MTB trails.</p>
+      <div style="margin-top:18px;padding:16px 18px;background:#E9E2D6;border-left:3px solid #B08A4A;font-size:15.5px;line-height:1.6">Two friendly free-range GSP dogs live on site.</div>
+      <div style="margin-top:30px;font-family:Archivo,sans-serif;font-size:11px;letter-spacing:.22em;text-transform:uppercase;color:#6C2029">Amenities</div>
+      <div style="margin-top:12px;display:flex;flex-direction:column;font-family:Archivo,sans-serif;font-size:15px">
+        <span style="padding:12px 0;border-top:1px solid rgba(62,44,34,.14)">Wi-Fi &amp; dedicated workspace</span>
+        <span style="padding:12px 0;border-top:1px solid rgba(62,44,34,.14)">Kitchenette, coffee machine, BBQ</span>
+        <span style="padding:12px 0;border-top:1px solid rgba(62,44,34,.14)">A/C, central heat, fireplace</span>
+        <span style="padding:12px 0;border-top:1px solid rgba(62,44,34,.14);border-bottom:1px solid rgba(62,44,34,.14)">Parking &amp; patio</span>
+      </div>
+      <span style="display:block;margin-top:16px;padding:15px 0;text-align:center;border:1px solid #B08A4A;font-family:Archivo,sans-serif;font-size:11.5px;font-weight:600;letter-spacing:.14em;text-transform:uppercase" style-active="background:rgba(176,138,74,.2)">Show all amenities</span>
+      <div style="margin-top:30px;font-family:Archivo,sans-serif;font-size:11px;letter-spacing:.22em;text-transform:uppercase;color:#6C2029">House rules</div>
+      <p style="margin:10px 0 0;font-family:Archivo,sans-serif;font-size:14px;line-height:1.8;color:#4A382C">Check-in 3:00 PM · Check-out 11:00 AM<br>Quiet 10:00 PM – 8:00 AM · No smoking<br>Pets by arrangement · Children welcome</p>
+    </div>
+    <div style="height:120px"></div>
+    <div style="position:sticky;bottom:0;display:flex;align-items:center;justify-content:space-between;padding:14px 20px 22px;background:#FBF8F1;border-top:1px solid rgba(62,44,34,.16);box-shadow:0 -10px 30px rgba(43,31,23,.12);font-family:Archivo,sans-serif">
+      <span><span style="font-size:12px;color:#4A382C">from</span> <span style="font-family:'Young Serif',serif;font-size:24px">$132</span><span style="font-size:12px;color:#4A382C"> / night</span></span>
+      <a href="#F-M02b" style="padding:15px 20px;background:#6C2029;color:#F7F2E7;font-size:11.5px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;white-space:nowrap" style-active="background:#561920">Check availability</a>
+    </div>
+  </div>
+
+  <!-- F-M02b -->
+  <div id="F-M02b" data-screen-label="F-M02 Cabin detail 375 widget expanded" style="flex:none;width:375px;height:812px;position:relative;overflow:hidden;background:#F5F0E6;font-family:Archivo,sans-serif;color:#3E2C22">
+    <div style="position:absolute;top:-46px;left:0;display:flex;gap:12px;align-items:baseline;color:#F7F2E7"><span style="font-size:16px;font-weight:600;letter-spacing:.08em">F-M02</span><span style="font-size:12px;letter-spacing:.16em;text-transform:uppercase;opacity:.85">Booking sheet expanded</span></div>
+    <img src="img/black-gum.jpg" alt="" style="position:absolute;top:0;left:0;width:100%;height:320px;object-fit:cover">
+    <div style="position:absolute;inset:0;background:rgba(36,27,21,.55)"></div>
+    <div style="position:absolute;left:0;right:0;bottom:0;background:#FBF8F1;border-top:3px solid #6C2029;padding:10px 20px 24px">
+      <div style="width:40px;height:4px;border-radius:2px;background:rgba(62,44,34,.2);margin:0 auto 16px"></div>
+      <div style="display:flex;justify-content:space-between;align-items:baseline"><span style="font-family:'Young Serif',serif;font-size:24px">Black Gum Getaway</span><span style="font-size:22px;cursor:pointer">✕</span></div>
+      <div style="margin-top:16px;border:1px solid rgba(62,44,34,.24)">
+        <div style="display:grid;grid-template-columns:1fr 1fr;border-bottom:1px solid rgba(62,44,34,.24)">
+          <div style="padding:12px 14px;border-right:1px solid rgba(62,44,34,.24)"><div style="font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:#7A6552">Check-in</div><div style="margin-top:4px;font-size:15px">Fri, Oct 16</div></div>
+          <div style="padding:12px 14px"><div style="font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:#7A6552">Check-out</div><div style="margin-top:4px;font-size:15px">Mon, Oct 19</div></div>
+        </div>
+        <div style="padding:12px 14px"><div style="font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:#7A6552">Guests</div><div style="margin-top:4px;font-size:15px">2 adults · 1 pet</div></div>
+      </div>
+      <div style="margin-top:16px;font-size:14px;color:#4A382C">
+        <div style="display:flex;justify-content:space-between;padding:7px 0"><span>$158 × 2 nights</span><span>$316</span></div>
+        <div style="display:flex;justify-content:space-between;padding:7px 0;border-bottom:1px solid rgba(62,44,34,.12)"><span>$132 × 1 night</span><span>$132</span></div>
+        <div style="display:flex;justify-content:space-between;align-items:baseline;padding:12px 0"><span style="font-size:10.5px;letter-spacing:.2em;text-transform:uppercase;color:#7A6552">Estimated total</span><span style="font-family:'Young Serif',serif;font-size:26px;color:#3E2C22">$448</span></div>
+      </div>
+      <a href="#F-M02b" style="display:block;padding:17px 0;text-align:center;background:#6C2029;color:#F7F2E7;font-size:12px;font-weight:600;letter-spacing:.14em;text-transform:uppercase" style-active="background:#561920">Book now</a>
+      <p style="margin:10px 0 0;font-size:12px;color:#7A6552;text-align:center">50% today · remainder 7 days before arrival</p>
+    </div>
+  </div>
+</section>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+class Component extends DCLogic {
+  month(y, m, blocked) {
+    const first = new Date(y, m, 1).getDay(), n = new Date(y, m + 1, 0).getDate(), cells = [];
+    for (let i = 0; i < first; i++) cells.push({ blank: true });
+    for (let d = 1; d <= n; d++) { const b = blocked.includes(d); cells.push({ d, blocked: b, plain: !b }); }
+    return cells;
+  }
+  renderVals() {
+    const A = [
+      ['Parking & facilities', 'Parking, patio or balcony'],
+      ['Kitchen & dining', 'BBQ, kitchenette, coffee machine, cookware, microwave, oven, fridge/freezer, toaster, dishes, wine glasses, dining table, coffee, cooking basics, cleaning products'],
+      ['Internet & office', 'Wi-Fi, dedicated workspace'],
+      ['Heating & cooling', 'A/C, ceiling fans, central heat, fireplace'],
+      ['Bathroom & laundry', 'Shower, towels, hair dryer, shampoo, conditioner, body soap, linens, extra pillows, room-darkening shades, clothing storage. Laundromat nearby; cleaning available during your stay'],
+      ['Location', 'Mountain, rural, private entrance'],
+      ['Safety', 'Smoke detector'],
+      ['Policies', 'Children welcome, pets only after arrangement, no smoking, long-term stays allowed, credit cards accepted, accessible 24/7']
+    ];
+    const P = [['Dogwood Den','img/dogwood.jpg','360px','420px'],['Running Spring Retreat','img/running-spring.jpg','420px','320px'],['Black Walnut Bungalow','img/black-walnut.jpg','320px','380px'],['White Oak Haven','img/white-oak.jpg','400px','300px'],['Post Oak Perch','img/post-oak.jpg','300px','400px']];
+    const T = ['black-gum','01','03','10'];
+    return {
+      amen: A.map(([t, items]) => ({ t, items })),
+      months: [{ title: 'October 2026', cells: this.month(2026, 9, [2, 3, 9, 10, 11, 23, 24]) }, { title: 'November 2026', cells: this.month(2026, 10, [6, 7, 25, 26, 27, 28]) }],
+      more: P.map(([name, img, w, h]) => ({ name, img, w, h })),
+      thumbs: T.map((t, i) => ({ img: `img/${t}.jpg`, o: i === 0 ? 1 : .55, ol: i === 0 ? '2px solid #B08A4A' : 'none' }))
+    };
+  }
+}
+</script>
+</body>
+</html>

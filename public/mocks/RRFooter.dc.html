@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<footer style="background:#2B1F17;color:#D9CFBD;font-family:Archivo,sans-serif">
+  <sc-if value="{{ desktop }}" hint-placeholder-val="{{ true }}">
+    <div style="padding:84px 60px 60px;display:grid;grid-template-columns:1.5fr 1fr 1fr 1fr;gap:56px;border-bottom:1px solid rgba(176,138,74,.3)">
+      <div>
+        <div style="font-family:'Young Serif',serif;font-size:36px;line-height:1.05;color:#F7F2E7">Remotely Rogers</div>
+        <p style="margin:16px 0 28px;max-width:340px;font-family:Spectral,serif;font-size:17px;line-height:1.7;color:#D9CFBD">Six private A-frames on 70 acres of Ozark woodland in Rogers, Arkansas.</p>
+        <a href="F-02 Cabins.dc.html" style="display:inline-block;padding:15px 28px;background:#B08A4A;color:#2B1F17;font-size:12px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;white-space:nowrap;transition:all .18s ease" style-hover="background:#C9A464;transform:translateY(-2px)" style-active="background:#9A7638;transform:translateY(0)">Check availability</a>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:12px">
+        <span style="font-size:11px;letter-spacing:.24em;text-transform:uppercase;color:#B08A4A">Call or write</span>
+        <a href="tel:4794405011" style="font-family:'Young Serif',serif;font-size:22px;color:#F7F2E7;transition:color .16s" style-hover="color:#E6D3AE">479-440-5011</a>
+        <a href="mailto:Jeff@remotelyrogers.com" style="font-size:15px;color:#D9CFBD;border-bottom:1px solid rgba(217,207,189,.3);align-self:flex-start;padding-bottom:2px;transition:all .16s" style-hover="color:#E6D3AE;border-bottom-color:#E6D3AE">Jeff@remotelyrogers.com</a>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:12px">
+        <span style="font-size:11px;letter-spacing:.24em;text-transform:uppercase;color:#B08A4A">Visit</span>
+        <span style="font-size:15px;line-height:1.6;color:#D9CFBD">11611–11601 Lindy Lane<br>Rogers, AR 72756</span>
+        <a href="https://maps.google.com/?q=11611+Lindy+Lane+Rogers+AR+72756" style="font-size:13px;font-weight:500;letter-spacing:.08em;color:#E6D3AE;transition:color .16s" style-hover="color:#F7F2E7">Map &amp; directions →</a>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:12px">
+        <span style="font-size:11px;letter-spacing:.24em;text-transform:uppercase;color:#B08A4A">Follow</span>
+        <a href="https://instagram.com/remotely.rogers" style="font-size:15px;color:#D9CFBD;transition:color .16s" style-hover="color:#E6D3AE">Instagram @remotely.rogers</a>
+        <span style="margin-top:14px;font-size:11px;letter-spacing:.24em;text-transform:uppercase;color:#B08A4A">Stays</span>
+        <span style="font-size:14px;line-height:1.7;color:#D9CFBD">Check-in 3:00 PM<br>Check-out 11:00 AM</span>
+      </div>
+    </div>
+    <div style="padding:24px 60px;display:flex;justify-content:space-between;align-items:center;font-size:12px;letter-spacing:.06em;color:#9A8770">
+      <span>© 2026 Remotely Rogers · Rogers, Arkansas</span>
+      <div style="display:flex;gap:26px">
+        <a href="F-02 Cabins.dc.html" style="color:#9A8770" style-hover="color:#E6D3AE">Cabins</a>
+        <a href="F-04 Activities.dc.html" style="color:#9A8770" style-hover="color:#E6D3AE">Activities</a>
+        <a href="F-05 Recommendations.dc.html" style="color:#9A8770" style-hover="color:#E6D3AE">Recommendations</a>
+        <a href="F-06 Work Stays.dc.html" style="color:#9A8770" style-hover="color:#E6D3AE">Work Stays</a>
+        <a href="F-07 Multi-Cabin.dc.html" style="color:#9A8770" style-hover="color:#E6D3AE">Multi-Cabin</a>
+        <a href="F-10 Contact.dc.html" style="color:#9A8770" style-hover="color:#E6D3AE">Contact</a>
+      </div>
+    </div>
+  </sc-if>
+  <sc-if value="{{ mobile }}">
+    <div style="padding:52px 24px 28px;display:flex;flex-direction:column;gap:28px">
+      <div style="font-family:'Young Serif',serif;font-size:28px;color:#F7F2E7">Remotely Rogers</div>
+      <div style="display:flex;flex-direction:column;gap:10px">
+        <span style="font-size:10.5px;letter-spacing:.24em;text-transform:uppercase;color:#B08A4A">Call or write</span>
+        <a href="tel:4794405011" style="font-family:'Young Serif',serif;font-size:21px;color:#F7F2E7">479-440-5011</a>
+        <a href="mailto:Jeff@remotelyrogers.com" style="font-size:15px;color:#D9CFBD">Jeff@remotelyrogers.com</a>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:10px">
+        <span style="font-size:10.5px;letter-spacing:.24em;text-transform:uppercase;color:#B08A4A">Visit</span>
+        <span style="font-size:15px;line-height:1.6">11611–11601 Lindy Lane, Rogers, AR 72756</span>
+        <a href="https://maps.google.com/?q=11611+Lindy+Lane+Rogers+AR+72756" style="font-size:14px;font-weight:500;color:#E6D3AE">Map &amp; directions →</a>
+      </div>
+      <a href="https://instagram.com/remotely.rogers" style="font-size:15px;color:#D9CFBD">Instagram @remotely.rogers</a>
+      <span style="padding-top:20px;border-top:1px solid rgba(176,138,74,.3);font-size:12px;color:#9A8770">© 2026 Remotely Rogers</span>
+    </div>
+  </sc-if>
+</footer>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1440,&quot;height&quot;:360},&quot;mobile&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:false,&quot;tsType&quot;:&quot;boolean&quot;}}">
+class Component extends DCLogic {
+  renderVals() {
+    const m = !!this.props.mobile;
+    return { mobile: m, desktop: !m };
+  }
+}
+</script>
+</body>
+</html>

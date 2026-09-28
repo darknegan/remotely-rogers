@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<div style="position:relative;width:100%;height:100%;min-height:260px;overflow:hidden;background:#E6DECE;font-family:Archivo,sans-serif">
+  <svg viewBox="0 0 800 800" preserveAspectRatio="xMidYMid slice" style="position:absolute;inset:0;width:100%;height:100%">
+    <path d="M540 90 C610 120 650 190 630 250 C612 300 560 310 548 360 C538 410 600 450 640 470 L800 470 L800 60 C700 50 600 60 540 90 Z" fill="#CFD3C8"></path>
+    <g fill="none" stroke="rgba(62,44,34,.11)" stroke-width="1.2">
+      <ellipse cx="410" cy="380" rx="90" ry="62" transform="rotate(-18 410 380)"></ellipse>
+      <ellipse cx="410" cy="384" rx="150" ry="104" transform="rotate(-16 410 384)"></ellipse>
+      <ellipse cx="404" cy="390" rx="214" ry="150" transform="rotate(-14 404 390)"></ellipse>
+      <ellipse cx="398" cy="398" rx="286" ry="204" transform="rotate(-12 398 398)"></ellipse>
+      <ellipse cx="392" cy="404" rx="360" ry="262" transform="rotate(-10 392 404)"></ellipse>
+      <ellipse cx="160" cy="640" rx="70" ry="44" transform="rotate(12 160 640)"></ellipse>
+      <ellipse cx="160" cy="640" rx="128" ry="84" transform="rotate(12 160 640)"></ellipse>
+    </g>
+    <path d="M-20 560 C160 520 260 470 380 440 C500 410 620 420 820 360" fill="none" stroke="#FBF8F1" stroke-width="10"></path>
+    <path d="M250 -20 C270 160 300 300 330 420 C360 540 380 660 420 820" fill="none" stroke="#FBF8F1" stroke-width="14"></path>
+    <path d="M250 -20 C270 160 300 300 330 420 C360 540 380 660 420 820" fill="none" stroke="#E2C98F" stroke-width="3"></path>
+    <path d="M404 404 C430 380 452 368 480 362" fill="none" stroke="#FBF8F1" stroke-width="5" stroke-dasharray="1 0"></path>
+  </svg>
+  <span style="position:absolute;left:calc(40% + 8px);top:14%;font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:#7A6552">I-49</span>
+  <span style="position:absolute;left:62%;top:57%;font-size:10px;letter-spacing:.14em;color:#7A6552;font-style:italic">Lindy Ln</span>
+  <sc-if value="{{ area }}">
+    <sc-for list="{{ pins }}" as="p" hint-placeholder-count="6">
+      <div style="{{ p.pos }}">
+        <span style="width:26px;height:26px;border-radius:50%;background:#B08A4A;color:#2B1F17;font-size:11px;font-weight:600;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 10px rgba(43,31,23,.25);border:2px solid #FBF8F1">{{ p.n }}</span>
+      </div>
+    </sc-for>
+  </sc-if>
+  <div style="position:absolute;left:60%;top:47%;transform:translate(-50%,-100%);display:flex;flex-direction:column;align-items:center">
+    <span style="padding:6px 10px;margin-bottom:8px;background:#3E2C22;color:#F7F2E7;font-size:11px;font-weight:500;letter-spacing:.06em;white-space:nowrap;box-shadow:0 6px 16px rgba(43,31,23,.3)">Remotely Rogers</span>
+    <span style="width:22px;height:22px;background:#6C2029;border:3px solid #FBF8F1;border-radius:50% 50% 50% 0;transform:rotate(-45deg);box-shadow:0 6px 14px rgba(43,31,23,.35)"></span>
+  </div>
+  <div style="position:absolute;top:16px;right:16px;display:flex;flex-direction:column;background:#FBF8F1;box-shadow:0 6px 18px rgba(43,31,23,.18)">
+    <span style="width:38px;height:38px;display:flex;align-items:center;justify-content:center;font-size:18px;color:#3E2C22;border-bottom:1px solid rgba(62,44,34,.14);cursor:pointer" style-hover="background:#F1EBDF">+</span>
+    <span style="width:38px;height:38px;display:flex;align-items:center;justify-content:center;font-size:18px;color:#3E2C22;cursor:pointer" style-hover="background:#F1EBDF">−</span>
+  </div>
+  <sc-if value="{{ card }}" hint-placeholder-val="{{ true }}">
+    <div style="position:absolute;left:18px;bottom:18px;max-width:300px;padding:18px 20px;background:#FBF8F1;box-shadow:0 12px 30px rgba(43,31,23,.2);border-top:2px solid #B08A4A">
+      <div style="font-family:'Young Serif',serif;font-size:18px;color:#3E2C22">Remotely Rogers</div>
+      <div style="margin-top:6px;font-size:13px;line-height:1.55;color:#4A382C">11611–11601 Lindy Lane<br>Rogers, AR 72756</div>
+      <a href="https://maps.google.com/?q=11611+Lindy+Lane+Rogers+AR+72756" style="display:inline-block;margin-top:12px;font-size:11px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:#6C2029;border-bottom:1px solid rgba(108,32,41,.35);padding-bottom:3px" style-hover="border-bottom-color:#6C2029">Get directions</a>
+    </div>
+  </sc-if>
+  <span style="position:absolute;right:12px;bottom:10px;font-size:10px;color:#7A6552;letter-spacing:.04em">Map embed · Google Maps</span>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:600,&quot;height&quot;:420},&quot;area&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:false,&quot;tsType&quot;:&quot;boolean&quot;},&quot;card&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;}}">
+class Component extends DCLogic {
+  renderVals() {
+    const P = [[22,30],[72,20],[80,64],[34,68],[48,84],[14,52]];
+    return {
+      area: !!this.props.area,
+      card: this.props.card ?? true,
+      pins: P.map(([x, y], i) => ({ n: i + 1, pos: { position: 'absolute', left: x + '%', top: y + '%' } }))
+    };
+  }
+}
+</script>
+</body>
+</html>
