@@ -1,6 +1,6 @@
 import { computed, Injectable, signal } from '@angular/core';
 
-import { nightCount, startOfDay, validateDateRange } from '../utils/date-utils';
+import { nightCount, parseDateKey, startOfDay, validateDateRange } from '../utils/date-utils';
 
 export interface GuestCounts {
   adults: number;
@@ -93,6 +93,38 @@ export class SearchStateService {
   clearDates(): void {
     this.checkIn.set(null);
     this.checkOut.set(null);
+  }
+
+  fromQueryParams(params: Partial<Record<string, string | null | undefined>>): void {
+    const checkIn = params['checkIn'];
+    const checkOut = params['checkOut'];
+
+    if (checkIn) {
+      this.setCheckIn(parseDateKey(checkIn));
+    }
+
+    if (checkOut) {
+      this.setCheckOut(parseDateKey(checkOut));
+    }
+
+    const adults = Number(params['adults']);
+    const children = Number(params['children']);
+    const infants = Number(params['infants']);
+    const pets = Number(params['pets']);
+
+    if (
+      params['adults'] !== undefined ||
+      params['children'] !== undefined ||
+      params['infants'] !== undefined ||
+      params['pets'] !== undefined
+    ) {
+      this.setGuests({
+        adults: Number.isFinite(adults) && adults > 0 ? adults : DEFAULT_GUESTS.adults,
+        children: Number.isFinite(children) && children >= 0 ? children : DEFAULT_GUESTS.children,
+        infants: Number.isFinite(infants) && infants >= 0 ? infants : DEFAULT_GUESTS.infants,
+        pets: Number.isFinite(pets) && pets >= 0 ? pets : DEFAULT_GUESTS.pets,
+      });
+    }
   }
 
   toQueryParams(): Record<string, string> {

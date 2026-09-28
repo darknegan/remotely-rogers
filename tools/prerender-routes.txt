@@ -1,4 +1,5 @@
 /
+/cabins
 /preview/foundations
 /preview/activities
 /preview/recommendations
