@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<div style="font-family:Archivo,sans-serif;color:#3E2C22;background:#FBF8F1;box-shadow:0 24px 60px rgba(62,44,34,.14);border-top:3px solid #6C2029">
+  <div style="display:flex;flex-wrap:wrap;align-items:flex-end;gap:18px;padding:26px 28px 22px;border-bottom:1px solid rgba(62,44,34,.12)">
+    <label style="display:flex;flex-direction:column;gap:7px">
+      <span style="font-size:10.5px;letter-spacing:.2em;text-transform:uppercase;color:#7A6552">Start date</span>
+      <span style="height:48px;min-width:190px;padding:0 16px;display:flex;align-items:center;justify-content:space-between;gap:16px;background:#F5F0E6;border:1px solid rgba(62,44,34,.22);font-size:15px;cursor:pointer" style-hover="border-color:#B08A4A">Fri, Oct 16, 2026 <span style="color:#B08A4A;font-size:12px">▾</span></span>
+    </label>
+    <label style="display:flex;flex-direction:column;gap:7px">
+      <span style="font-size:10.5px;letter-spacing:.2em;text-transform:uppercase;color:#7A6552">Guests per cabin</span>
+      <span style="height:48px;display:flex;align-items:center;border:1px solid rgba(62,44,34,.22);background:#F5F0E6">
+        <span onClick="{{ guestDown }}" style="width:44px;height:100%;display:flex;align-items:center;justify-content:center;font-size:18px;cursor:pointer;color:#6C2029" style-hover="background:#EDE5D6" style-active="background:#E3D8C4">−</span>
+        <span style="min-width:74px;text-align:center;font-size:15px">{{ guests }} guests</span>
+        <span onClick="{{ guestUp }}" style="width:44px;height:100%;display:flex;align-items:center;justify-content:center;font-size:18px;cursor:pointer;color:#6C2029" style-hover="background:#EDE5D6" style-active="background:#E3D8C4">+</span>
+      </span>
+    </label>
+    <a href="#" style="height:48px;padding:0 26px;display:flex;align-items:center;background:#3E2C22;color:#F7F2E7;font-size:11.5px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;transition:all .16s" style-hover="background:#56402F" style-active="background:#2B1F17">Update</a>
+    <p style="flex:1 1 320px;margin:0 0 4px;font-family:Spectral,serif;font-size:15px;line-height:1.55;color:#4A382C">Click an available night on a cabin's row, then a second night 2–5 days later to fill between. Click again to clear that cabin. Each cabin can have its own check-in and check-out.</p>
+  </div>
+  <div style="display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:16px;padding:16px 28px;border-bottom:1px solid rgba(62,44,34,.12)">
+    <div style="display:flex;align-items:center;gap:10px">
+      <span style="font-family:'Young Serif',serif;font-size:24px;margin-right:10px;white-space:nowrap">October 2026</span>
+      <span style="width:38px;height:38px;display:flex;align-items:center;justify-content:center;border:1px solid rgba(62,44,34,.22);cursor:pointer" style-hover="border-color:#6C2029;color:#6C2029" style-active="background:#EDE5D6">‹</span>
+      <span style="width:38px;height:38px;display:flex;align-items:center;justify-content:center;border:1px solid rgba(62,44,34,.22);cursor:pointer" style-hover="border-color:#6C2029;color:#6C2029" style-active="background:#EDE5D6">›</span>
+      <span style="height:38px;padding:0 14px;display:flex;align-items:center;border:1px solid rgba(62,44,34,.22);font-size:12px;letter-spacing:.1em;text-transform:uppercase;cursor:pointer" style-hover="border-color:#6C2029;color:#6C2029" style-active="background:#EDE5D6">Today</span>
+    </div>
+    <div style="display:flex;flex-wrap:wrap;gap:18px;font-size:12px;color:#4A382C">
+      <span style="display:flex;align-items:center;gap:7px"><span style="width:14px;height:14px;background:#F5F0E6;border:1px solid rgba(62,44,34,.25)"></span>Available</span>
+      <span style="display:flex;align-items:center;gap:7px"><span style="width:14px;height:14px;background:#5A4637"></span>Reserved</span>
+      <span style="display:flex;align-items:center;gap:7px"><span style="width:14px;height:14px;background:repeating-linear-gradient(135deg,#D9CFBD 0 3px,#EDE5D6 3px 6px)"></span>Closed</span>
+      <span style="display:flex;align-items:center;gap:7px"><span style="width:14px;height:14px;background:#6C2029"></span>Selected</span>
+    </div>
+  </div>
+  <div style="display:flex;align-items:stretch">
+    <div style="position:relative;flex:1 1 600px;min-width:0;min-height:476px;overflow-x:auto;overflow-y:hidden">
+      <div style="display:flex;width:max-content;border-bottom:1px solid rgba(62,44,34,.12)">
+        <div style="position:sticky;left:0;z-index:2;width:{{ nameW }};flex:none;background:#FBF8F1;padding:12px 16px;font-size:10.5px;letter-spacing:.2em;text-transform:uppercase;color:#7A6552;display:flex;align-items:flex-end">Cabin</div>
+        <sc-for list="{{ days }}" as="d" hint-placeholder-count="12">
+          <div style="width:60px;flex:none;padding:10px 0 8px;text-align:center;border-left:1px solid rgba(62,44,34,.08);background:{{ d.bg }}">
+            <div style="font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:#7A6552">{{ d.dow }}</div>
+            <div style="margin-top:3px;font-family:'Young Serif',serif;font-size:18px">{{ d.n }}</div>
+          </div>
+        </sc-for>
+      </div>
+      <sc-for list="{{ rows }}" as="r" hint-placeholder-count="6">
+        <div style="display:flex;width:max-content;border-bottom:1px solid rgba(62,44,34,.1)">
+          <a href="F-03 Cabin Detail.dc.html" style="position:sticky;left:0;z-index:2;width:{{ nameW }};flex:none;display:flex;align-items:center;gap:12px;padding:8px 14px 8px 12px;background:#FBF8F1;border-right:1px solid rgba(62,44,34,.12)" style-hover="background:#F3EDE2">
+            <img src="{{ r.img }}" alt="{{ r.name }}" style="width:48px;height:48px;object-fit:cover;flex:none">
+            <span style="display:flex;flex-direction:column;gap:3px;min-width:0">
+              <span style="font-family:'Young Serif',serif;font-size:15px;line-height:1.15;color:#3E2C22">{{ r.short }}</span>
+              <span style="font-size:11px;color:#7A6552">4 guests · 2 night min</span>
+            </span>
+          </a>
+          {{ r.cellsEl }}
+        </div>
+      </sc-for>
+      <sc-if value="{{ loading }}">
+        <div style="position:absolute;inset:0;z-index:5;background:rgba(251,248,241,.86);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:18px">
+          <span style="width:44px;height:44px;border-radius:50%;border:3px solid rgba(176,138,74,.25);border-top-color:#B08A4A;transform:rotate(40deg)"></span>
+          <span style="font-family:'Young Serif',serif;font-size:20px">Loading availability…</span>
+          <span style="font-size:13px;color:#7A6552">Checking all six cabins for October 16–27</span>
+        </div>
+      </sc-if>
+      <sc-if value="{{ errored }}">
+        <div style="position:absolute;inset:0;z-index:5;background:rgba(251,248,241,.92);display:flex;align-items:center;justify-content:center">
+          <div style="max-width:460px;padding:30px 34px;background:#FBF8F1;border:1px solid rgba(156,43,27,.35);border-top:3px solid #9C2B1B;box-shadow:0 18px 40px rgba(62,44,34,.16)">
+            <div style="font-size:10.5px;letter-spacing:.2em;text-transform:uppercase;color:#9C2B1B">Availability didn't load</div>
+            <p style="margin:12px 0 20px;font-family:Spectral,serif;font-size:17px;line-height:1.6;color:#4A382C">We couldn't reach the booking calendar. Your selections are saved — try again, or call Jeff at 479-440-5011.</p>
+            <a href="#" style="display:inline-block;padding:13px 24px;background:#6C2029;color:#F7F2E7;font-size:11.5px;font-weight:600;letter-spacing:.14em;text-transform:uppercase" style-hover="background:#882A34" style-active="background:#561920">Try again</a>
+          </div>
+        </div>
+      </sc-if>
+    </div>
+    <sc-if value="{{ showCart }}" hint-placeholder-val="{{ true }}">
+      <aside style="flex:0 0 340px;display:flex;flex-direction:column;padding:26px 26px 28px;background:#F1EBDF;border-left:1px solid rgba(62,44,34,.12)">
+        <div style="display:flex;justify-content:space-between;align-items:baseline">
+          <span style="font-family:'Young Serif',serif;font-size:24px;white-space:nowrap">Your cabins</span>
+          <span style="font-size:12px;color:#7A6552">{{ cartCount }}</span>
+        </div>
+        <sc-for list="{{ warnings }}" as="w">
+          <div style="margin-top:16px;padding:12px 14px;background:#F7E7E1;border-left:3px solid #9C2B1B;font-size:13px;line-height:1.5;color:#7A2415">{{ w }}</div>
+        </sc-for>
+        <sc-if value="{{ empty }}" hint-placeholder-val="{{ true }}">
+          <div style="margin-top:22px;padding:26px 20px;border:1px dashed rgba(62,44,34,.3);text-align:center">
+            <p style="margin:0;font-family:Spectral,serif;font-size:16px;line-height:1.6;color:#4A382C">No cabins selected yet. Click an available night on any cabin to start.</p>
+          </div>
+        </sc-if>
+        <sc-for list="{{ cart }}" as="it">
+          <div style="margin-top:18px;padding-bottom:16px;display:flex;gap:12px;border-bottom:1px solid rgba(62,44,34,.14)">
+            <img src="{{ it.img }}" alt="{{ it.name }}" style="width:56px;height:56px;object-fit:cover;flex:none">
+            <div style="flex:1;min-width:0">
+              <div style="display:flex;justify-content:space-between;gap:8px"><span style="font-family:'Young Serif',serif;font-size:16px">{{ it.name }}</span><span onClick="{{ it.remove }}" style="font-size:12px;color:#7A6552;cursor:pointer;border-bottom:1px solid transparent" style-hover="color:#6C2029;border-bottom-color:#6C2029">Remove</span></div>
+              <div style="margin-top:4px;font-size:12.5px;color:#4A382C">{{ it.range }}</div>
+              <div style="margin-top:6px;display:flex;justify-content:space-between;font-size:13px;color:#4A382C"><span style="white-space:nowrap">{{ it.nightsLabel }}</span><span style="font-weight:600;color:#3E2C22">${{ it.total }}</span></div>
+            </div>
+          </div>
+        </sc-for>
+        <div style="margin-top:auto;padding-top:22px">
+          <div style="display:flex;justify-content:space-between;align-items:baseline;padding-top:14px;border-top:2px solid #B08A4A">
+            <span style="font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:#7A6552">Estimated total</span>
+            <span style="font-family:'Young Serif',serif;font-size:28px">${{ grand }}</span>
+          </div>
+          <sc-if value="{{ canGo }}">
+            <a href="F-08 Checkout.dc.html" style="margin-top:18px;display:block;padding:17px 0;text-align:center;background:#6C2029;color:#F7F2E7;font-size:12px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;transition:all .18s" style-hover="background:#882A34;box-shadow:0 10px 24px rgba(108,32,41,.28)" style-active="background:#561920;box-shadow:none">Continue to checkout</a>
+          </sc-if>
+          <sc-if value="{{ cantGo }}" hint-placeholder-val="{{ true }}">
+            <span style="margin-top:18px;display:block;padding:17px 0;text-align:center;background:#D9CFBD;color:#7A6552;font-size:12px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;cursor:not-allowed">Continue to checkout</span>
+          </sc-if>
+          <p style="margin:14px 0 0;font-size:12px;line-height:1.55;color:#7A6552">You'll pay for every selected cabin in one Stripe checkout.</p>
+        </div>
+      </aside>
+    </sc-if>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1320,&quot;height&quot;:760},&quot;initial&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;empty&quot;,&quot;selected&quot;,&quot;conflict&quot;],&quot;default&quot;:&quot;empty&quot;,&quot;tsType&quot;:&quot;string&quot;},&quot;status&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;ready&quot;,&quot;loading&quot;,&quot;error&quot;],&quot;default&quot;:&quot;ready&quot;,&quot;tsType&quot;:&quot;string&quot;},&quot;hideCart&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:false,&quot;tsType&quot;:&quot;boolean&quot;},&quot;narrow&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:false,&quot;tsType&quot;:&quot;boolean&quot;}}">
+class Component extends DCLogic {
+  CABINS = [
+    ['Black Gum Getaway','Black Gum','img/thumb/black-gum.jpg',{R:[8,9,10]}],
+    ['Dogwood Den','Dogwood','img/thumb/dogwood.jpg',{R:[5,6,7]}],
+    ['Running Spring Retreat','Running Spring','img/thumb/running-spring.jpg',{R:[2,3],C:[9,10,11]}],
+    ['Black Walnut Bungalow','Black Walnut','img/thumb/black-walnut.jpg',{R:[0,1,2]}],
+    ['White Oak Haven','White Oak','img/thumb/white-oak.jpg',{R:[4,5,6,7]}],
+    ['Post Oak Perch','Post Oak','img/thumb/post-oak.jpg',{C:[0,1],R:[10,11]}]
+  ];
+  initSel() {
+    const m = this.props.initial ?? 'empty';
+    if (m === 'selected') return { 0: { s: 0, e: 2 }, 1: { s: 1, e: 2 } };
+    if (m === 'conflict') return { 0: { s: 0, e: 2 }, 2: { s: 5, e: 5 } };
+    return {};
+  }
+  state = { sel: null, guests: 2 };
+  date(i) { return new Date(2026, 9, 16 + i); }
+  fmt(d) { return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' }); }
+  price(i, c) { const dow = this.date(i).getDay(); return (dow === 5 || dow === 6 ? 158 : 132) + (c % 3) * 5; }
+  click(c, i) {
+    const sel = { ...(this.state.sel ?? this.initSel()) };
+    const cur = sel[c];
+    const R = this.CABINS[c][3], blocked = j => (R.R || []).includes(j) || (R.C || []).includes(j);
+    if (cur && i >= cur.s && i <= cur.e) delete sel[c];
+    else if (cur && cur.s === cur.e && i > cur.s && i - cur.s <= 4 && ![...Array(i - cur.s + 1)].some((_, k) => blocked(cur.s + k))) sel[c] = { s: cur.s, e: i };
+    else sel[c] = { s: i, e: i };
+    this.setState({ sel });
+  }
+  cellsEl(cells) {
+    const h = React.createElement;
+    const base = { width: 60, height: 64, flex: 'none', display: 'flex', alignItems: 'center', background: '#F5F0E6', boxSizing: 'border-box' };
+    const lock = h('svg', { width: 12, height: 14, viewBox: '0 0 12 14' }, h('rect', { x: 1, y: 6, width: 10, height: 8, rx: 1, fill: '#E6D3AE' }), h('path', { d: 'M3 6V4a3 3 0 0 1 6 0v2', stroke: '#E6D3AE', strokeWidth: 1.6, fill: 'none' }));
+    const ban = h('svg', { width: 14, height: 14, viewBox: '0 0 14 14' }, h('circle', { cx: 7, cy: 7, r: 5.5, stroke: '#7A6552', strokeWidth: 1.6, fill: 'none' }), h('path', { d: 'M3.2 10.8L10.8 3.2', stroke: '#7A6552', strokeWidth: 1.6 }));
+    return cells.map(c => {
+      if (c.avail) return h('div', { key: c.i, onClick: c.click, onMouseEnter: e => { e.currentTarget.style.background = '#EFE0C4'; }, onMouseLeave: e => { e.currentTarget.style.background = '#F5F0E6'; }, onMouseDown: e => { e.currentTarget.style.background = '#E6D3AE'; }, style: { ...base, flexDirection: 'column', justifyContent: 'center', gap: 3, borderLeft: '1px solid rgba(62,44,34,.08)', cursor: 'pointer' } },
+        h('span', { style: { fontSize: 12.5, fontWeight: 500, color: '#3E2C22' } }, '$' + c.price), h('span', { style: { fontSize: 10, color: '#7A6552' } }, '☾ 2'));
+      if (c.sel || c.pending) return h('div', { key: c.i, onClick: c.click, style: { ...base, padding: '6px 0', cursor: 'pointer' } },
+        h('div', { style: { width: '100%', height: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 2, boxSizing: 'border-box', borderRadius: c.pending ? 6 : c.radius, ...(c.pending ? { border: '2px dashed #9C2B1B', color: '#9C2B1B' } : { background: '#6C2029', color: '#F7F2E7' }) } },
+          h('span', { style: { fontSize: 12.5, fontWeight: 600 } }, '$' + c.price), h('span', { style: { fontSize: 9.5, letterSpacing: '.1em', textTransform: 'uppercase', opacity: .9 } }, c.pending ? '1 night' : c.tag)));
+      return h('div', { key: c.i, style: base },
+        h('div', { style: { width: '100%', height: 30, display: 'flex', alignItems: 'center', paddingLeft: 10, boxSizing: 'border-box', background: c.res ? '#5A4637' : 'repeating-linear-gradient(135deg,#D9CFBD 0 4px,#EDE5D6 4px 8px)' } }, c.first ? (c.res ? lock : ban) : null));
+    });
+  }
+  renderVals() {
+    const sel = this.state.sel ?? this.initSel();
+    const status = this.props.status ?? 'ready';
+    const days = [...Array(12)].map((_, i) => { const d = this.date(i), w = d.getDay(); return { n: d.getDate(), dow: d.toLocaleDateString('en-US', { weekday: 'short' }), bg: w === 5 || w === 6 ? '#F3EADA' : '#FBF8F1' }; });
+    const rows = this.CABINS.map(([name, short, img, R], c) => ({
+      name, short, img,
+      cells: [...Array(12)].map((_, i) => {
+        const res = (R.R || []).includes(i), closed = (R.C || []).includes(i), s = sel[c];
+        const inSel = s && i >= s.s && i <= s.e, pend = inSel && s.s === s.e;
+        const prevSame = t => (R[t] || []).includes(i - 1);
+        return {
+          i, price: this.price(i, c), avail: !res && !closed && !inSel, res, closed,
+          sel: inSel && !pend, pending: pend,
+          first: (res && !prevSame('R')) || (closed && !prevSame('C')),
+          radius: s ? (i === s.s && i === s.e ? '6px' : i === s.s ? '6px 0 0 6px' : i === s.e ? '0 6px 6px 0' : '0') : '0',
+          tag: s ? (i === s.s ? 'In' : i === s.e ? 'Last' : '') : '',
+          click: () => this.click(c, i)
+        };
+      })
+    }));
+    rows.forEach(r => { r.cellsEl = this.cellsEl(r.cells); });
+    const cart = [], warnings = [];
+    Object.entries(sel).forEach(([c, s]) => {
+      const [name, , img] = this.CABINS[c];
+      if (s.s === s.e) { warnings.push(`${name} needs at least 2 nights. Pick a second night up to 5 days later.`); return; }
+      const n = s.e - s.s + 1; let t = 0; for (let i = s.s; i <= s.e; i++) t += this.price(i, +c);
+      cart.push({ name, img, range: `${this.fmt(this.date(s.s))} – ${this.fmt(this.date(s.e + 1))} · check-out 11 AM`, nightsLabel: `${n} nights`, total: t, remove: () => { const x = { ...sel }; delete x[c]; this.setState({ sel: x }); } });
+    });
+    const grand = cart.reduce((a, b) => a + b.total, 0);
+    return {
+      days, rows, cart, warnings, grand,
+      cartCount: cart.length === 1 ? '1 cabin' : `${cart.length} cabins`,
+      empty: cart.length === 0 && warnings.length === 0,
+      canGo: cart.length > 0 && warnings.length === 0, cantGo: !(cart.length > 0 && warnings.length === 0),
+      showCart: !this.props.hideCart,
+      nameW: this.props.narrow ? '138px' : '210px',
+      loading: status === 'loading', errored: status === 'error',
+      guests: this.state.guests,
+      guestUp: () => this.setState(s => ({ guests: Math.min(4, s.guests + 1) })),
+      guestDown: () => this.setState(s => ({ guests: Math.max(1, s.guests - 1) }))
+    };
+  }
+}
+</script>
+</body>
+</html>

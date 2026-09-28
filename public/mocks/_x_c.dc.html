@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<meta name="design_doc_mode" content="canvas">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Young+Serif&family=Spectral:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Archivo:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  body { margin: 0; background: #8C8275; }
+  a { color: #6C2029; text-decoration: none; }
+  a:hover { color: #882A34; }
+  * { box-sizing: border-box; }
+</style>
+</helmet>
+
+<section style="display:flex;flex-wrap:nowrap;width:max-content;gap:120px 80px;align-items:flex-start;padding:110px 80px 120px">
+
+  <!-- F-07c -->
+  <div id="F-07c" data-screen-label="F-07c Calendar loading error conflict" style="flex:none;width:1440px;position:relative;background:#F5F0E6;font-family:Spectral,serif;color:#3E2C22">
+    <div style="position:absolute;top:-46px;left:0;display:flex;gap:12px;align-items:baseline;font-family:Archivo,sans-serif;color:#F7F2E7"><span style="font-size:16px;font-weight:600;letter-spacing:.08em">F-07c</span><span style="font-size:12px;letter-spacing:.16em;text-transform:uppercase;opacity:.85">Calendar states · loading / error / min-night conflict</span></div>
+    <dc-import name="RRNav" active="Multi-Cabin" hint-size="100%,78px"></dc-import>
+    <div style="padding:56px 60px 90px;display:flex;flex-direction:column;gap:30px">
+      <div style="font-family:Archivo,sans-serif;font-size:11px;letter-spacing:.26em;text-transform:uppercase;color:#6C2029">A · Loading</div>
+      <dc-import name="RRGroupCalendar" status="loading" hint-size="100%,1px"></dc-import>
+      <div style="margin-top:40px;font-family:Archivo,sans-serif;font-size:11px;letter-spacing:.26em;text-transform:uppercase;color:#6C2029">B · Availability error</div>
+      <dc-import name="RRGroupCalendar" status="error" initial="selected" hint-size="100%,1px"></dc-import>
+      <div style="margin-top:40px;font-family:Archivo,sans-serif;font-size:11px;letter-spacing:.26em;text-transform:uppercase;color:#6C2029">C · Selection conflict — one night picked, 2-night minimum</div>
+      <dc-import name="RRGroupCalendar" initial="conflict" hint-size="100%,1px"></dc-import>
+    </div>
+  </div>
+
+  </section>
+</x-dc>
+</body>
+</html>
