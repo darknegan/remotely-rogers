@@ -938,12 +938,12 @@
   color: var(--rr-bark);
 }
 
-/* Home page — F-M01 mobile layout (global to stay within component style budget) */
+/* Home page — F-M01 mobile layout (global; !important beats encapsulated home.scss display) */
 .rr-home-desktop-only {
-  display: none;
+  display: none !important;
 
   @media (min-width: 1024px) {
-    display: block;
+    display: block !important;
   }
 }
 
@@ -957,13 +957,19 @@
 .rr-home-comfort.rr-home-desktop-only,
 .rr-home-multi.rr-home-desktop-only {
   @media (min-width: 1024px) {
-    display: grid;
+    display: grid !important;
   }
 }
 
 .rr-home-ctas.rr-home-desktop-only {
   @media (min-width: 1024px) {
-    display: grid;
+    display: grid !important;
+  }
+}
+
+.rr-home-reviews__head.rr-home-desktop-only {
+  @media (min-width: 1024px) {
+    display: flex !important;
   }
 }
 
