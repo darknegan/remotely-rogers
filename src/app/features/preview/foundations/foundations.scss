@@ -1,0 +1,49 @@
+.rr-type-display-86 {
+  font-family: var(--rr-font-display);
+  font-size: clamp(3rem, 8vw, 5.375rem);
+  line-height: 1.02;
+}
+
+.rr-type-h1 {
+  font-family: var(--rr-font-display);
+  font-size: clamp(2.25rem, 5vw, 3.5rem);
+  line-height: 1.08;
+}
+
+.rr-type-h2 {
+  font-family: var(--rr-font-display);
+  font-size: clamp(1.75rem, 4vw, 2.5rem);
+  line-height: 1.2;
+}
+
+.rr-type-h3 {
+  font-family: var(--rr-font-display);
+  font-size: 1.625rem;
+  line-height: 1.25;
+}
+
+.rr-type-quote {
+  font-size: 1.5rem;
+  font-style: italic;
+  line-height: 1.5;
+}
+
+.rr-type-body {
+  font-size: 1.125rem;
+  line-height: 1.75;
+  color: var(--rr-walnut-ink);
+}
+
+.rr-type-ui {
+  font-family: var(--rr-font-ui);
+  font-size: 0.9375rem;
+  color: var(--rr-walnut);
+}
+
+.rr-type-label {
+  font-family: var(--rr-font-ui);
+  font-size: 0.6875rem;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: var(--rr-oxblood);
+}

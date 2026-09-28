@@ -1,0 +1,20 @@
+<header class="rr-site-header">
+  <a class="rr-site-header__brand" routerLink="/preview/foundations">
+    <span class="rr-site-header__logo">Remotely Rogers</span>
+    <span class="rr-site-header__tagline">Rogers · Arkansas</span>
+  </a>
+
+  <nav class="rr-site-header__nav" aria-label="Primary">
+    @for (link of links; track link.path) {
+      <a
+        class="rr-site-header__link"
+        [routerLink]="link.path"
+        routerLinkActive="rr-site-header__link--active"
+        [routerLinkActiveOptions]="{ exact: link.path === '/preview/foundations' }"
+      >
+        {{ link.label }}
+      </a>
+    }
+    <a class="rr-btn rr-btn--primary" routerLink="/cabins">Check availability</a>
+  </nav>
+</header>

@@ -1,0 +1,70 @@
+<div class="rr-foundations">
+  <section class="rr-foundations__hero">
+    <div>
+      <div class="rr-foundations__eyebrow">Remotely Rogers · Website system</div>
+      <h1 class="rr-foundations__title">Ozark maison</h1>
+    </div>
+    <p class="rr-foundations__lede">
+      A design-hotel system for six A-frames: limestone grounds, walnut type, oxblood for the one
+      action that matters on each screen, brass for rules and detail. Photography runs full-bleed;
+      everything else steps back.
+    </p>
+  </section>
+
+  <section class="rr-foundations__section">
+    <div class="rr-foundations__section-title">Palette</div>
+    <div class="rr-foundations__palette">
+      @for (swatch of palette; track swatch.hex) {
+        <div class="rr-foundations__swatch">
+          <div class="rr-foundations__swatch-color" [style.background]="swatch.hex"></div>
+          <div class="rr-foundations__swatch-meta">
+            <div class="rr-foundations__swatch-name">{{ swatch.name }}</div>
+            <div class="rr-foundations__swatch-hex">{{ swatch.hex }}</div>
+            <div class="rr-foundations__swatch-role">{{ swatch.role }}</div>
+          </div>
+        </div>
+      }
+    </div>
+  </section>
+
+  <section class="rr-foundations__section">
+    <div class="rr-foundations__section-title">Type · Young Serif display, Spectral text, Archivo UI</div>
+    @for (sample of typeSamples; track sample.label) {
+      <div class="rr-foundations__type-row">
+        <span class="rr-foundations__type-label">{{ sample.label }}</span>
+        <span [class]="sample.className">{{ sample.text }}</span>
+      </div>
+    }
+  </section>
+
+  <section class="rr-foundations__section">
+    <div class="rr-foundations__section-title">Buttons · default / hover / pressed</div>
+    <div class="rr-foundations__buttons">
+      <span class="rr-btn rr-btn--primary">Check availability</span>
+      <span class="rr-btn rr-btn--secondary">Multi-Cabin</span>
+      <span class="rr-btn rr-btn--primary" style="background: var(--rr-walnut)">Search</span>
+      <span class="rr-btn rr-btn--text">View cabin</span>
+      <span
+        class="rr-btn rr-btn--primary"
+        style="background: var(--rr-disabled); color: var(--rr-disabled-text); cursor: not-allowed"
+      >
+        Book now
+      </span>
+    </div>
+  </section>
+
+  <section class="rr-foundations__section">
+    <div class="rr-foundations__section-title">Booking bar · dates, guests, search</div>
+    <div class="rr-foundations__booking-demo">
+      <app-booking-bar />
+    </div>
+  </section>
+
+  <section class="rr-foundations__section">
+    <div class="rr-foundations__section-title">Shell QA</div>
+    <p class="rr-foundations__lede">
+      Site header, mobile header, and footer render from the shell around this page. Resize to 375px
+      to verify the drawer nav and compact footer.
+    </p>
+  </section>
+</div>

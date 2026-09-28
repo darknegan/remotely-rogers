@@ -1,5 +1,6 @@
 @import 'primeicons/primeicons.css';
 @import 'styles/tokens';
+@import 'styles/layout';
 @import 'styles/lodgify-export';
 @import 'styles/primeng-content';
 @import 'styles/group-booking';
@@ -12,5 +13,7 @@
 
 body {
   margin: 0;
-  background: var(--rr-cream);
+  background: var(--rr-ground);
+  font-family: var(--rr-font-body);
+  color: var(--rr-walnut);
 }

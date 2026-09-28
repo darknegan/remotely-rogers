@@ -1,33 +1,46 @@
 import { Routes } from '@angular/router';
 
 export const routes: Routes = [
-  { path: '', redirectTo: 'preview/activities', pathMatch: 'full' },
+  { path: '', redirectTo: 'preview/foundations', pathMatch: 'full' },
   {
-    path: 'preview/activities',
-    loadComponent: () =>
-      import('./features/content/activities/activities').then((m) => m.Activities),
-  },
-  {
-    path: 'preview/recommendations',
-    loadComponent: () =>
-      import('./features/content/recommendations/recommendations').then((m) => m.Recommendations),
-  },
-  {
-    path: 'preview/work-stays',
-    loadComponent: () =>
-      import('./features/content/work-stays/work-stays').then((m) => m.WorkStays),
-  },
-  {
-    path: 'preview/multi-cabin-stays',
-    loadComponent: () =>
-      import('./features/content/multi-cabin-stays/multi-cabin-stays').then(
-        (m) => m.MultiCabinStays,
-      ),
-  },
-  {
-    path: 'preview/reviews',
-    loadComponent: () =>
-      import('./features/content/reviews/reviews').then((m) => m.Reviews),
+    path: 'preview',
+    loadComponent: () => import('./layout/site-shell/site-shell').then((m) => m.SiteShell),
+    children: [
+      {
+        path: 'foundations',
+        loadComponent: () =>
+          import('./features/preview/foundations/foundations').then((m) => m.FoundationsPreview),
+      },
+      {
+        path: 'activities',
+        loadComponent: () =>
+          import('./features/content/activities/activities').then((m) => m.Activities),
+      },
+      {
+        path: 'recommendations',
+        loadComponent: () =>
+          import('./features/content/recommendations/recommendations').then(
+            (m) => m.Recommendations,
+          ),
+      },
+      {
+        path: 'work-stays',
+        loadComponent: () =>
+          import('./features/content/work-stays/work-stays').then((m) => m.WorkStays),
+      },
+      {
+        path: 'multi-cabin-stays',
+        loadComponent: () =>
+          import('./features/content/multi-cabin-stays/multi-cabin-stays').then(
+            (m) => m.MultiCabinStays,
+          ),
+      },
+      {
+        path: 'reviews',
+        loadComponent: () =>
+          import('./features/content/reviews/reviews').then((m) => m.Reviews),
+      },
+    ],
   },
   {
     path: 'group-booking',

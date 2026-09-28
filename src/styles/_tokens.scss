@@ -1,16 +1,47 @@
 :root {
-  --rr-forest: #2d4a3e;
-  --rr-forest-dark: #1e3329;
-  --rr-sage: #5a7d6a;
-  --rr-cream: #f7f4ef;
-  --rr-terracotta: #c45c3e;
-  --rr-terracotta-hover: #a84d34;
-  --rr-text: #3d3d3d;
-  --rr-border: #ddd8cf;
-  --rr-white: #ffffff;
-  --rr-radius: 12px;
-  --rr-radius-sm: 8px;
-  --rr-shadow: 0 4px 24px rgba(30, 51, 41, 0.08);
-  --rr-font: 'Vollkorn', Georgia, 'Times New Roman', serif;
-  --rr-font-sans: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  /* Ozark maison palette */
+  --rr-ground: #f5f0e6;
+  --rr-ground-deep: #e9e2d6;
+  --rr-paper: #fbf8f1;
+  --rr-walnut: #3e2c22;
+  --rr-walnut-ink: #4a382c;
+  --rr-bark: #7a6552;
+  --rr-footer-ink: #2b1f17;
+  --rr-oxblood: #6c2029;
+  --rr-oxblood-hover: #882a34;
+  --rr-oxblood-active: #561920;
+  --rr-brass: #b08a4a;
+  --rr-brass-light: #e6d3ae;
+  --rr-brass-hover: #c9a464;
+  --rr-brass-active: #9a7638;
+  --rr-cream-on-dark: #f7f2e7;
+  --rr-muted-on-dark: #d9cfbd;
+  --rr-rust: #9c2b1b;
+  --rr-disabled: #d9cfbd;
+  --rr-disabled-text: #7a6552;
+
+  /* Typography */
+  --rr-font-display: 'Young Serif', Georgia, serif;
+  --rr-font-body: 'Spectral', Georgia, serif;
+  --rr-font-ui: 'Archivo', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+
+  /* Layout */
+  --rr-radius: 0;
+  --rr-radius-sm: 0;
+  --rr-shadow: 0 18px 44px rgba(62, 44, 34, 0.13);
+  --rr-nav-height: 78px;
+  --rr-mobile-header-height: 64px;
+
+  /* Legacy aliases — unmigrated preview pages until later steps */
+  --rr-forest: var(--rr-walnut);
+  --rr-forest-dark: var(--rr-footer-ink);
+  --rr-sage: var(--rr-bark);
+  --rr-cream: var(--rr-ground);
+  --rr-terracotta: var(--rr-oxblood);
+  --rr-terracotta-hover: var(--rr-oxblood-hover);
+  --rr-text: var(--rr-walnut-ink);
+  --rr-border: rgba(62, 44, 34, 0.14);
+  --rr-white: var(--rr-paper);
+  --rr-font: var(--rr-font-body);
+  --rr-font-sans: var(--rr-font-ui);
 }
