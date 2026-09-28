@@ -1276,11 +1276,33 @@
   padding: 0;
 }
 
-.rr-cabins-toolbar .rr-booking-bar__field,
-.rr-cabins-toolbar .rr-booking-bar__search {
+.rr-cabins-toolbar .rr-booking-bar__field {
   min-height: 3.375rem;
   border: 1px solid rgba(62, 44, 34, 0.22);
   background: var(--rr-ground);
+}
+
+.rr-cabins-toolbar .rr-booking-bar__search {
+  min-height: 3.375rem;
+  border: 1px solid var(--rr-walnut);
+  background: var(--rr-walnut);
+  color: var(--rr-cream-on-dark);
+
+  &:hover:not(:disabled) {
+    background: #56402f;
+    color: var(--rr-cream-on-dark);
+  }
+
+  &:active:not(:disabled) {
+    background: var(--rr-footer-ink);
+    color: var(--rr-cream-on-dark);
+  }
+
+  &:disabled {
+    border-color: rgba(62, 44, 34, 0.22);
+    background: var(--rr-disabled);
+    color: var(--rr-disabled-text);
+  }
 }
 
 .rr-cabins-filters-drawer.p-drawer {
