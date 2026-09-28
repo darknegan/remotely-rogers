@@ -1,5 +1,5 @@
 <header class="rr-site-header">
-  <a class="rr-site-header__brand" routerLink="/preview/foundations">
+  <a class="rr-site-header__brand" routerLink="/">
     <span class="rr-site-header__logo">Remotely Rogers</span>
     <span class="rr-site-header__tagline">Rogers · Arkansas</span>
   </a>
@@ -10,7 +10,7 @@
         class="rr-site-header__link"
         [routerLink]="link.path"
         routerLinkActive="rr-site-header__link--active"
-        [routerLinkActiveOptions]="{ exact: link.path === '/preview/foundations' }"
+        [routerLinkActiveOptions]="{ exact: link.path === '/' }"
       >
         {{ link.label }}
       </a>

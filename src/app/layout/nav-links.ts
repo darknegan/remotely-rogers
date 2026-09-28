@@ -5,7 +5,7 @@ export interface NavLink {
 
 /** Primary site navigation — preview paths until step 9 cutover. */
 export const SITE_NAV_LINKS: NavLink[] = [
-  { label: 'Home', path: '/preview/foundations' },
+  { label: 'Home', path: '/' },
   { label: 'Cabins', path: '/cabins' },
   { label: 'Activities', path: '/preview/activities' },
   { label: 'Recommendations', path: '/preview/recommendations' },

@@ -1,0 +1,165 @@
+.rr-home-review-band {
+  display: flex;
+  align-items: stretch;
+  margin: 0 3.75rem 1.75rem;
+  background: var(--rr-paper);
+  box-shadow: 0 14px 40px rgba(62, 44, 34, 0.08);
+}
+
+.rr-home-review-band--image-right {
+  flex-direction: row-reverse;
+}
+
+.rr-home-review-band__image {
+  position: relative;
+  flex: 0 0 27.5rem;
+  height: 20rem;
+  overflow: hidden;
+  display: block;
+  text-decoration: none;
+  color: inherit;
+
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+}
+
+.rr-home-review-band__image-caption {
+  position: absolute;
+  inset: auto 0 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  padding: 2.5rem 1.5rem 1.125rem;
+  background: linear-gradient(to top, rgba(36, 27, 21, 0.85), rgba(36, 27, 21, 0));
+}
+
+.rr-home-review-band__cabin-name {
+  font-family: var(--rr-font-display);
+  font-size: 1.5rem;
+  color: var(--rr-cream-on-dark);
+}
+
+.rr-home-review-band__view {
+  font-family: var(--rr-font-ui);
+  font-size: 0.66rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--rr-brass-light);
+}
+
+.rr-home-review-band__content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  padding: 2.125rem 2.75rem 1.875rem;
+}
+
+.rr-home-review-band__toolbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  font-family: var(--rr-font-ui);
+}
+
+.rr-home-review-band__rating {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  font-size: 0.8125rem;
+  color: var(--rr-walnut-ink);
+}
+
+.rr-home-review-band__stars {
+  color: var(--rr-brass);
+  letter-spacing: 0.12em;
+}
+
+.rr-home-review-band__nav {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.rr-home-review-band__index {
+  margin-right: 0.375rem;
+  font-size: 0.75rem;
+  color: var(--rr-bark);
+}
+
+.rr-home-review-band__arrow {
+  width: 2.375rem;
+  height: 2.375rem;
+  border: 1px solid rgba(62, 44, 34, 0.22);
+  background: transparent;
+  color: var(--rr-walnut);
+  font-size: 1.25rem;
+  line-height: 1;
+  cursor: pointer;
+
+  &:hover {
+    border-color: var(--rr-oxblood);
+    color: var(--rr-oxblood);
+  }
+
+  &:active {
+    background: #ede5d6;
+  }
+}
+
+.rr-home-review-band__quote {
+  margin: 1.375rem 0 0;
+  font-size: 1.5625rem;
+  font-style: italic;
+  line-height: 1.5;
+  color: var(--rr-walnut);
+  text-wrap: pretty;
+}
+
+.rr-home-review-band__footer {
+  margin-top: auto;
+  padding-top: 1.25rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 1rem;
+  font-family: var(--rr-font-ui);
+
+  strong {
+    font-size: 0.875rem;
+    color: var(--rr-walnut);
+  }
+}
+
+.rr-home-review-band__stay {
+  margin-left: 0.625rem;
+  font-size: 0.78rem;
+  color: var(--rr-bark);
+}
+
+.rr-home-review-band__all {
+  padding: 0 0 0.1875rem;
+  border: none;
+  border-bottom: 1px solid rgba(108, 32, 41, 0.35);
+  background: transparent;
+  font-family: var(--rr-font-ui);
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--rr-oxblood);
+  cursor: pointer;
+
+  &:hover {
+    border-bottom-color: var(--rr-oxblood);
+  }
+}
+
+@media (max-width: 1023px) {
+  :host {
+    display: none;
+  }
+}

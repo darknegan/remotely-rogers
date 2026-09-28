@@ -13,6 +13,7 @@ import {
   prevReviewIndex,
   reviewBandImageOnLeft,
   shouldAutoAdvance,
+  carouselCabinName,
   shortCabinName,
   visibleReviewWindow,
   visibleReviews,

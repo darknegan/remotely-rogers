@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, input } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { DatePicker } from 'primeng/datepicker';
@@ -27,6 +27,9 @@ interface GuestStepper {
 export class BookingBar {
   private readonly router = inject(Router);
   protected readonly search = inject(SearchStateService);
+
+  /** Home hero uses a 2×2 + guests + search grid below 1024px. */
+  readonly layout = input<'default' | 'home'>('default');
 
   readonly minDate = startOfDay(new Date());
 
