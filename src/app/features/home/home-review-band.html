@@ -15,7 +15,7 @@
       <div class="rr-home-review-band__toolbar">
         <span class="rr-home-review-band__rating">
           <span class="rr-home-review-band__stars" aria-hidden="true">{{ stars(average()) }}</span>
-          <span>{{ average() }} · {{ reviewCount() }} reviews · Airbnb</span>
+          <span>{{ formatRating(average()) }} · {{ reviewCount() }} reviews · Airbnb</span>
         </span>
         <div class="rr-home-review-band__nav">
           <span class="rr-home-review-band__index">{{ indexLabel() }}</span>
@@ -72,7 +72,7 @@
           <h3 class="rr-home-reviews-dialog__title">{{ name() }}</h3>
           <div class="rr-home-reviews-dialog__meta">
             <span class="rr-home-reviews-dialog__stars" aria-hidden="true">{{ stars(average()) }}</span>
-            {{ average() }} · {{ reviewCount() }} reviews · Airbnb
+            {{ formatRating(average()) }} · {{ reviewCount() }} reviews · Airbnb
           </div>
         </div>
         <button

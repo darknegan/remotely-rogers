@@ -1,4 +1,4 @@
-<div class="rr-booking-bar">
+<div class="rr-booking-bar" [class.rr-booking-bar--home]="layout() === 'home'">
   <button type="button" class="rr-booking-bar__field" (click)="checkInPopover.toggle($event)">
     <div class="rr-booking-bar__label">Check-in</div>
     <div class="rr-booking-bar__value">{{ checkInLabel() }}</div>
@@ -11,7 +11,9 @@
 
   <button type="button" class="rr-booking-bar__field" (click)="guestPopover.toggle($event)">
     <div class="rr-booking-bar__label">Guests</div>
-    <div class="rr-booking-bar__value">{{ search.guestSummary() }}</div>
+    <div class="rr-booking-bar__value">
+      {{ search.guestSummary() }}<span class="rr-booking-bar__guest-cap"> · up to 4 per cabin</span>
+    </div>
   </button>
 
   <button

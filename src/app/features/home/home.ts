@@ -1,9 +1,11 @@
-import { ChangeDetectionStrategy, Component, computed, linkedSignal, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, linkedSignal, signal } from '@angular/core';
+import { Title } from '@angular/platform-browser';
 import { RouterLink } from '@angular/router';
 import { Dialog } from 'primeng/dialog';
 
 import {
   averageRating,
+  carouselCabinName,
   nextReviewIndex,
   prevReviewIndex,
   reviewBandImageOnLeft,
@@ -17,6 +19,7 @@ import { HomeReviewBand } from './home-review-band';
 interface HomeStat {
   value: string;
   label: string;
+  mobileLabel: string;
 }
 
 interface HomeAmenity {
@@ -27,6 +30,7 @@ interface HomeAmenity {
 interface HomeCabinCard {
   slug: string;
   name: string;
+  carouselName: string;
   imageUrl: string;
   imageOnLeft: boolean;
 }
@@ -43,11 +47,13 @@ function cabinImageUrl(imageUrl: string, width = 1200): string {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class Home {
+  private readonly title = inject(Title);
+
   readonly stats: HomeStat[] = [
-    { value: '70', label: 'Private acres' },
-    { value: '6', label: 'A-frame cabins' },
-    { value: '4', label: 'Guests per cabin' },
-    { value: '1', label: 'Pet welcome, arranged first' },
+    { value: '70', label: 'Private acres', mobileLabel: 'Private acres' },
+    { value: '6', label: 'A-frame cabins', mobileLabel: 'A-frames' },
+    { value: '4', label: 'Guests per cabin', mobileLabel: 'Guests each' },
+    { value: '1', label: 'Pet welcome, arranged first', mobileLabel: 'Pet welcome' },
   ];
 
   readonly amenities: HomeAmenity[] = [
@@ -72,13 +78,14 @@ export class Home {
   readonly cabins: HomeCabinCard[] = CABIN_CONFIG.cabins.map((cabin, index) => ({
     slug: cabin.slug,
     name: shortCabinName(cabin.name),
+    carouselName: carouselCabinName(cabin.name),
     imageUrl: cabinImageUrl(cabin.imageUrl ?? '', 800),
     imageOnLeft: reviewBandImageOnLeft(index),
   }));
 
   readonly heroImage = cabinImageUrl(CABIN_CONFIG.cabins[0].imageUrl ?? '', 1600);
   readonly galleryPrimaryImage = cabinImageUrl(CABIN_CONFIG.cabins[4].imageUrl ?? '', 1200);
-  readonly gallerySecondaryImage = cabinImageUrl(CABIN_CONFIG.cabins[5].imageUrl ?? '', 1200);
+  readonly galleryLoftImage = cabinImageUrl(CABIN_CONFIG.cabins[1].imageUrl ?? '', 1200);
   readonly comfortImage = cabinImageUrl(CABIN_CONFIG.cabins[3].imageUrl ?? '', 1200);
   readonly multiCabinImage = cabinImageUrl(CABIN_CONFIG.cabins[2].imageUrl ?? '', 1600);
   readonly cabinsCtaImage = cabinImageUrl(CABIN_CONFIG.cabins[0].imageUrl ?? '', 1200);
@@ -103,6 +110,14 @@ export class Home {
   readonly mobileAverage = computed(() => averageRating(this.mobileReviews()));
 
   readonly mobileModalVisible = signal(false);
+
+  constructor() {
+    this.title.setTitle('Remotely Rogers — Six A-frames on 70 acres');
+  }
+
+  protected formatRating(rating: number): string {
+    return rating.toFixed(1);
+  }
 
   protected stars(rating: number): string {
     return '★★★★★'.slice(0, Math.max(0, Math.min(5, Math.round(rating))));

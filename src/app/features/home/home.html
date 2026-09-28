@@ -1,19 +1,22 @@
 <div class="rr-home">
-  <section class="rr-home-hero">
-    <img class="rr-home-hero__image" [src]="heroImage" alt="Inside a Remotely Rogers A-frame" />
-    <div class="rr-home-hero__overlay" aria-hidden="true"></div>
+  <section class="rr-home-hero-wrap">
+    <div class="rr-home-hero">
+      <img class="rr-home-hero__image" [src]="heroImage" alt="Inside a Remotely Rogers A-frame" />
+      <div class="rr-home-hero__overlay" aria-hidden="true"></div>
 
-    <div class="rr-home-hero__copy">
-      <div class="rr-home-hero__eyebrow">
-        <span class="rr-home-hero__rule" aria-hidden="true"></span>
-        <span>Rogers, Arkansas · near Bentonville</span>
+      <div class="rr-home-hero__copy">
+        <div class="rr-home-hero__eyebrow rr-home-hero__eyebrow--desktop">
+          <span class="rr-home-hero__rule" aria-hidden="true"></span>
+          <span>Rogers, Arkansas · near Bentonville</span>
+        </div>
+        <div class="rr-home-hero__eyebrow rr-home-hero__eyebrow--mobile">Rogers, Arkansas</div>
+        <h1 class="rr-home-hero__title">Six private A-frames on 70 acres.</h1>
+        <p class="rr-home-hero__lede">Minutes from Bentonville trails and downtown Rogers.</p>
       </div>
-      <h1 class="rr-home-hero__title">Six private A-frames on 70 acres.</h1>
-      <p class="rr-home-hero__lede">Minutes from Bentonville trails and downtown Rogers.</p>
     </div>
 
     <div class="rr-home-hero__booking">
-      <app-booking-bar />
+      <app-booking-bar layout="home" />
     </div>
   </section>
 
@@ -25,12 +28,15 @@
       </h2>
     </div>
     <div class="rr-home-discover__body">
-      <p class="rr-home-body rr-home-body--dropcap">
+      <p class="rr-home-body rr-home-body--mobile">
+        Six A-frames on 70 private acres. Each sleeps four and welcomes one pet.
+      </p>
+      <p class="rr-home-body rr-home-body--desktop rr-home-body--dropcap">
         Six A-frames sit on 70 private acres in Rogers, Arkansas. Each one sleeps up to four guests
         and welcomes one pet, and each faces the trees through a full wall of glass — so the seasons
         are the view, from spring green to bare winter branches.
       </p>
-      <p class="rr-home-body">
+      <p class="rr-home-body rr-home-body--desktop">
         Walk the trails through the property in the morning. Downtown Rogers is fifteen minutes away
         when you want it.
       </p>
@@ -41,23 +47,42 @@
     @for (stat of stats; track stat.label) {
       <div class="rr-home-stats__item">
         <div class="rr-home-stats__value">{{ stat.value }}</div>
-        <div class="rr-home-stats__label">{{ stat.label }}</div>
+        <div class="rr-home-stats__label rr-home-stats__label--desktop">{{ stat.label }}</div>
+        <div class="rr-home-stats__label rr-home-stats__label--mobile">{{ stat.mobileLabel }}</div>
       </div>
     }
   </div>
 
-  <section class="rr-home-gallery" aria-label="Cabin interiors">
+  <section class="rr-home-cabins-strip-section rr-home-mobile-only" aria-label="The cabins">
+    <div class="rr-home-cabins-strip__head">
+      <span class="rr-home-cabins-strip__title">The cabins</span>
+      <a class="rr-home-cabins-strip__link" routerLink="/cabins">All six →</a>
+    </div>
+    <div class="rr-home-cabins-strip">
+      @for (cabin of cabins; track cabin.slug) {
+        <a class="rr-home-cabin-card" [routerLink]="['/cabins', cabin.slug]">
+          <img [src]="cabin.imageUrl" [alt]="cabin.carouselName" loading="lazy" />
+          <div class="rr-home-cabin-card__body">
+            <div class="rr-home-cabin-card__name">{{ cabin.carouselName }}</div>
+            <div class="rr-home-cabin-card__rate">from <strong>$132</strong> per night</div>
+          </div>
+        </a>
+      }
+    </div>
+  </section>
+
+  <section class="rr-home-gallery rr-home-desktop-only" aria-label="Cabin interiors">
     <figure class="rr-home-gallery__primary">
       <img [src]="galleryPrimaryImage" alt="Sunlit main room" loading="lazy" />
       <figcaption>The glass wall at White Oak Haven, late morning.</figcaption>
     </figure>
     <figure class="rr-home-gallery__secondary">
-      <img [src]="gallerySecondaryImage" alt="Loft and stair" loading="lazy" />
+      <img [src]="galleryLoftImage" alt="Sleeping loft under the A-frame roof" loading="lazy" />
       <figcaption>Up under the A: the sleeping loft.</figcaption>
     </figure>
   </section>
 
-  <section class="rr-home-comfort">
+  <section class="rr-home-comfort rr-home-desktop-only">
     <div class="rr-home-comfort__image">
       <img [src]="comfortImage" alt="Kitchenette and desk" loading="lazy" />
     </div>
@@ -76,7 +101,7 @@
     </div>
   </section>
 
-  <section class="rr-home-multi">
+  <section class="rr-home-multi rr-home-desktop-only">
     <img class="rr-home-multi__image" [src]="multiCabinImage" alt="The A-frames in snow" />
     <div class="rr-home-multi__overlay" aria-hidden="true"></div>
     <div class="rr-home-multi__copy">
@@ -98,7 +123,7 @@
   </section>
 
   <section class="rr-home-reviews">
-    <div class="rr-home-reviews__head">
+    <div class="rr-home-reviews__head rr-home-desktop-only">
       <div>
         <div class="rr-home-eyebrow">Guest reviews</div>
         <h2 class="rr-home-display">What guests say, cabin by cabin.</h2>
@@ -117,42 +142,30 @@
       }
     </div>
 
-    <div class="rr-home-reviews__mobile">
-      <div class="rr-home-cabins-strip__head rr-home-cabins-strip__head--first">
-        <span class="rr-home-cabins-strip__title">The cabins</span>
-        <a class="rr-home-cabins-strip__link" routerLink="/cabins">All six →</a>
-      </div>
-      <div class="rr-home-cabins-strip">
-        @for (cabin of cabins; track cabin.slug) {
-          <a class="rr-home-cabin-card" [routerLink]="['/cabins', cabin.slug]">
-            <img [src]="cabin.imageUrl" [alt]="cabin.name" loading="lazy" />
-            <div class="rr-home-cabin-card__body">
-              <div class="rr-home-cabin-card__name">{{ cabin.name }}</div>
-              <div class="rr-home-cabin-card__rate">from <strong>$132</strong> per night</div>
-            </div>
-          </a>
-        }
-      </div>
-
-      @if (mobileReview(); as review) {
+    @if (mobileReview(); as review) {
+      <div class="rr-home-reviews__mobile">
         <div class="rr-home-mobile-review">
           <div class="rr-home-eyebrow rr-home-eyebrow--brass">Guest reviews</div>
           <div class="rr-home-mobile-review__card">
             <div class="rr-home-mobile-review__image-wrap">
-              <img [src]="mobileCabin().imageUrl" [alt]="mobileCabin().name" loading="lazy" />
-              <span class="rr-home-mobile-review__cabin">{{ mobileCabin().name }}</span>
+              <img
+                [src]="mobileCabin().imageUrl"
+                [alt]="mobileCabin().carouselName"
+                loading="lazy"
+              />
+              <span class="rr-home-mobile-review__cabin">{{ mobileCabin().carouselName }}</span>
             </div>
             <div class="rr-home-mobile-review__body">
               <div class="rr-home-mobile-review__meta">
                 <span class="rr-home-mobile-review__stars" aria-hidden="true">
                   {{ stars(mobileAverage()) }}
                 </span>
-                {{ mobileAverage() }} · {{ mobileReviews().length }} reviews · Airbnb
+                {{ formatRating(mobileAverage()) }} · {{ mobileReviews().length }} reviews · Airbnb
               </div>
               <p class="rr-home-mobile-review__quote">{{ review.quote }}</p>
               <div class="rr-home-mobile-review__guest">
                 <strong>{{ review.guestName }}</strong>
-                <span>{{ review.stayLabel }}</span>
+                <span>· {{ review.stayLabel }}</span>
               </div>
             </div>
           </div>
@@ -188,11 +201,11 @@
             Show all {{ mobileReviews().length }} reviews
           </button>
         </div>
-      }
-    </div>
+      </div>
+    }
   </section>
 
-  <section class="rr-home-ctas">
+  <section class="rr-home-ctas rr-home-desktop-only">
     <a class="rr-home-cta rr-home-cta--cabins" routerLink="/cabins">
       <img [src]="cabinsCtaImage" alt="Black Gum Getaway" loading="lazy" />
       <span class="rr-home-cta__copy">
@@ -208,6 +221,16 @@
         Pick cabins and nights on one calendar, then check out together.
       </span>
       <span class="rr-home-cta__outline">Open the group calendar</span>
+    </a>
+  </section>
+
+  <section class="rr-home-mobile-ctas rr-home-mobile-only">
+    <a class="rr-home-mobile-cta rr-home-mobile-cta--group" routerLink="/group-booking">
+      <span class="rr-home-mobile-cta__title">Book several cabins together</span>
+      <span class="rr-home-mobile-cta__link">Group calendar →</span>
+    </a>
+    <a class="rr-home-mobile-cta rr-home-mobile-cta--cabins" routerLink="/cabins">
+      Check availability
     </a>
   </section>
 </div>
@@ -229,7 +252,7 @@
       <header class="rr-home-reviews-dialog__header">
         <img
           [src]="mobileCabin().imageUrl"
-          [alt]="mobileCabin().name"
+          [alt]="mobileCabin().carouselName"
           class="rr-home-reviews-dialog__thumb"
         />
         <div class="rr-home-reviews-dialog__intro">
@@ -239,7 +262,7 @@
             <span class="rr-home-reviews-dialog__stars" aria-hidden="true">
               {{ stars(mobileAverage()) }}
             </span>
-            {{ mobileAverage() }} · {{ mobileReviews().length }} reviews · Airbnb
+            {{ formatRating(mobileAverage()) }} · {{ mobileReviews().length }} reviews · Airbnb
           </div>
         </div>
         <button

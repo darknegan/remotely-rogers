@@ -47,6 +47,10 @@ export class HomeReviewBand {
 
   readonly modalVisible = signal(false);
 
+  protected formatRating(rating: number): string {
+    return rating.toFixed(1);
+  }
+
   protected stars(rating: number): string {
     return '★★★★★'.slice(0, Math.max(0, Math.min(5, Math.round(rating))));
   }
