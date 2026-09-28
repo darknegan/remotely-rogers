@@ -1,0 +1,81 @@
+<section class="rr-hero" [style.background-image]="'url(' + hero + ')'">
+  <div class="rr-hero__inner">
+    <p class="rr-kicker">Rogers, Arkansas</p>
+    <h1 class="rr-display">Six private A-frames on 70 acres.</h1>
+    <p>Minutes from Bentonville trails and downtown Rogers.</p>
+    <div style="margin-top: 28px">
+      <app-booking-bar />
+    </div>
+  </div>
+</section>
+
+<section class="rr-section">
+  <div class="rr-split">
+    <div>
+      <p class="rr-kicker">Discover Remotely Rogers</p>
+      <h2>Ozark woodland, a glass wall, and nobody on the other side of it.</h2>
+      <p class="rr-lede">
+        Six A-frames sit on 70 private acres in Rogers, Arkansas. Each one sleeps up to four guests
+        and welcomes one pet, and each faces the trees through a full wall of glass — so the seasons
+        are the view, from spring green to bare winter branches.
+      </p>
+    </div>
+    <img src="/cabins/03.jpg" alt="A-frame interior looking into the woods" style="width: 100%; height: 420px; object-fit: cover" />
+  </div>
+  <div class="rr-stats">
+    <div><strong>70</strong><span>Private acres</span></div>
+    <div><strong>6</strong><span>A-frame cabins</span></div>
+    <div><strong>4</strong><span>Guests per cabin</span></div>
+    <div><strong>1</strong><span>Pet welcome, arranged first</span></div>
+  </div>
+</section>
+
+<section class="rr-section rr-section--ink">
+  <p class="rr-kicker" style="color: var(--rr-brass)">Comfortable cabins</p>
+  <h2>Stocked the way you'd want to arrive.</h2>
+  <div class="rr-amenity-grid">
+    <article>
+      <h3>Kitchenette</h3>
+      <p>Cookware, dishes, wine glasses and countertop appliances.</p>
+    </article>
+    <article>
+      <h3>Fridge &amp; freezer</h3>
+      <p>Full size, for a long weekend or a work week.</p>
+    </article>
+    <article>
+      <h3>Bath &amp; bedding</h3>
+      <p>Towels, bedding, shampoo, conditioner, soap and a hair dryer.</p>
+    </article>
+    <article>
+      <h3>Parking</h3>
+      <p>A designated spot at every cabin.</p>
+    </article>
+  </div>
+</section>
+
+<section class="rr-hero" style="min-height: 420px; background-image: url('/cabins/10.jpg')">
+  <div class="rr-hero__inner">
+    <p class="rr-kicker">Six cabins on one property</p>
+    <p class="rr-display" style="font-size: clamp(36px, 5vw, 62px)">Book one cabin, or several together.</p>
+  </div>
+</section>
+
+<section class="rr-section">
+  <p class="rr-kicker">Guest reviews</p>
+  <h2>What guests say, cabin by cabin.</h2>
+  @for (cabin of cabins; track cabin.slug) {
+    <app-review-band [slug]="cabin.slug" [name]="cabin.name" [imageUrl]="cabin.imageUrl" />
+  }
+</section>
+
+<div class="rr-cta-row">
+  <a routerLink="/cabins">
+    <span class="rr-kicker" style="color: var(--rr-brass-soft)">Cabins</span>
+    <span class="rr-display" style="font-size: 46px">Browse the six A-frames</span>
+    <span class="rr-btn" style="background: var(--rr-ivory); color: var(--rr-walnut); align-self: flex-start">Check availability</span>
+  </a>
+  <a routerLink="/multi-cabin">
+    <span class="rr-kicker" style="color: var(--rr-brass-soft)">Multi-Cabin</span>
+    <span class="rr-display" style="font-size: 46px">Bring everyone. Pay once.</span>
+  </a>
+</div>

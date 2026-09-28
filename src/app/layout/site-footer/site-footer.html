@@ -1,0 +1,35 @@
+<footer class="rr-footer">
+  <div class="rr-footer__grid">
+    <div class="rr-footer__col">
+      <h2>Remotely Rogers</h2>
+      <p>
+        Six private A-frames on 70 acres of Ozark woodland in Rogers, Arkansas.
+      </p>
+      <a class="rr-btn rr-btn--brass" routerLink="/cabins">Check availability</a>
+    </div>
+    <div class="rr-footer__col">
+      <span class="rr-kicker">Call or write</span>
+      <a class="rr-footer__phone" [href]="phoneHref">{{ phone }}</a>
+      <a [href]="emailHref">{{ email }}</a>
+    </div>
+    <div class="rr-footer__col">
+      <span class="rr-kicker">Visit</span>
+      <span>{{ address }}</span>
+      <a [href]="map" target="_blank" rel="noopener">Map &amp; directions →</a>
+    </div>
+    <div class="rr-footer__col">
+      <span class="rr-kicker">Follow</span>
+      <a [href]="instagram" target="_blank" rel="noopener">Instagram @remotely.rogers</a>
+      <span class="rr-kicker">Stays</span>
+      <span>Check-in 3:00 PM<br />Check-out 11:00 AM</span>
+    </div>
+  </div>
+  <div class="rr-footer__bar">
+    <span>© {{ year }} Remotely Rogers · Rogers, Arkansas</span>
+    <nav aria-label="Footer">
+      @for (link of links; track link.path) {
+        <a [routerLink]="link.path">{{ link.label }}</a>
+      }
+    </nav>
+  </div>
+</footer>

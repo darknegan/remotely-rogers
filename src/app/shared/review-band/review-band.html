@@ -1,0 +1,43 @@
+@if (reviews().length) {
+  <section class="rr-review-band">
+    <a [routerLink]="['/cabins', slug()]">
+      <img [src]="imageUrl()" [alt]="name()" />
+      <strong>{{ name() }}</strong>
+    </a>
+    <div>
+      @for (review of visible(); track review.id) {
+        <article class="rr-review-card">
+          <strong>{{ review.guestName }}</strong>
+          <span class="rr-stars" [attr.aria-label]="review.rating + ' out of 5 stars'">{{ stars(review.rating) }}</span>
+          <div>{{ review.stayLabel }}</div>
+          <p>{{ review.quote }}</p>
+        </article>
+      }
+      <p>
+        <span class="rr-stars">{{ stars(average()) }}</span>
+        {{ average() }} · {{ reviews().length }} reviews · Airbnb
+      </p>
+      <div style="display: flex; gap: 8px; margin-top: 8px">
+        <button type="button" class="rr-btn rr-btn--ghost" (click)="prev()">Previous</button>
+        <button type="button" class="rr-btn rr-btn--ghost" (click)="next()">Next</button>
+        <button type="button" class="rr-btn" (click)="open.set(true)">Show all {{ reviews().length }}</button>
+      </div>
+    </div>
+  </section>
+
+  <p-dialog
+    [visible]="open()"
+    (visibleChange)="open.set($event)"
+    [header]="'All guest reviews · ' + name()"
+    [modal]="true"
+    [style]="{ width: 'min(720px, 94vw)' }"
+  >
+    @for (review of reviews(); track review.id) {
+      <article class="rr-review-card">
+        <strong>{{ initials(review.guestName) }} {{ review.guestName }}</strong>
+        <div>{{ review.stayLabel }}</div>
+        <p>{{ review.quote }}</p>
+      </article>
+    }
+  </p-dialog>
+}

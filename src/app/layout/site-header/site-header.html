@@ -1,0 +1,47 @@
+<header class="rr-header">
+  <a routerLink="/" class="rr-wordmark">
+    <strong>Remotely Rogers</strong>
+    <span>Rogers · Arkansas</span>
+  </a>
+  <nav class="rr-nav" aria-label="Primary">
+    @for (link of links; track link.path) {
+      <a
+        [routerLink]="link.path"
+        routerLinkActive="is-active"
+        [routerLinkActiveOptions]="{ exact: !!link.exact }"
+      >
+        {{ link.label }}
+      </a>
+    }
+    <a class="rr-btn" routerLink="/cabins">Check availability</a>
+  </nav>
+</header>
+
+<div class="rr-mobile-bar">
+  <a routerLink="/" class="rr-wordmark">
+    <strong>Remotely Rogers</strong>
+  </a>
+  <div style="display: flex; align-items: center; gap: 6px">
+    <a class="rr-btn" routerLink="/cabins">Book</a>
+    <button type="button" class="rr-menu-btn" aria-label="Open menu" (click)="menuOpen.set(true)">
+      <span></span>
+      <span></span>
+      <span></span>
+    </button>
+  </div>
+</div>
+
+<p-drawer
+  [visible]="menuOpen()"
+  (visibleChange)="menuOpen.set($event)"
+  position="right"
+  header="Menu"
+  [style]="{ width: 'min(100%, 375px)', background: '#2B1F17', color: '#F7F2E7' }"
+>
+  <nav class="rr-drawer-nav" aria-label="Mobile">
+    @for (link of links; track link.path) {
+      <a [routerLink]="link.path" (click)="closeMenu()">{{ link.label }}</a>
+    }
+    <a class="rr-btn" routerLink="/cabins" (click)="closeMenu()">Check availability</a>
+  </nav>
+</p-drawer>

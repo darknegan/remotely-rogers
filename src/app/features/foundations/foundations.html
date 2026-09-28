@@ -1,0 +1,21 @@
+<section class="rr-section">
+  <p class="rr-kicker">Remotely Rogers · Website system</p>
+  <h1 class="rr-display">Ozark maison</h1>
+  <p class="rr-lede">
+    A design-hotel system for six A-frames: limestone grounds, walnut type, oxblood for the one
+    action that matters on each screen, brass for rules and detail.
+  </p>
+  <div class="rr-swatches" style="margin-top: 36px">
+    @for (swatch of swatches; track swatch.name) {
+      <div class="rr-swatch" [style.background]="swatch.value">
+        <strong>{{ swatch.name }}</strong>
+        <div>{{ swatch.value }}</div>
+      </div>
+    }
+  </div>
+  <h2 style="margin-top: 48px">Young Serif · Spectral · Archivo</h2>
+  <p class="rr-lede">Six private A-frames on 70 acres.</p>
+  <div style="margin-top: 36px">
+    <app-booking-bar />
+  </div>
+</section>

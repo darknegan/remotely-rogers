@@ -1,0 +1,101 @@
+<section class="rr-section" style="padding-bottom: 0">
+  <p class="rr-kicker">All properties</p>
+  <h1 class="rr-display" style="font-size: clamp(40px, 5vw, 68px)">Six cabins. One hill.</h1>
+  <div style="margin-top: 24px">
+    <app-booking-bar />
+  </div>
+  <div class="rr-toolbar" style="margin-top: 12px">
+    <p-button type="button" label="More filters" [outlined]="true" (onClick)="store.filtersOpen.set(true)" />
+    <label class="rr-field">
+      Sort by price
+      <p-select
+        [options]="sortOptions"
+        optionLabel="label"
+        optionValue="value"
+        [ngModel]="store.sort()"
+        (ngModelChange)="store.sort.set($event)"
+        name="sort"
+      />
+    </label>
+    <strong style="margin-left: auto; font-family: var(--rr-font-display); font-size: 26px; font-weight: 400">
+      {{ store.resultLabel() }}
+    </strong>
+  </div>
+</section>
+
+@if (store.results().length === 0) {
+  <section class="rr-listing">
+    <div class="rr-empty">
+      <div class="rr-empty__copy">
+        <p class="rr-kicker">No match</p>
+        <h2>No cabins match those filters.</h2>
+        <p class="rr-lede">
+          Try different dates, clear the filters, or ask Jeff about holding several cabins together.
+        </p>
+        <div style="display: flex; gap: 12px; margin-top: 28px; flex-wrap: wrap">
+          <button type="button" class="rr-btn" (click)="store.clearFilters()">Try different dates</button>
+          <a class="rr-btn rr-btn--ghost" routerLink="/contact">Ask about a group stay</a>
+        </div>
+      </div>
+      <img src="/cabins/10.jpg" alt="Cabins in the woods" />
+    </div>
+  </section>
+} @else {
+  <section class="rr-listing" [attr.data-pane]="store.mobilePane()">
+    <div class="rr-cabin-list">
+      @for (cabin of store.results(); track cabin.slug; let first = $first) {
+        <a class="rr-cabin-card" [routerLink]="['/cabins', cabin.slug]" [style.grid-template-columns]="first ? '1.2fr 1fr' : null">
+          <img [src]="cabin.imageUrl" [alt]="cabin.name" />
+          <div>
+            <p class="rr-kicker">Vacation home · {{ cabin.guests }} guests</p>
+            <h2>{{ cabin.name }}</h2>
+            <p>Wifi · from ${{ cabin.nightlyFrom }} per night</p>
+          </div>
+        </a>
+      }
+    </div>
+    <aside>
+      <app-map-embed />
+    </aside>
+  </section>
+  <div class="rr-section rr-pane-toggle" style="gap: 8px; padding-top: 0">
+    <button type="button" class="rr-btn" [class.rr-btn--ghost]="store.mobilePane() !== 'list'" (click)="store.mobilePane.set('list')">List</button>
+    <button type="button" class="rr-btn" [class.rr-btn--ghost]="store.mobilePane() !== 'map'" (click)="store.mobilePane.set('map')">Map</button>
+  </div>
+}
+
+<p-dialog
+  header="More filters"
+  [visible]="store.filtersOpen()"
+  (visibleChange)="store.filtersOpen.set($event)"
+  [modal]="true"
+  [style]="{ width: 'min(520px, 94vw)' }"
+>
+  <div class="rr-form">
+    <label>
+      Bedrooms
+      <p-select
+        [options]="bedroomOptions"
+        optionLabel="label"
+        optionValue="value"
+        [ngModel]="store.minBedrooms()"
+        (ngModelChange)="store.minBedrooms.set($event)"
+        name="bedrooms"
+      />
+    </label>
+    @for (amenity of amenityKeys; track amenity[0]) {
+      <label style="grid-template-columns: auto 1fr; align-items: center">
+        <input
+          type="checkbox"
+          [checked]="store.amenities()[amenity[0]]"
+          (change)="store.toggleAmenity(amenity[0])"
+        />
+        {{ amenity[1] }}
+      </label>
+    }
+    <div style="display: flex; gap: 12px">
+      <p-button type="button" label="Apply" (onClick)="store.filtersOpen.set(false)" />
+      <p-button type="button" label="Clear" [outlined]="true" (onClick)="store.clearFilters()" />
+    </div>
+  </div>
+</p-dialog>

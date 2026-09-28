@@ -1,8 +1,7 @@
-import { Component } from '@angular/core';
-import { Card } from 'primeng/card';
-import { Divider } from 'primeng/divider';
-import { Panel } from 'primeng/panel';
-import { Tag } from 'primeng/tag';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { RouterLink } from '@angular/router';
+
+import { MapEmbed } from '../../../layout/map-embed/map-embed';
 
 type TagSeverity = 'success' | 'info' | 'warn' | 'danger' | 'secondary' | 'contrast';
 
@@ -41,9 +40,9 @@ interface TripIdea {
 
 @Component({
   selector: 'app-recommendations',
-  imports: [Card, Divider, Panel, Tag],
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [RouterLink, MapEmbed],
   templateUrl: './recommendations.html',
-  styleUrl: './recommendations.scss',
 })
 export class Recommendations {
   readonly picks: Recommendation[] = [

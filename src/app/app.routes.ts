@@ -1,33 +1,51 @@
 import { Routes } from '@angular/router';
 
 export const routes: Routes = [
-  { path: '', redirectTo: 'preview/activities', pathMatch: 'full' },
   {
-    path: 'preview/activities',
-    loadComponent: () =>
-      import('./features/content/activities/activities').then((m) => m.Activities),
+    path: '',
+    loadComponent: () => import('./features/home/home').then((m) => m.Home),
   },
   {
-    path: 'preview/recommendations',
+    path: 'cabins',
+    loadComponent: () => import('./features/cabins/cabin-listing').then((m) => m.CabinListing),
+  },
+  {
+    path: 'cabins/:slug',
+    loadComponent: () => import('./features/cabins/cabin-detail').then((m) => m.CabinDetail),
+  },
+  {
+    path: 'activities',
+    loadComponent: () => import('./features/content/activities/activities').then((m) => m.Activities),
+  },
+  {
+    path: 'recommendations',
     loadComponent: () =>
       import('./features/content/recommendations/recommendations').then((m) => m.Recommendations),
   },
   {
-    path: 'preview/work-stays',
-    loadComponent: () =>
-      import('./features/content/work-stays/work-stays').then((m) => m.WorkStays),
+    path: 'work-stays',
+    loadComponent: () => import('./features/content/work-stays/work-stays').then((m) => m.WorkStays),
   },
   {
-    path: 'preview/multi-cabin-stays',
+    path: 'multi-cabin',
     loadComponent: () =>
-      import('./features/content/multi-cabin-stays/multi-cabin-stays').then(
-        (m) => m.MultiCabinStays,
-      ),
+      import('./features/content/multi-cabin-stays/multi-cabin-stays').then((m) => m.MultiCabinStays),
   },
+  {
+    path: 'contact',
+    loadComponent: () => import('./features/contact/contact').then((m) => m.Contact),
+  },
+  {
+    path: 'preview/foundations',
+    loadComponent: () => import('./features/foundations/foundations').then((m) => m.Foundations),
+  },
+  { path: 'preview/activities', redirectTo: 'activities', pathMatch: 'full' },
+  { path: 'preview/recommendations', redirectTo: 'recommendations', pathMatch: 'full' },
+  { path: 'preview/work-stays', redirectTo: 'work-stays', pathMatch: 'full' },
+  { path: 'preview/multi-cabin-stays', redirectTo: 'multi-cabin', pathMatch: 'full' },
   {
     path: 'preview/reviews',
-    loadComponent: () =>
-      import('./features/content/reviews/reviews').then((m) => m.Reviews),
+    loadComponent: () => import('./features/content/reviews/reviews').then((m) => m.Reviews),
   },
   {
     path: 'group-booking',

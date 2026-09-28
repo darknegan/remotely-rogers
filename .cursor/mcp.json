@@ -7,6 +7,9 @@
     "primeng": {
       "command": "npx",
       "args": ["-y", "@primeng/mcp"]
+    },
+    "claude-design": {
+      "url": "https://api.anthropic.com/v1/design/mcp"
     }
   }
 }

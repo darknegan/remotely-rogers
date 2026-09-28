@@ -1,20 +1,20 @@
 :host {
-  --lf-bg: #ffffff;
-  --lf-border: #e6e6e6;
-  --lf-border-light: #f0f0f0;
-  --lf-text: #1a1a1a;
-  --lf-text-muted: #8a8a8a;
-  --lf-forest: #2d4a3e;
-  --lf-today-bg: #2d4a3e;
-  --lf-today-text: #ffffff;
-  --lf-bar-booked-bg: #f4d7cc;
-  --lf-bar-booked-border: #c45c3e;
-  --lf-bar-booked-text: #7a2e1c;
-  --lf-bar-blocked-bg: #3d3d3d;
-  --lf-bar-blocked-text: #ffffff;
-  --lf-stay-bg: rgba(45, 74, 62, 0.06);
-  --lf-weekend-bg: #f7f4ef;
-  --lf-font: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  --lf-bg: #fbf8f1;
+  --lf-border: rgba(176, 138, 74, 0.45);
+  --lf-border-light: rgba(62, 44, 34, 0.08);
+  --lf-text: #3e2c22;
+  --lf-text-muted: #7a6552;
+  --lf-forest: #6c2029;
+  --lf-today-bg: #6c2029;
+  --lf-today-text: #f7f2e7;
+  --lf-bar-booked-bg: #e6d3ae;
+  --lf-bar-booked-border: #9a7638;
+  --lf-bar-booked-text: #3e2c22;
+  --lf-bar-blocked-bg: #2b1f17;
+  --lf-bar-blocked-text: #f7f2e7;
+  --lf-stay-bg: rgba(108, 32, 41, 0.08);
+  --lf-weekend-bg: #ede5d6;
+  --lf-font: Archivo, system-ui, sans-serif;
 
   display: block;
 }
@@ -29,7 +29,7 @@
   min-height: 14rem;
   padding: 2rem 1rem;
   border: 1px solid var(--lf-border);
-  border-radius: 8px;
+  border-radius: 0;
   background: var(--lf-bg);
   text-align: center;
 }
@@ -100,7 +100,7 @@
   display: inline-block;
   width: 0.85rem;
   height: 0.85rem;
-  border-radius: 3px;
+  border-radius: 0;
 }
 
 .rr-legend-swatch--available {
@@ -119,12 +119,12 @@
 
 .rr-legend-swatch--stay {
   background: var(--lf-stay-bg);
-  border: 1px solid rgba(45, 74, 62, 0.25);
+  border: 1px solid rgba(108, 32, 41, 0.25);
 }
 
 .rr-legend-swatch--selected {
-  background: rgba(45, 74, 62, 0.16);
-  border: 1px solid rgba(45, 74, 62, 0.4);
+  background: rgba(108, 32, 41, 0.16);
+  border: 1px solid rgba(108, 32, 41, 0.4);
 }
 
 .rr-cabin-grid__selection-error {
@@ -135,7 +135,7 @@
   overflow: auto;
   max-height: min(70vh, 36rem);
   border: 1px solid var(--lf-border);
-  border-radius: 8px;
+  border-radius: 0;
   background: var(--lf-bg);
 }
 
@@ -217,7 +217,7 @@
   min-width: 1.65rem;
   height: 1.65rem;
   margin-top: 0.1rem;
-  border-radius: 6px;
+  border-radius: 0;
   background: var(--lf-today-bg);
   color: var(--lf-today-text);
   font-weight: 600;
@@ -257,7 +257,7 @@
 .rr-cabin-grid__cabin-info img {
   width: 2.5rem;
   height: 2.5rem;
-  border-radius: 4px;
+  border-radius: 0;
   object-fit: cover;
   flex-shrink: 0;
 }
@@ -318,12 +318,12 @@
 }
 
 .rr-cabin-grid__cell--selected {
-  background-color: rgba(45, 74, 62, 0.14);
+  background-color: rgba(108, 32, 41, 0.14);
 }
 
 .rr-cabin-grid__cell--pending {
-  background-color: rgba(45, 74, 62, 0.08);
-  box-shadow: inset 0 0 0 2px rgba(45, 74, 62, 0.55);
+  background-color: rgba(108, 32, 41, 0.08);
+  box-shadow: inset 0 0 0 2px rgba(108, 32, 41, 0.55);
 }
 
 .rr-cabin-grid__cell--disabled {
@@ -351,11 +351,11 @@
 }
 
 .rr-cabin-grid__cell-btn:not(:disabled):hover {
-  background: rgba(45, 74, 62, 0.08);
+  background: rgba(108, 32, 41, 0.08);
 }
 
 .rr-cabin-grid__cell--selected .rr-cabin-grid__cell-btn:not(:disabled):hover {
-  background: rgba(45, 74, 62, 0.2);
+  background: rgba(108, 32, 41, 0.2);
 }
 
 .rr-cabin-grid__price {
@@ -392,7 +392,7 @@
   gap: 0.35rem;
   height: 1.85rem;
   padding: 0 0.65rem;
-  border-radius: 999px;
+  border-radius: 0;
   font-family: var(--lf-font);
   font-size: 0.75rem;
   font-weight: 600;

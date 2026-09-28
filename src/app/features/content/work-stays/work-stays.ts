@@ -1,8 +1,7 @@
-import { Component } from '@angular/core';
-import { Card } from 'primeng/card';
-import { Divider } from 'primeng/divider';
-import { Panel } from 'primeng/panel';
-import { Tag } from 'primeng/tag';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { RouterLink } from '@angular/router';
+
+import { InquiryForm } from '../../../shared/inquiry-form/inquiry-form';
 
 type TagSeverity = 'success' | 'info' | 'warn' | 'danger' | 'secondary' | 'contrast';
 
@@ -38,9 +37,9 @@ interface WorkdayStep {
 
 @Component({
   selector: 'app-work-stays',
-  imports: [Card, Divider, Panel, Tag],
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [RouterLink, InquiryForm],
   templateUrl: './work-stays.html',
-  styleUrl: './work-stays.scss',
 })
 export class WorkStays {
   readonly amenities: WorkAmenity[] = [
