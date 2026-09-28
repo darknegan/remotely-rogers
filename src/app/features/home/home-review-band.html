@@ -1,0 +1,112 @@
+@if (reviewCount() > 0 && activeReview(); as review) {
+  <article
+    class="rr-home-review-band"
+    [class.rr-home-review-band--image-right]="!imageOnLeft()"
+  >
+    <a class="rr-home-review-band__image" [routerLink]="['/cabins', slug()]">
+      <img [src]="imageUrl()" [alt]="displayName()" loading="lazy" />
+      <span class="rr-home-review-band__image-caption">
+        <span class="rr-home-review-band__cabin-name">{{ displayName() }}</span>
+        <span class="rr-home-review-band__view">View cabin →</span>
+      </span>
+    </a>
+
+    <div class="rr-home-review-band__content">
+      <div class="rr-home-review-band__toolbar">
+        <span class="rr-home-review-band__rating">
+          <span class="rr-home-review-band__stars" aria-hidden="true">{{ stars(average()) }}</span>
+          <span>{{ average() }} · {{ reviewCount() }} reviews · Airbnb</span>
+        </span>
+        <div class="rr-home-review-band__nav">
+          <span class="rr-home-review-band__index">{{ indexLabel() }}</span>
+          <button
+            type="button"
+            class="rr-home-review-band__arrow"
+            aria-label="Previous review"
+            (click)="prev()"
+          >
+            ‹
+          </button>
+          <button
+            type="button"
+            class="rr-home-review-band__arrow"
+            aria-label="Next review"
+            (click)="next()"
+          >
+            ›
+          </button>
+        </div>
+      </div>
+
+      <blockquote class="rr-home-review-band__quote">{{ review.quote }}</blockquote>
+
+      <div class="rr-home-review-band__footer">
+        <span>
+          <strong>{{ review.guestName }}</strong>
+          <span class="rr-home-review-band__stay">{{ review.stayLabel }}</span>
+        </span>
+        <button type="button" class="rr-home-review-band__all" (click)="openModal()">
+          Show all {{ reviewCount() }} reviews
+        </button>
+      </div>
+    </div>
+  </article>
+
+  <p-dialog
+    [visible]="modalVisible()"
+    (visibleChange)="modalVisible.set($event)"
+    [modal]="true"
+    [dismissableMask]="true"
+    [draggable]="false"
+    [resizable]="false"
+    [closable]="false"
+    [showHeader]="false"
+    styleClass="rr-home-reviews-dialog"
+    [style]="{ width: '53.75rem', maxWidth: 'calc(100vw - 2rem)' }"
+  >
+    <div class="rr-home-reviews-dialog__panel">
+      <header class="rr-home-reviews-dialog__header">
+        <img [src]="imageUrl()" [alt]="displayName()" class="rr-home-reviews-dialog__thumb" />
+        <div class="rr-home-reviews-dialog__intro">
+          <div class="rr-home-reviews-dialog__eyebrow">All guest reviews</div>
+          <h3 class="rr-home-reviews-dialog__title">{{ name() }}</h3>
+          <div class="rr-home-reviews-dialog__meta">
+            <span class="rr-home-reviews-dialog__stars" aria-hidden="true">{{ stars(average()) }}</span>
+            {{ average() }} · {{ reviewCount() }} reviews · Airbnb
+          </div>
+        </div>
+        <button
+          type="button"
+          class="rr-home-reviews-dialog__close"
+          aria-label="Close reviews"
+          (click)="closeModal()"
+        >
+          ✕
+        </button>
+      </header>
+
+      <div class="rr-home-reviews-dialog__list">
+        @for (item of reviews(); track item.id) {
+          <article class="rr-home-reviews-dialog__item">
+            <div class="rr-home-reviews-dialog__guest">
+              <div class="rr-home-reviews-dialog__guest-name">{{ item.guestName }}</div>
+              <div class="rr-home-reviews-dialog__guest-stay">{{ item.stayLabel }}</div>
+              <div class="rr-home-reviews-dialog__stars" aria-hidden="true">
+                {{ stars(item.rating) }}
+              </div>
+            </div>
+            <p class="rr-home-reviews-dialog__quote">{{ item.quote }}</p>
+          </article>
+        }
+        <div class="rr-home-reviews-dialog__fade" aria-hidden="true"></div>
+      </div>
+
+      <footer class="rr-home-reviews-dialog__footer">
+        <span>Showing {{ reviewCount() }} reviews · scroll for more</span>
+        <a class="rr-btn rr-btn--primary" routerLink="/cabins" (click)="closeModal()">
+          Check availability
+        </a>
+      </footer>
+    </div>
+  </p-dialog>
+}

@@ -755,3 +755,152 @@
   max-width: 52rem;
   margin: 0 auto;
 }
+
+/* Home reviews dialog (PrimeNG overlay — global) */
+.rr-home-reviews-dialog {
+  border: none;
+  border-radius: 0;
+  overflow: hidden;
+  box-shadow: 0 40px 100px rgba(0, 0, 0, 0.45);
+
+  .p-dialog-content {
+    padding: 0;
+    background: var(--rr-ground);
+  }
+}
+
+.rr-home-reviews-dialog__panel {
+  display: flex;
+  flex-direction: column;
+  max-height: min(53.75rem, calc(100vh - 4rem));
+}
+
+.rr-home-reviews-dialog__header {
+  display: flex;
+  gap: 1.5rem;
+  align-items: center;
+  padding: 1.75rem 2rem;
+  border-bottom: 1px solid rgba(62, 44, 34, 0.14);
+}
+
+.rr-home-reviews-dialog__thumb {
+  width: 4.75rem;
+  height: 4.75rem;
+  object-fit: cover;
+}
+
+.rr-home-reviews-dialog__intro {
+  flex: 1;
+  min-width: 0;
+}
+
+.rr-home-reviews-dialog__eyebrow {
+  font-family: var(--rr-font-ui);
+  font-size: 0.66rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--rr-oxblood);
+}
+
+.rr-home-reviews-dialog__title {
+  margin: 0.375rem 0 0;
+  font-family: var(--rr-font-display);
+  font-size: 1.875rem;
+  font-weight: 400;
+  color: var(--rr-walnut);
+}
+
+.rr-home-reviews-dialog__meta {
+  margin-top: 0.375rem;
+  font-family: var(--rr-font-ui);
+  font-size: 0.8125rem;
+  color: var(--rr-walnut-ink);
+}
+
+.rr-home-reviews-dialog__stars {
+  color: var(--rr-brass);
+  letter-spacing: 0.1em;
+}
+
+.rr-home-reviews-dialog__close {
+  width: 3rem;
+  height: 3rem;
+  border: 1px solid rgba(62, 44, 34, 0.25);
+  background: transparent;
+  font-size: 1.25rem;
+  color: var(--rr-walnut);
+  cursor: pointer;
+
+  &:hover {
+    border-color: var(--rr-oxblood);
+    color: var(--rr-oxblood);
+    background: var(--rr-paper);
+  }
+
+  &:active {
+    background: #ede5d6;
+  }
+}
+
+.rr-home-reviews-dialog__list {
+  position: relative;
+  flex: 1;
+  overflow: auto;
+  padding: 0.5rem 2rem 0;
+}
+
+.rr-home-reviews-dialog__item {
+  display: grid;
+  grid-template-columns: 11.25rem 1fr;
+  gap: 1.75rem;
+  padding: 1.75rem 0;
+  border-bottom: 1px solid rgba(62, 44, 34, 0.12);
+}
+
+.rr-home-reviews-dialog__guest-name {
+  font-family: var(--rr-font-ui);
+  font-size: 0.9375rem;
+  font-weight: 600;
+  color: var(--rr-walnut);
+}
+
+.rr-home-reviews-dialog__guest-stay {
+  margin-top: 0.25rem;
+  font-family: var(--rr-font-ui);
+  font-size: 0.78rem;
+  color: var(--rr-bark);
+}
+
+.rr-home-reviews-dialog__guest .rr-home-reviews-dialog__stars {
+  margin-top: 0.5rem;
+  font-size: 0.8125rem;
+}
+
+.rr-home-reviews-dialog__quote {
+  margin: 0;
+  font-size: 1.3125rem;
+  font-style: italic;
+  line-height: 1.6;
+  color: var(--rr-walnut);
+}
+
+.rr-home-reviews-dialog__fade {
+  position: sticky;
+  bottom: 0;
+  height: 7.5rem;
+  margin-top: -7.5rem;
+  background: linear-gradient(to top, var(--rr-ground), rgba(245, 240, 230, 0));
+  pointer-events: none;
+}
+
+.rr-home-reviews-dialog__footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  padding: 1.125rem 2rem;
+  border-top: 1px solid rgba(62, 44, 34, 0.14);
+  font-family: var(--rr-font-ui);
+  font-size: 0.8125rem;
+  color: var(--rr-bark);
+}

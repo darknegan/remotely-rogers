@@ -1,7 +1,16 @@
 import { Routes } from '@angular/router';
 
 export const routes: Routes = [
-  { path: '', redirectTo: 'preview/foundations', pathMatch: 'full' },
+  {
+    path: '',
+    loadComponent: () => import('./layout/site-shell/site-shell').then((m) => m.SiteShell),
+    children: [
+      {
+        path: '',
+        loadComponent: () => import('./features/home/home').then((m) => m.Home),
+      },
+    ],
+  },
   {
     path: 'preview',
     loadComponent: () => import('./layout/site-shell/site-shell').then((m) => m.SiteShell),
