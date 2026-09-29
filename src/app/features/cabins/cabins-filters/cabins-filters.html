@@ -1,0 +1,67 @@
+<p-drawer
+  [visible]="store.filtersOpen()"
+  (visibleChange)="store.filtersOpen.set($event)"
+  position="right"
+  styleClass="rr-cabins-filters-drawer"
+  [modal]="true"
+  [dismissible]="true"
+  [closeOnEscape]="true"
+  [blockScroll]="true"
+>
+  <ng-template #header>
+    <div class="rr-cabins-filters__header">
+      <h2 class="rr-cabins-filters__title">More filters</h2>
+      <button type="button" class="rr-cabins-filters__close" (click)="close()" aria-label="Close filters">
+        ✕
+      </button>
+    </div>
+  </ng-template>
+
+  <div class="rr-cabins-filters__body">
+    <div class="rr-cabins-filters__section-label">Amenities</div>
+    <div class="rr-cabins-filters__amenities">
+      @for (amenity of amenityOptions; track amenity.id) {
+        <button
+          type="button"
+          class="rr-cabins-filters__amenity"
+          [class.rr-cabins-filters__amenity--on]="store.isAmenitySelected(amenity.id)"
+          (click)="store.toggleAmenity(amenity.id)"
+        >
+          <span>{{ amenity.label }}</span>
+          <span class="rr-cabins-filters__check" aria-hidden="true">
+            @if (store.isAmenitySelected(amenity.id)) {
+              ✓
+            }
+          </span>
+        </button>
+      }
+    </div>
+
+    <div class="rr-cabins-filters__section-label">Bedrooms</div>
+    <div class="rr-cabins-filters__bedrooms">
+      @for (option of bedroomOptions; track option.label) {
+        <button
+          type="button"
+          class="rr-cabins-filters__bedroom"
+          [class.rr-cabins-filters__bedroom--active]="store.bedroomFilter() === option.value"
+          (click)="store.setBedroomFilter(option.value)"
+        >
+          {{ option.label }}
+        </button>
+      }
+    </div>
+
+    <p class="rr-cabins-filters__note">
+      Every cabin sleeps four and welcomes one pet once you’ve arranged it with Jeff.
+    </p>
+  </div>
+
+  <ng-template #footer>
+    <div class="rr-cabins-filters__footer">
+      <button type="button" class="rr-cabins-filters__clear" (click)="clearAll()">Clear all</button>
+      <button type="button" class="rr-cabins-filters__apply" (click)="apply()">
+        Show {{ store.resultCountLabel() }}
+      </button>
+    </div>
+  </ng-template>
+</p-drawer>

@@ -1,0 +1,83 @@
+<div class="rr-cabins-map" [class.rr-cabins-map--compact]="compact()">
+  <svg
+    class="rr-cabins-map__svg"
+    viewBox="0 0 800 800"
+    preserveAspectRatio="xMidYMid slice"
+    aria-hidden="true"
+  >
+    <path
+      d="M540 90 C610 120 650 190 630 250 C612 300 560 310 548 360 C538 410 600 450 640 470 L800 470 L800 60 C700 50 600 60 540 90 Z"
+      fill="#CFD3C8"
+    />
+    <g fill="none" stroke="rgba(62,44,34,.11)" stroke-width="1.2">
+      <ellipse cx="410" cy="380" rx="90" ry="62" transform="rotate(-18 410 380)" />
+      <ellipse cx="410" cy="384" rx="150" ry="104" transform="rotate(-16 410 384)" />
+      <ellipse cx="404" cy="390" rx="214" ry="150" transform="rotate(-14 404 390)" />
+      <ellipse cx="398" cy="398" rx="286" ry="204" transform="rotate(-12 398 398)" />
+      <ellipse cx="392" cy="404" rx="360" ry="262" transform="rotate(-10 392 404)" />
+      <ellipse cx="160" cy="640" rx="70" ry="44" transform="rotate(12 160 640)" />
+      <ellipse cx="160" cy="640" rx="128" ry="84" transform="rotate(12 160 640)" />
+    </g>
+    <path
+      d="M-20 560 C160 520 260 470 380 440 C500 410 620 420 820 360"
+      fill="none"
+      stroke="#FBF8F1"
+      stroke-width="10"
+    />
+    <path
+      d="M250 -20 C270 160 300 300 330 420 C360 540 380 660 420 820"
+      fill="none"
+      stroke="#FBF8F1"
+      stroke-width="14"
+    />
+    <path
+      d="M250 -20 C270 160 300 300 330 420 C360 540 380 660 420 820"
+      fill="none"
+      stroke="#E2C98F"
+      stroke-width="3"
+    />
+    <path
+      d="M404 404 C430 380 452 368 480 362"
+      fill="none"
+      stroke="#FBF8F1"
+      stroke-width="5"
+      stroke-dasharray="1 0"
+    />
+  </svg>
+
+  <span class="rr-cabins-map__road rr-cabins-map__road--i49">I-49</span>
+  <span class="rr-cabins-map__road rr-cabins-map__road--lindy">Lindy Ln</span>
+
+  @if (showPins()) {
+    @for (pin of pins; track pin.n) {
+      <span class="rr-cabins-map__pin" [style.left]="pin.left" [style.top]="pin.top">
+        {{ pin.n }}
+      </span>
+    }
+  }
+
+  <div class="rr-cabins-map__marker">
+    <span class="rr-cabins-map__marker-label">Remotely Rogers</span>
+    <span class="rr-cabins-map__marker-dot" aria-hidden="true"></span>
+  </div>
+
+  <div class="rr-cabins-map__zoom" aria-hidden="true">
+    <span>+</span>
+    <span>−</span>
+  </div>
+
+  @if (showCard()) {
+    <div class="rr-cabins-map__card">
+      <div class="rr-cabins-map__card-title">Remotely Rogers</div>
+      <p class="rr-cabins-map__card-address">
+        11611–11601 Lindy Lane<br />
+        Rogers, AR 72756
+      </p>
+      <a class="rr-cabins-map__card-link" [href]="directionsUrl" target="_blank" rel="noopener">
+        Get directions
+      </a>
+    </div>
+  }
+
+  <span class="rr-cabins-map__credit">Map embed · Google Maps</span>
+</div>
