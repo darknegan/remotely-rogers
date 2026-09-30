@@ -13,6 +13,11 @@ export const routes: Routes = [
         path: 'cabins',
         loadComponent: () => import('./features/cabins/cabins').then((m) => m.Cabins),
       },
+      {
+        path: 'cabins/:slug',
+        loadComponent: () =>
+          import('./features/cabin-detail/cabin-detail').then((m) => m.CabinDetail),
+      },
     ],
   },
   {

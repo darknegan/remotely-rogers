@@ -1,0 +1,238 @@
+@if (cabin(); as cabin) {
+  <div class="rr-cabin-detail">
+    <header class="rr-cabin-detail__hero rr-cabin-desktop-only">
+      <div class="rr-cabin-detail__intro">
+        <div class="rr-cabin-detail__breadcrumb">
+          <a routerLink="/cabins">Cabins</a>
+          <span>/</span>
+          <span>{{ cabin.displayName }}</span>
+        </div>
+        <h1 class="rr-cabin-detail__title">{{ cabin.displayName }}</h1>
+        <div class="rr-cabin-detail__meta">
+          <span>Vacation Home</span>
+          <span class="rr-cabin-detail__dot">·</span>
+          <span>Rogers, Arkansas</span>
+          @if (reviewCount() > 0) {
+            <span class="rr-cabin-detail__dot">·</span>
+            <span>
+              <span class="rr-cabin-detail__star">★</span>
+              {{ formatRating(average()) }} ·
+              <a href="#reviews">{{ reviewCount() }} reviews</a>
+            </span>
+          }
+        </div>
+      </div>
+    </header>
+
+    <app-cabin-gallery [cabinName]="cabin.displayName" [images]="cabin.gallery" />
+
+    <div class="rr-cabin-detail__mobile-head rr-cabin-mobile-only">
+      <h1 class="rr-cabin-detail__title rr-cabin-detail__title--mobile">{{ cabin.displayName }}</h1>
+      <div class="rr-cabin-detail__meta rr-cabin-detail__meta--mobile">
+        @if (reviewCount() > 0) {
+          <span class="rr-cabin-detail__star">★</span>
+          {{ formatRating(average()) }} · {{ reviewCount() }} reviews ·
+        }
+        Rogers, AR
+      </div>
+    </div>
+
+    <div class="rr-cabin-detail__layout">
+      <div class="rr-cabin-detail__main">
+        <div class="rr-cabin-detail__stats">
+          <div class="rr-cabin-detail__stat">
+            <div class="rr-cabin-detail__stat-value">{{ cabin.maxGuests }}</div>
+            <div class="rr-cabin-detail__stat-label">Guests</div>
+          </div>
+          <div class="rr-cabin-detail__stat">
+            <div class="rr-cabin-detail__stat-value">{{ cabin.bedrooms }}</div>
+            <div class="rr-cabin-detail__stat-label">Bedrooms</div>
+          </div>
+          <div class="rr-cabin-detail__stat">
+            <div class="rr-cabin-detail__stat-value">{{ cabin.beds }}</div>
+            <div class="rr-cabin-detail__stat-label">Beds</div>
+          </div>
+          <div class="rr-cabin-detail__stat">
+            <div class="rr-cabin-detail__stat-value">{{ cabin.bathrooms }}</div>
+            <div class="rr-cabin-detail__stat-label">
+              <span class="rr-cabin-desktop-only">Bathroom</span>
+              <span class="rr-cabin-mobile-only">Bath</span>
+            </div>
+          </div>
+        </div>
+
+        <section class="rr-cabin-detail__copy">
+          <p class="rr-cabin-detail__headline">{{ introHeadline }}</p>
+          <p class="rr-cabin-detail__lede">{{ introLede }}</p>
+          <p class="rr-cabin-detail__lede">
+            Traveling with friends or extended family?
+            <a routerLink="/preview/multi-cabin-stays">Book multiple cabins</a>
+            on the same property.
+          </p>
+          <div class="rr-cabin-detail__note">
+            <span class="rr-cabin-detail__note-label">Please note</span>
+            <p>{{ dogNote }}</p>
+          </div>
+        </section>
+
+        <section class="rr-cabin-detail__highlights rr-cabin-desktop-only">
+          @for (highlight of cabin.highlights; track highlight) {
+            <div class="rr-cabin-detail__highlight">
+              <span class="rr-cabin-detail__highlight-label">Highlight</span>
+              <span class="rr-cabin-detail__highlight-value">{{ highlight }}</span>
+            </div>
+          }
+        </section>
+
+        <section class="rr-cabin-detail__amenities">
+          <h2 class="rr-cabin-detail__section-title">Amenities</h2>
+          <div class="rr-cabin-detail__amenity-grid rr-cabin-desktop-only">
+            @for (group of cabin.amenityGroups; track group.title) {
+              <div class="rr-cabin-detail__amenity-group">
+                <div class="rr-cabin-detail__amenity-title">{{ group.title }}</div>
+                <p>{{ group.items }}</p>
+              </div>
+            }
+          </div>
+          <div class="rr-cabin-detail__amenity-list rr-cabin-mobile-only">
+            <span>Wi-Fi & dedicated workspace</span>
+            <span>Kitchenette, coffee machine, BBQ</span>
+            <span>A/C, central heat, fireplace</span>
+            <span>Parking & patio</span>
+          </div>
+        </section>
+
+        <div class="rr-cabin-detail__rules-map">
+          <section>
+            <h2 class="rr-cabin-detail__section-title rr-cabin-detail__section-title--small">House rules</h2>
+            <div class="rr-cabin-detail__rules rr-cabin-desktop-only">
+              @for (rule of houseRules; track rule.label) {
+                <div class="rr-cabin-detail__rule">
+                  <span>{{ rule.label }}</span>
+                  <span>{{ rule.value }}</span>
+                </div>
+              }
+            </div>
+            <p class="rr-cabin-detail__rules-mobile rr-cabin-mobile-only">
+              Check-in 3:00 PM · Check-out 11:00 AM<br />
+              Quiet 10:00 PM – 8:00 AM · No smoking<br />
+              Pets by arrangement · Children welcome
+            </p>
+          </section>
+
+          <section>
+            <h2 class="rr-cabin-detail__section-title rr-cabin-detail__section-title--small">Location</h2>
+            <div class="rr-cabin-detail__map">
+              <app-cabins-map [compact]="true" [showCard]="false" [showPins]="false" />
+            </div>
+            <p class="rr-cabin-detail__location">{{ locationNote }}</p>
+          </section>
+        </div>
+
+        <section class="rr-cabin-detail__policies">
+          <h2 class="rr-cabin-detail__section-title">Rates &amp; policies</h2>
+          <div class="rr-cabin-detail__policy-grid">
+            @for (card of policyCards; track card.title) {
+              <div class="rr-cabin-detail__policy-card">
+                <div class="rr-cabin-detail__policy-title">{{ card.title }}</div>
+                <p>{{ card.body }}</p>
+              </div>
+            }
+          </div>
+        </section>
+
+        <app-cabin-detail-reviews [slug]="cabin.slug" />
+
+        <section class="rr-cabin-detail__host">
+          <img class="rr-cabin-detail__host-image" [src]="host.imageUrl" alt="Remotely Rogers" />
+          <div>
+            <div class="rr-cabin-detail__host-eyebrow">About the host</div>
+            <h2 class="rr-cabin-detail__host-name">{{ host.name }}</h2>
+            <p class="rr-cabin-detail__host-bio">{{ host.bio }}</p>
+            <div class="rr-cabin-detail__host-links">
+              <a [href]="'mailto:' + host.email">{{ host.email }}</a>
+              <a [href]="host.phoneHref">{{ host.phone }}</a>
+            </div>
+          </div>
+        </section>
+      </div>
+
+      <aside class="rr-cabin-detail__sidebar rr-cabin-desktop-only">
+        <div class="rr-cabin-detail__widget-wrap">
+          <app-cabin-booking-widget
+            [slug]="cabin.slug"
+            [cabinName]="cabin.displayName"
+            [nightlyRate]="cabin.fromPrice"
+            (datesChanged)="syncQueryParams()"
+          />
+        </div>
+      </aside>
+    </div>
+
+    <section class="rr-cabin-detail__more">
+      <div class="rr-cabin-detail__more-head">
+        <h2>More cabins on this property</h2>
+        <a routerLink="/cabins">All cabins</a>
+      </div>
+      <div class="rr-cabin-detail__more-strip">
+        @for (other of moreCabins(); track other.slug) {
+          <a
+            class="rr-cabin-detail__more-card"
+            [routerLink]="['/cabins', other.slug]"
+            [queryParams]="search.toQueryParams()"
+          >
+            <img [src]="other.imageUrl" [alt]="other.name" />
+            <div class="rr-cabin-detail__more-copy">
+              <span>{{ other.name }}</span>
+              <span>from ${{ other.nightlyRate }}</span>
+            </div>
+          </a>
+        }
+      </div>
+    </section>
+
+    <div class="rr-cabin-detail__mobile-bar rr-cabin-mobile-only">
+      <span class="rr-cabin-detail__mobile-price">
+        <span>from</span>
+        <strong>${{ cabin.fromPrice }}</strong>
+        <span>/ night</span>
+      </span>
+      <button type="button" class="rr-cabin-detail__mobile-cta" (click)="openBookingDrawer()">
+        Check availability
+      </button>
+    </div>
+
+    <p-drawer
+      [visible]="bookingDrawerOpen()"
+      (visibleChange)="bookingDrawerOpen.set($event)"
+      position="bottom"
+      styleClass="rr-cabin-booking-drawer"
+      [modal]="true"
+      [dismissible]="true"
+      [showCloseIcon]="false"
+      [blockScroll]="true"
+    >
+      <div class="rr-cabin-booking-drawer__panel">
+        <div class="rr-cabin-booking-drawer__handle" aria-hidden="true"></div>
+        <div class="rr-cabin-booking-drawer__head">
+          <span class="rr-cabin-booking-drawer__title">{{ cabin.displayName }}</span>
+          <button
+            type="button"
+            class="rr-cabin-booking-drawer__close"
+            aria-label="Close booking"
+            (click)="closeBookingDrawer()"
+          >
+            ✕
+          </button>
+        </div>
+        <app-cabin-booking-widget
+          [slug]="cabin.slug"
+          [cabinName]="cabin.displayName"
+          [nightlyRate]="cabin.fromPrice"
+          [compact]="true"
+          (datesChanged)="syncQueryParams()"
+        />
+      </div>
+    </p-drawer>
+  </div>
+}

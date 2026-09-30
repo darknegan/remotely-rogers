@@ -48,8 +48,8 @@ export class Cabins {
     return `Vacation Home · 4 guests · Wifi`;
   }
 
-  protected cabinHref(cabin: CabinListing): string {
-    return `/cabins/${cabin.slug}`;
+  protected cabinQueryParams(): Record<string, string> {
+    return this.search.toQueryParams();
   }
 
   protected featuredImage(cabin: CabinListing, width = 1200): string {

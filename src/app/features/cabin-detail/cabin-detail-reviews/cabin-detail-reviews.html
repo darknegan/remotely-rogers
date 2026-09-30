@@ -1,0 +1,87 @@
+@if (reviewCount() > 0) {
+  <section id="reviews" class="rr-cabin-reviews">
+    <div class="rr-cabin-reviews__head">
+      <h2 class="rr-cabin-reviews__title">Guest reviews</h2>
+      <span class="rr-cabin-reviews__meta">
+        <span class="rr-cabin-reviews__stars" aria-hidden="true">{{ stars(average()) }}</span>
+        {{ formatRating(average()) }} · {{ reviewCount() }} reviews · Airbnb
+      </span>
+    </div>
+
+    <div class="rr-cabin-reviews__grid">
+      @for (review of visibleReviews(); track review.id; let i = $index) {
+        <article class="rr-cabin-reviews__card" [class.rr-cabin-reviews__card--muted]="i === 1">
+          <p class="rr-cabin-reviews__quote">“{{ review.quote }}”</p>
+          <div class="rr-cabin-reviews__guest">
+            <strong>{{ review.guestName }}</strong>
+            <span>{{ review.stayLabel }}</span>
+          </div>
+        </article>
+      }
+    </div>
+
+    <div class="rr-cabin-reviews__footer">
+      <div class="rr-cabin-reviews__nav">
+        <button type="button" class="rr-cabin-reviews__arrow" aria-label="Previous reviews" (click)="prev()">
+          ‹
+        </button>
+        <button type="button" class="rr-cabin-reviews__arrow" aria-label="Next reviews" (click)="next()">
+          ›
+        </button>
+        <span class="rr-cabin-reviews__range">{{ rangeLabel() }}</span>
+      </div>
+      <button type="button" class="rr-cabin-reviews__all" (click)="openModal()">
+        Show all {{ reviewCount() }} reviews
+      </button>
+    </div>
+  </section>
+
+  <p-dialog
+    [visible]="modalVisible()"
+    (visibleChange)="modalVisible.set($event)"
+    [modal]="true"
+    [dismissableMask]="true"
+    [draggable]="false"
+    [resizable]="false"
+    [closable]="false"
+    [showHeader]="false"
+    styleClass="rr-home-reviews-dialog"
+    [style]="{ width: '53.75rem', maxWidth: 'calc(100vw - 2rem)' }"
+  >
+    <div class="rr-home-reviews-dialog__panel">
+      <header class="rr-home-reviews-dialog__header">
+        <div class="rr-home-reviews-dialog__intro">
+          <div class="rr-home-reviews-dialog__eyebrow">All guest reviews</div>
+          <div class="rr-home-reviews-dialog__meta">
+            <span class="rr-home-reviews-dialog__stars" aria-hidden="true">{{ stars(average()) }}</span>
+            {{ formatRating(average()) }} · {{ reviewCount() }} reviews · Airbnb
+          </div>
+        </div>
+        <button
+          type="button"
+          class="rr-home-reviews-dialog__close"
+          aria-label="Close reviews"
+          (click)="closeModal()"
+        >
+          ✕
+        </button>
+      </header>
+
+      <div class="rr-home-reviews-dialog__list">
+        @for (item of reviews(); track item.id) {
+          <article class="rr-home-reviews-dialog__item">
+            <div class="rr-home-reviews-dialog__guest">
+              <div class="rr-home-reviews-dialog__guest-name">{{ item.guestName }}</div>
+              <div class="rr-home-reviews-dialog__guest-stay">{{ item.stayLabel }}</div>
+              <div class="rr-home-reviews-dialog__stars" aria-hidden="true">
+                {{ stars(item.rating) }}
+              </div>
+            </div>
+            <p class="rr-home-reviews-dialog__quote">{{ item.quote }}</p>
+          </article>
+        }
+        <div class="rr-home-reviews-dialog__fade" aria-hidden="true"></div>
+      </div>
+    </div>
+  </p-dialog>
+}
