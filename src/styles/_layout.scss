@@ -1308,3 +1308,42 @@
 .rr-cabins-filters-drawer.p-drawer {
   width: min(31.25rem, 100vw) !important;
 }
+
+/* Cabin detail page — F-M02 mobile layout (global; !important beats encapsulated display) */
+.rr-cabin-desktop-only {
+  display: none !important;
+
+  @media (min-width: 1024px) {
+    display: block !important;
+  }
+}
+
+.rr-cabin-mobile-only {
+  @media (min-width: 1024px) {
+    display: none !important;
+  }
+}
+
+.rr-cabin-detail__hero.rr-cabin-desktop-only {
+  @media (min-width: 1024px) {
+    display: flex !important;
+  }
+}
+
+.rr-cabin-detail__highlights.rr-cabin-desktop-only {
+  @media (min-width: 1024px) {
+    display: flex !important;
+  }
+}
+
+.rr-cabin-detail__amenity-grid.rr-cabin-desktop-only {
+  @media (min-width: 1024px) {
+    display: grid !important;
+  }
+}
+
+.rr-cabin-detail__amenity-list.rr-cabin-mobile-only {
+  @media (max-width: 1023px) {
+    display: flex !important;
+  }
+}

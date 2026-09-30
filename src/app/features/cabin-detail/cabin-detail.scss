@@ -1,21 +1,3 @@
-.rr-cabin-desktop-only {
-  display: none;
-}
-
-.rr-cabin-mobile-only {
-  display: block;
-}
-
-@media (min-width: 1024px) {
-  .rr-cabin-desktop-only {
-    display: block;
-  }
-
-  .rr-cabin-mobile-only {
-    display: none;
-  }
-}
-
 .rr-cabin-detail {
   background: var(--rr-ground);
   color: var(--rr-walnut);

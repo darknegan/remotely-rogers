@@ -1,11 +1,15 @@
 .rr-cabin-gallery {
   position: relative;
-  display: grid;
+  display: none;
   grid-template-columns: 2fr 1fr 1fr;
   grid-template-rows: 1fr 1fr;
   gap: 0.625rem;
   height: 38.75rem;
   margin: 0 3.75rem;
+
+  @media (min-width: 1024px) {
+    display: grid;
+  }
 }
 
 .rr-cabin-gallery__hero,
@@ -63,6 +67,10 @@
   position: relative;
   height: 18.75rem;
   overflow: hidden;
+
+  @media (min-width: 1024px) {
+    display: none !important;
+  }
 }
 
 .rr-cabin-gallery-mobile__frame {
