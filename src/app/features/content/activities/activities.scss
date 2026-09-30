@@ -2,6 +2,21 @@
   font-family: var(--rr-font-body);
   color: var(--rr-walnut);
   background: var(--rr-ground);
+  overflow-x: clip;
+}
+
+.rr-activities-desktop-only {
+  display: none !important;
+
+  @media (min-width: 1024px) {
+    display: block !important;
+  }
+}
+
+.rr-activities-mobile-only {
+  @media (min-width: 1024px) {
+    display: none !important;
+  }
 }
 
 .rr-activities-eyebrow {
@@ -504,5 +519,92 @@
     &:hover {
       border-bottom-color: var(--rr-oxblood);
     }
+  }
+}
+
+@media (max-width: 1023px) {
+  .rr-activities-compact-header {
+    padding: 1.875rem 1.25rem 1.125rem;
+  }
+
+  .rr-activities-filter-bar {
+    top: var(--rr-mobile-header-height);
+    flex-wrap: wrap;
+    padding: 1rem 1.25rem;
+
+    &__summary {
+      width: 100%;
+      margin-left: 0;
+      margin-top: 0.25rem;
+    }
+  }
+
+  .rr-activities-featured {
+    padding: 2rem 1.25rem 0;
+
+    &__grid {
+      grid-template-columns: 1fr !important;
+      grid-template-rows: auto;
+    }
+  }
+
+  .rr-activities-feature-card--large {
+    grid-row: auto;
+    min-height: 20rem;
+  }
+
+  .rr-activities-biking-feature__body {
+    grid-template-columns: 1fr !important;
+  }
+
+  .rr-activities-trail-cards {
+    padding: 1.5rem 1.25rem 0;
+
+    &__grid {
+      grid-template-columns: 1fr !important;
+    }
+  }
+
+  .rr-activities-outdoor {
+    grid-template-columns: 1fr !important;
+    gap: 2rem;
+    padding: 3rem 1.25rem 0;
+
+    &__list {
+      grid-template-columns: 1fr !important;
+    }
+  }
+
+  .rr-activities-culture-list,
+  .rr-activities-day-plan {
+    padding-left: 1.25rem;
+    padding-right: 1.25rem;
+  }
+
+  .rr-activities-day-plan__grid {
+    grid-template-columns: 1fr !important;
+
+    .rr-activities-day-plan__step {
+      padding: 1.5rem 0 0;
+      border-left: 0;
+      border-top: 1px solid rgba(62, 44, 34, 0.16);
+
+      &:first-child {
+        border-top: 0;
+        padding-top: 0;
+      }
+    }
+  }
+
+  .rr-activities-cta {
+    flex-direction: column;
+    align-items: flex-start;
+    margin: 3rem 1.25rem 4rem;
+    padding: 2rem 1.5rem;
+  }
+
+  .rr-activities-filter-hint {
+    margin-left: 1.25rem;
+    margin-right: 1.25rem;
   }
 }

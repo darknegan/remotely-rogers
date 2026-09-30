@@ -1216,6 +1216,51 @@
   }
 }
 
+/* Shared Ozark editorial CTAs — cabins, activities, etc. */
+.rr-cabins-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1.0625rem 1.875rem;
+  border: 0;
+  font-family: var(--rr-font-ui);
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  text-decoration: none;
+  white-space: nowrap;
+  cursor: pointer;
+
+  &--primary {
+    background: var(--rr-oxblood);
+    color: var(--rr-cream-on-dark);
+
+    &:hover {
+      background: var(--rr-oxblood-hover);
+    }
+
+    &:active {
+      background: var(--rr-oxblood-active);
+    }
+  }
+
+  &--outline {
+    padding: 1rem 1.75rem;
+    border: 1px solid var(--rr-brass);
+    background: transparent;
+    color: var(--rr-walnut);
+
+    &:hover {
+      background: rgba(176, 138, 74, 0.14);
+    }
+
+    &:active {
+      background: rgba(176, 138, 74, 0.28);
+    }
+  }
+}
+
 /* Cabins page — F-M03 mobile layout */
 .rr-cabins-desktop-only {
   display: none !important;
@@ -1348,21 +1393,7 @@
   }
 }
 
-/* Activities page — F-04 responsive layout */
-.rr-activities-desktop-only {
-  display: none !important;
-
-  @media (min-width: 1024px) {
-    display: block !important;
-  }
-}
-
-.rr-activities-mobile-only {
-  @media (min-width: 1024px) {
-    display: none !important;
-  }
-}
-
+/* Activities page — F-04 global sections (hero, trails band, culture, dining, empty) */
 .rr-activities-cta-outline {
   color: var(--rr-brass-light);
 
@@ -1403,6 +1434,11 @@
     right: 3.75rem;
     bottom: 3.75rem;
     color: var(--rr-cream-on-dark);
+
+    .rr-activities-display {
+      font-size: clamp(2.75rem, 7vw, 6rem);
+      line-height: 1;
+    }
   }
 
   .rr-activities-hero__eyebrow {
@@ -1700,58 +1736,6 @@
 }
 
 @media (max-width: 1023px) {
-  .rr-activities-compact-header {
-    padding: 1.875rem 1.25rem 1.125rem;
-  }
-
-  .rr-activities-filter-bar {
-    top: var(--rr-mobile-header-height);
-    flex-wrap: wrap;
-    padding: 1rem 1.25rem;
-
-    .rr-activities-filter-bar__summary {
-      width: 100%;
-      margin-left: 0;
-      margin-top: 0.25rem;
-    }
-  }
-
-  .rr-activities-featured {
-    padding: 2rem 1.25rem 0;
-
-    .rr-activities-featured__grid {
-      grid-template-columns: 1fr;
-      grid-template-rows: auto;
-    }
-  }
-
-  .rr-activities-feature-card--large {
-    grid-row: auto;
-    min-height: 20rem;
-  }
-
-  .rr-activities-biking-feature__body {
-    grid-template-columns: 1fr;
-  }
-
-  .rr-activities-trail-cards {
-    padding: 1.5rem 1.25rem 0;
-
-    .rr-activities-trail-cards__grid {
-      grid-template-columns: 1fr;
-    }
-  }
-
-  .rr-activities-outdoor {
-    grid-template-columns: 1fr;
-    gap: 2rem;
-    padding: 3rem 1.25rem 0;
-
-    .rr-activities-outdoor__list {
-      grid-template-columns: 1fr;
-    }
-  }
-
   .rr-activities-trails-band {
     margin: 3rem 1.25rem 0;
     padding: 2rem 1.5rem;
@@ -1790,48 +1774,15 @@
     }
   }
 
-  .rr-activities-culture-list,
-  .rr-activities-dining,
-  .rr-activities-day-plan {
-    padding-left: 1.25rem;
-    padding-right: 1.25rem;
-  }
-
   .rr-activities-dining {
     grid-template-columns: 1fr;
     gap: 2rem;
-    padding-top: 3rem;
+    padding: 3rem 1.25rem 0;
   }
 
-  .rr-activities-day-plan__grid {
-    grid-template-columns: 1fr;
-
-    .rr-activities-day-plan__step {
-      padding: 1.5rem 0 0;
-      border-left: 0;
-      border-top: 1px solid rgba(62, 44, 34, 0.16);
-
-      &:first-child {
-        border-top: 0;
-        padding-top: 0;
-      }
-    }
-  }
-
-  .rr-activities-cta {
-    flex-direction: column;
-    align-items: flex-start;
-    margin: 3rem 1.25rem 4rem;
-    padding: 2rem 1.5rem;
-  }
-
-  .rr-activities-filter-hint,
   .rr-activities-empty {
     margin-left: 1.25rem;
     margin-right: 1.25rem;
-  }
-
-  .rr-activities-empty {
     grid-template-columns: 1fr;
 
     .rr-activities-empty__copy {
