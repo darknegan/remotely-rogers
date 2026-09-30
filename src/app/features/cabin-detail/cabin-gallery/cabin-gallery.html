@@ -1,0 +1,104 @@
+@if (images().length > 0) {
+  <div class="rr-cabin-gallery">
+    <button
+      type="button"
+      class="rr-cabin-gallery__hero"
+      (click)="openLightbox(0)"
+      aria-label="Open gallery"
+    >
+      <img [src]="images()[0].url" [alt]="images()[0].alt" />
+    </button>
+
+    @if (images()[1]; as second) {
+      <button type="button" class="rr-cabin-gallery__tall" (click)="openLightbox(1)">
+        <img [src]="second.url" [alt]="second.alt" />
+      </button>
+    }
+
+    @if (images()[2]; as third) {
+      <button type="button" class="rr-cabin-gallery__small" (click)="openLightbox(2)">
+        <img [src]="third.url" [alt]="third.alt" />
+      </button>
+    }
+
+    @if (images()[3]; as fourth) {
+      <button type="button" class="rr-cabin-gallery__small" (click)="openLightbox(3)">
+        <img [src]="fourth.url" [alt]="fourth.alt" />
+      </button>
+    }
+
+    <button type="button" class="rr-cabin-gallery__more" (click)="openLightbox(0)">
+      View more pictures
+    </button>
+  </div>
+
+  <div class="rr-cabin-gallery-mobile">
+    @if (activeImage(); as image) {
+      <button type="button" class="rr-cabin-gallery-mobile__frame" (click)="openLightbox(activeIndex())">
+        <img [src]="image.url" [alt]="image.alt" />
+        <span class="rr-cabin-gallery-mobile__count">{{ indexLabel() }}</span>
+      </button>
+      <div class="rr-cabin-gallery-mobile__dots" aria-hidden="true">
+        @for (item of images(); track item.url; let i = $index) {
+          <span
+            class="rr-cabin-gallery-mobile__dot"
+            [class.rr-cabin-gallery-mobile__dot--active]="i === activeIndex()"
+          ></span>
+        }
+      </div>
+    }
+  </div>
+
+  <p-dialog
+    [visible]="lightboxOpen()"
+    (visibleChange)="lightboxOpen.set($event)"
+    [modal]="true"
+    [dismissableMask]="true"
+    [draggable]="false"
+    [resizable]="false"
+    [closable]="false"
+    [showHeader]="false"
+    styleClass="rr-cabin-gallery-dialog"
+    [style]="{ width: '100vw', maxWidth: '100vw', height: '100dvh' }"
+  >
+    @if (activeImage(); as image) {
+      <div class="rr-cabin-gallery-dialog__panel">
+        <header class="rr-cabin-gallery-dialog__header">
+          <span class="rr-cabin-gallery-dialog__title">{{ cabinName() }}</span>
+          <span class="rr-cabin-gallery-dialog__count">{{ indexLabel() }}</span>
+          <button
+            type="button"
+            class="rr-cabin-gallery-dialog__close"
+            aria-label="Close gallery"
+            (click)="closeLightbox()"
+          >
+            ✕
+          </button>
+        </header>
+
+        <div class="rr-cabin-gallery-dialog__stage">
+          <button type="button" class="rr-cabin-gallery-dialog__nav" aria-label="Previous photo" (click)="prev()">
+            ‹
+          </button>
+          <img class="rr-cabin-gallery-dialog__image" [src]="image.url" [alt]="image.alt" />
+          <button type="button" class="rr-cabin-gallery-dialog__nav" aria-label="Next photo" (click)="next()">
+            ›
+          </button>
+        </div>
+
+        <div class="rr-cabin-gallery-dialog__thumbs">
+          @for (thumb of images(); track thumb.url; let i = $index) {
+            <button
+              type="button"
+              class="rr-cabin-gallery-dialog__thumb"
+              [class.rr-cabin-gallery-dialog__thumb--active]="i === activeIndex()"
+              (click)="selectThumb(i)"
+            >
+              <img [src]="thumb.url" alt="" />
+            </button>
+          }
+        </div>
+      </div>
+    }
+  </p-dialog>
+}

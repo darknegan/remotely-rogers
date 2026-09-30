@@ -1,5 +1,11 @@
 /
 /cabins
+/cabins/black-gum-getaway-cozy-forest-a-frame-near-bentonville
+/cabins/dogwood-den--cozy-forest-a-frame-near-bentonville
+/cabins/running-spring-retreat-cozy-forest-a-frame-near-bentonville
+/cabins/black-walnut-bungalow-cozy-forest-a-frame-near-bentonville
+/cabins/white-oak-haven-cozy-forest-a-frame-near-bentonville
+/cabins/post-oak-perch-cozy-forest-a-frame-near-bentonville
 /preview/foundations
 /preview/activities
 /preview/recommendations

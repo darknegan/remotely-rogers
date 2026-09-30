@@ -124,7 +124,11 @@
     >
       <div class="rr-cabins-list rr-cabins-mobile-list">
         @if (store.featuredCabin(); as featured) {
-          <a class="rr-cabins-card rr-cabins-card--featured" [routerLink]="cabinHref(featured)">
+          <a
+            class="rr-cabins-card rr-cabins-card--featured"
+            [routerLink]="['/cabins', featured.slug]"
+            [queryParams]="cabinQueryParams()"
+          >
             <div class="rr-cabins-card__media">
               <img [src]="featuredImage(featured, 1400)" [alt]="featured.name" />
               <span class="rr-cabins-card__badge">Featured</span>
@@ -150,7 +154,8 @@
               <a
                 class="rr-cabins-card rr-cabins-card--grid"
                 [class.rr-cabins-card--offset]="cabin.layoutRole === 'grid-offset'"
-                [routerLink]="cabinHref(cabin)"
+                [routerLink]="['/cabins', cabin.slug]"
+                [queryParams]="cabinQueryParams()"
               >
                 <div class="rr-cabins-card__media rr-cabins-card__media--grid">
                   <img [src]="featuredImage(cabin, 1000)" [alt]="cabin.name" />
@@ -170,7 +175,11 @@
         @if (store.rowCabins().length > 0) {
           <div class="rr-cabins-rows-label rr-cabins-desktop-only">Also on the property</div>
           @for (cabin of store.rowCabins(); track cabin.id) {
-            <a class="rr-cabins-row rr-cabins-desktop-only" [routerLink]="cabinHref(cabin)">
+            <a
+              class="rr-cabins-row rr-cabins-desktop-only"
+              [routerLink]="['/cabins', cabin.slug]"
+              [queryParams]="cabinQueryParams()"
+            >
               <div class="rr-cabins-row__media">
                 <img [src]="featuredImage(cabin, 800)" [alt]="cabin.name" />
               </div>
@@ -193,7 +202,11 @@
 
         <div class="rr-cabins-mobile-stack rr-cabins-mobile-only">
           @for (cabin of store.mobileListCabins(); track cabin.id) {
-            <a class="rr-cabins-mobile-card" [routerLink]="cabinHref(cabin)">
+            <a
+              class="rr-cabins-mobile-card"
+              [routerLink]="['/cabins', cabin.slug]"
+              [queryParams]="cabinQueryParams()"
+            >
               <img [src]="featuredImage(cabin, 600)" [alt]="cabin.name" />
               <div class="rr-cabins-mobile-card__body">
                 <div class="rr-cabins-card__name rr-cabins-card__name--mobile">{{ cabin.name }}</div>

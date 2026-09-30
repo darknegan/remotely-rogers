@@ -1,0 +1,146 @@
+<aside class="rr-cabin-widget" [class.rr-cabin-widget--compact]="compact()">
+  <div class="rr-cabin-widget__head">
+    <span class="rr-cabin-widget__price">
+      from
+      <span class="rr-cabin-widget__rate">${{ nightlyRate() }}</span>
+      / night
+    </span>
+    @if (reviewCount() > 0) {
+      <span class="rr-cabin-widget__rating">
+        <span class="rr-cabin-widget__star" aria-hidden="true">★</span>
+        {{ formatRating(average()) }} · {{ reviewCount() }}
+      </span>
+    }
+  </div>
+
+  <div class="rr-cabin-widget__fields">
+    <div class="rr-cabin-widget__dates">
+      <button
+        type="button"
+        class="rr-cabin-widget__field"
+        (click)="checkInPopover.toggle($event)"
+      >
+        <span class="rr-cabin-widget__label">Check-in</span>
+        <span class="rr-cabin-widget__value">{{ checkInLabel() }}</span>
+      </button>
+      <button
+        type="button"
+        class="rr-cabin-widget__field"
+        (click)="checkOutPopover.toggle($event)"
+      >
+        <span class="rr-cabin-widget__label">Check-out</span>
+        <span class="rr-cabin-widget__value">{{ checkOutLabel() }}</span>
+      </button>
+    </div>
+    <button type="button" class="rr-cabin-widget__guests" (click)="guestPopover.toggle($event)">
+      <span>
+        <span class="rr-cabin-widget__label">Guests</span>
+        <span class="rr-cabin-widget__value">{{ search.guestSummary() }}</span>
+      </span>
+      <span class="rr-cabin-widget__caret" aria-hidden="true">▾</span>
+    </button>
+  </div>
+
+  <div class="rr-cabin-widget__summary">
+    <div class="rr-cabin-widget__line">
+      <span>Nights</span>
+      <span>{{ estimate()?.nights ?? '—' }}</span>
+    </div>
+    @if (estimate(); as total) {
+      <div class="rr-cabin-widget__line rr-cabin-widget__line--total">
+        <span>Estimated total · {{ total.nights }} nights</span>
+        <span class="rr-cabin-widget__total">{{ formatMoney(total.subtotal) }}</span>
+      </div>
+      <div class="rr-cabin-widget__line rr-cabin-widget__line--muted">
+        <span>Due today (50%)</span>
+        <span>{{ formatMoney(total.dueToday) }}</span>
+      </div>
+      <div class="rr-cabin-widget__line rr-cabin-widget__line--muted">
+        <span>Due before arrival</span>
+        <span>{{ formatMoney(total.dueBeforeArrival) }}</span>
+      </div>
+    } @else {
+      <div class="rr-cabin-widget__line rr-cabin-widget__line--total">
+        <span>Estimated total</span>
+        <span>Select dates</span>
+      </div>
+    }
+  </div>
+
+  <div class="rr-cabin-widget__actions">
+    @if (bookUrl(); as href) {
+      <a class="rr-cabin-widget__book rr-cabin-widget__book--active" [href]="href" target="_blank" rel="noopener">
+        Book now
+      </a>
+    } @else {
+      <span class="rr-cabin-widget__book">Book now</span>
+    }
+    <p class="rr-cabin-widget__note">{{ minStayNote() }}</p>
+    <p class="rr-cabin-widget__deposit">$250 security deposit is pre-authorized, not charged.</p>
+  </div>
+
+  <div class="rr-cabin-widget__group">
+    Bringing a group?
+    <a routerLink="/preview/multi-cabin-stays">Book several cabins</a>
+  </div>
+</aside>
+
+<p-popover #checkInPopover styleClass="rr-date-popover-panel">
+  <p-date-picker
+    [ngModel]="search.checkIn()"
+    (ngModelChange)="onCheckInChange($event)"
+    name="cabinCheckIn"
+    [minDate]="minDate"
+    dateFormat="D, M d"
+    [inline]="true"
+    [showIcon]="false"
+  />
+</p-popover>
+
+<p-popover #checkOutPopover styleClass="rr-date-popover-panel">
+  <p-date-picker
+    [ngModel]="search.checkOut()"
+    (ngModelChange)="onCheckOutChange($event)"
+    name="cabinCheckOut"
+    [minDate]="search.checkIn() ?? minDate"
+    dateFormat="D, M d"
+    [inline]="true"
+    [showIcon]="false"
+  />
+</p-popover>
+
+<p-popover #guestPopover styleClass="rr-guest-popover-panel">
+  <div class="rr-guest-popover">
+    <div style="padding: 1.375rem 1.5rem 0.375rem">
+      @for (stepper of guestSteppers; track stepper.key) {
+        <div class="rr-guest-popover__row">
+          <div>
+            <div class="rr-guest-popover__label">{{ stepper.label }}</div>
+            <div class="rr-guest-popover__sub">{{ stepper.sub }}</div>
+          </div>
+          <div class="rr-guest-popover__stepper">
+            <p-input-number
+              [ngModel]="search.guests()[stepper.key]"
+              (ngModelChange)="updateGuest(stepper.key, $event)"
+              [name]="'cabin' + stepper.key"
+              [min]="limits(stepper.key).min"
+              [max]="limits(stepper.key).max"
+              [showButtons]="true"
+              buttonLayout="horizontal"
+              incrementButtonIcon="pi pi-plus"
+              decrementButtonIcon="pi pi-minus"
+            />
+          </div>
+        </div>
+      }
+      <p class="rr-guest-popover__note">
+        {{ search.capNote() }}
+        <a routerLink="/preview/multi-cabin-stays">Book several cabins</a>
+      </p>
+    </div>
+    <div class="rr-guest-popover__actions" style="padding: 0 1.5rem 1.25rem">
+      <button type="button" class="rr-btn rr-btn--text" (click)="search.resetGuests()">Reset</button>
+      <button type="button" class="rr-btn rr-btn--primary" (click)="guestPopover.hide()">Apply</button>
+    </div>
+  </div>
+</p-popover>
