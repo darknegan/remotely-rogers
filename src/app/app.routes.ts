@@ -18,6 +18,11 @@ export const routes: Routes = [
         loadComponent: () =>
           import('./features/cabin-detail/cabin-detail').then((m) => m.CabinDetail),
       },
+      {
+        path: 'activities',
+        loadComponent: () =>
+          import('./features/content/activities/activities').then((m) => m.Activities),
+      },
     ],
   },
   {

@@ -1347,3 +1347,495 @@
     display: flex !important;
   }
 }
+
+/* Activities page — F-04 responsive layout */
+.rr-activities-desktop-only {
+  display: none !important;
+
+  @media (min-width: 1024px) {
+    display: block !important;
+  }
+}
+
+.rr-activities-mobile-only {
+  @media (min-width: 1024px) {
+    display: none !important;
+  }
+}
+
+.rr-activities-cta-outline {
+  color: var(--rr-brass-light);
+
+  &:hover {
+    background: rgba(176, 138, 74, 0.2);
+    color: var(--rr-cream-on-dark);
+  }
+}
+
+.rr-activities-hero {
+  position: relative;
+  height: min(47.5rem, 85vh);
+  overflow: hidden;
+
+  .rr-activities-hero__image {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: 50% 55%;
+  }
+
+  .rr-activities-hero__overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      to top,
+      rgba(36, 27, 21, 0.92) 0%,
+      rgba(36, 27, 21, 0.25) 55%,
+      rgba(36, 27, 21, 0.35)
+    );
+  }
+
+  .rr-activities-hero__copy {
+    position: absolute;
+    left: 3.75rem;
+    right: 3.75rem;
+    bottom: 3.75rem;
+    color: var(--rr-cream-on-dark);
+  }
+
+  .rr-activities-hero__eyebrow {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+    font-family: var(--rr-font-ui);
+    font-size: 0.6875rem;
+    letter-spacing: 0.28em;
+    text-transform: uppercase;
+    color: var(--rr-brass-light);
+  }
+
+  .rr-activities-hero__rule {
+    width: 3.25rem;
+    height: 2px;
+    background: var(--rr-brass);
+  }
+
+  .rr-activities-hero__stats {
+    display: grid;
+    grid-template-columns: repeat(3, auto);
+    justify-content: start;
+    margin-top: 2.75rem;
+    border-top: 1px solid rgba(230, 211, 174, 0.4);
+  }
+
+  .rr-activities-hero__stat {
+    padding: 1.25rem 3.75rem 0 0;
+
+    &:not(:first-child) {
+      padding-left: 3.75rem;
+      border-left: 1px solid rgba(230, 211, 174, 0.4);
+    }
+  }
+
+  .rr-activities-hero__stat-value {
+    font-family: var(--rr-font-display);
+    font-size: 2.75rem;
+    color: var(--rr-brass-light);
+  }
+
+  .rr-activities-hero__stat-label {
+    margin-left: 0.75rem;
+    font-family: var(--rr-font-ui);
+    font-size: 0.75rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--rr-cream-on-dark);
+  }
+}
+
+.rr-activities-trails-band {
+  margin: 6.875rem 3.75rem 0;
+  padding: 3.5rem;
+  background: var(--rr-ground-deep);
+
+  .rr-activities-trails-band__head {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    gap: 2rem;
+  }
+
+  .rr-activities-trails-band__note {
+    font-family: var(--rr-font-ui);
+    font-size: 0.8125rem;
+    color: var(--rr-bark);
+  }
+
+  .rr-activities-trails-band__grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    margin-top: 2.375rem;
+    border-top: 2px solid var(--rr-brass);
+  }
+
+  .rr-activities-trails-band__item {
+    display: block;
+    padding: 1.625rem 1.625rem 0 0;
+    margin-right: 1.625rem;
+    border-right: 1px solid rgba(62, 44, 34, 0.14);
+    text-decoration: none;
+    color: inherit;
+
+    &:last-child {
+      border-right: 0;
+      margin-right: 0;
+    }
+  }
+
+  .rr-activities-trails-band__minutes {
+    font-family: var(--rr-font-display);
+    font-size: 4.5rem;
+    line-height: 1;
+    color: var(--rr-oxblood);
+
+    span {
+      font-size: 1.125rem;
+      margin-left: 0.375rem;
+      color: var(--rr-bark);
+    }
+  }
+
+  .rr-activities-trails-band__name {
+    margin-top: 0.875rem;
+    font-family: var(--rr-font-display);
+    font-size: 1.4375rem;
+  }
+
+  .rr-activities-trails-band__where {
+    margin-top: 0.375rem;
+    font-family: var(--rr-font-ui);
+    font-size: 0.8125rem;
+    color: var(--rr-bark);
+  }
+}
+
+.rr-activities-culture {
+  position: relative;
+  margin-top: 6.875rem;
+  height: 40rem;
+  overflow: hidden;
+
+  .rr-activities-culture__image {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    filter: brightness(0.55);
+  }
+
+  .rr-activities-culture__overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(90deg, rgba(36, 27, 21, 0.85) 0%, rgba(36, 27, 21, 0.2) 70%);
+  }
+
+  .rr-activities-culture__copy {
+    position: absolute;
+    left: 3.75rem;
+    top: 0;
+    bottom: 0;
+    width: min(40rem, 55%);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    color: var(--rr-cream-on-dark);
+  }
+
+  .rr-activities-culture__eyebrow {
+    font-family: var(--rr-font-ui);
+    font-size: 0.6875rem;
+    letter-spacing: 0.26em;
+    text-transform: uppercase;
+    color: var(--rr-brass-light);
+  }
+
+  .rr-activities-culture__title {
+    margin: 1.125rem 0 2.125rem;
+    font-family: var(--rr-font-display);
+    font-weight: 400;
+    font-size: clamp(2rem, 4vw, 3.25rem);
+    line-height: 1.08;
+  }
+
+  .rr-activities-culture__list {
+    display: flex;
+    flex-direction: column;
+    font-family: var(--rr-font-ui);
+  }
+
+  .rr-activities-culture__row {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 1rem 0;
+    border-top: 1px solid rgba(230, 211, 174, 0.35);
+    text-decoration: none;
+    color: inherit;
+
+    &:last-child {
+      border-bottom: 1px solid rgba(230, 211, 174, 0.35);
+    }
+
+    span:first-child {
+      font-family: var(--rr-font-display);
+      font-size: 1.375rem;
+    }
+
+    span:last-child {
+      font-size: 0.8125rem;
+      color: var(--rr-brass-light);
+      white-space: nowrap;
+    }
+  }
+}
+
+.rr-activities-dining {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 5rem;
+  padding: 6.875rem 3.75rem 0;
+
+  .rr-activities-dining__lede {
+    margin: 1.25rem 0 0;
+    max-width: 28.75rem;
+    font-size: 1.125rem;
+    line-height: 1.72;
+    color: var(--rr-walnut-ink);
+  }
+
+  .rr-activities-dining__menu {
+    padding: 2.125rem 2.5rem;
+    background: var(--rr-paper);
+    box-shadow: var(--rr-shadow);
+    border-top: 3px solid var(--rr-oxblood);
+  }
+
+  .rr-activities-dining__row {
+    display: flex;
+    align-items: baseline;
+    gap: 0.75rem;
+    padding: 0.875rem 0;
+    text-decoration: none;
+    color: inherit;
+  }
+
+  .rr-activities-dining__name {
+    font-family: var(--rr-font-display);
+    font-size: 1.375rem;
+    white-space: nowrap;
+  }
+
+  .rr-activities-dining__dots {
+    flex: 1;
+    border-bottom: 1.5px dotted rgba(62, 44, 34, 0.3);
+    transform: translateY(-5px);
+  }
+
+  .rr-activities-dining__kind {
+    font-family: var(--rr-font-ui);
+    font-size: 0.8125rem;
+    color: var(--rr-bark);
+    white-space: nowrap;
+  }
+}
+
+.rr-activities-empty {
+  display: grid;
+  grid-template-columns: 1fr min(32.5rem, 45%);
+  margin: 3.75rem 3.75rem 6.25rem;
+  background: var(--rr-paper);
+  box-shadow: 0 20px 50px rgba(62, 44, 34, 0.1);
+
+  .rr-activities-empty__copy {
+    padding: 4.375rem 4rem;
+  }
+
+  .rr-activities-empty__title {
+    margin: 1.125rem 0 0;
+    font-family: var(--rr-font-display);
+    font-weight: 400;
+    font-size: clamp(2rem, 4vw, 3rem);
+    line-height: 1.1;
+  }
+
+  .rr-activities-empty__lede {
+    margin: 1.25rem 0 0;
+    max-width: 32.5rem;
+    font-size: 1.1875rem;
+    line-height: 1.72;
+    color: var(--rr-walnut-ink);
+  }
+
+  .rr-activities-empty__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    margin-top: 2.25rem;
+  }
+
+  .rr-activities-empty__image-wrap {
+    min-height: 20rem;
+    overflow: hidden;
+
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+  }
+}
+
+@media (max-width: 1023px) {
+  .rr-activities-compact-header {
+    padding: 1.875rem 1.25rem 1.125rem;
+  }
+
+  .rr-activities-filter-bar {
+    top: var(--rr-mobile-header-height);
+    flex-wrap: wrap;
+    padding: 1rem 1.25rem;
+
+    .rr-activities-filter-bar__summary {
+      width: 100%;
+      margin-left: 0;
+      margin-top: 0.25rem;
+    }
+  }
+
+  .rr-activities-featured {
+    padding: 2rem 1.25rem 0;
+
+    .rr-activities-featured__grid {
+      grid-template-columns: 1fr;
+      grid-template-rows: auto;
+    }
+  }
+
+  .rr-activities-feature-card--large {
+    grid-row: auto;
+    min-height: 20rem;
+  }
+
+  .rr-activities-biking-feature__body {
+    grid-template-columns: 1fr;
+  }
+
+  .rr-activities-trail-cards {
+    padding: 1.5rem 1.25rem 0;
+
+    .rr-activities-trail-cards__grid {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  .rr-activities-outdoor {
+    grid-template-columns: 1fr;
+    gap: 2rem;
+    padding: 3rem 1.25rem 0;
+
+    .rr-activities-outdoor__list {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  .rr-activities-trails-band {
+    margin: 3rem 1.25rem 0;
+    padding: 2rem 1.5rem;
+
+    .rr-activities-trails-band__head {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+
+    .rr-activities-trails-band__grid {
+      grid-template-columns: 1fr;
+    }
+
+    .rr-activities-trails-band__item {
+      margin-right: 0;
+      padding-right: 0;
+      border-right: 0;
+      border-bottom: 1px solid rgba(62, 44, 34, 0.14);
+      padding-bottom: 1.5rem;
+
+      &:last-child {
+        border-bottom: 0;
+      }
+    }
+  }
+
+  .rr-activities-culture {
+    height: auto;
+    min-height: 28rem;
+
+    .rr-activities-culture__copy {
+      position: relative;
+      left: 0;
+      width: 100%;
+      padding: 2.5rem 1.25rem;
+    }
+  }
+
+  .rr-activities-culture-list,
+  .rr-activities-dining,
+  .rr-activities-day-plan {
+    padding-left: 1.25rem;
+    padding-right: 1.25rem;
+  }
+
+  .rr-activities-dining {
+    grid-template-columns: 1fr;
+    gap: 2rem;
+    padding-top: 3rem;
+  }
+
+  .rr-activities-day-plan__grid {
+    grid-template-columns: 1fr;
+
+    .rr-activities-day-plan__step {
+      padding: 1.5rem 0 0;
+      border-left: 0;
+      border-top: 1px solid rgba(62, 44, 34, 0.16);
+
+      &:first-child {
+        border-top: 0;
+        padding-top: 0;
+      }
+    }
+  }
+
+  .rr-activities-cta {
+    flex-direction: column;
+    align-items: flex-start;
+    margin: 3rem 1.25rem 4rem;
+    padding: 2rem 1.5rem;
+  }
+
+  .rr-activities-filter-hint,
+  .rr-activities-empty {
+    margin-left: 1.25rem;
+    margin-right: 1.25rem;
+  }
+
+  .rr-activities-empty {
+    grid-template-columns: 1fr;
+
+    .rr-activities-empty__copy {
+      padding: 2rem 1.5rem;
+    }
+  }
+}
