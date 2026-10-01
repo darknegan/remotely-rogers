@@ -7,6 +7,8 @@
 /cabins/white-oak-haven-cozy-forest-a-frame-near-bentonville
 /cabins/post-oak-perch-cozy-forest-a-frame-near-bentonville
 /activities
+/recommendations
+/work-stays
 /preview/foundations
 /preview/activities
 /preview/recommendations
