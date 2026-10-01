@@ -7,7 +7,7 @@ export interface NavLink {
 export const SITE_NAV_LINKS: NavLink[] = [
   { label: 'Home', path: '/' },
   { label: 'Cabins', path: '/cabins' },
-  { label: 'Activities', path: '/preview/activities' },
+  { label: 'Activities', path: '/activities' },
   { label: 'Recommendations', path: '/preview/recommendations' },
   { label: 'Work Stays', path: '/preview/work-stays' },
   { label: 'Multi-Cabin', path: '/preview/multi-cabin-stays' },
@@ -16,7 +16,7 @@ export const SITE_NAV_LINKS: NavLink[] = [
 
 export const FOOTER_NAV_LINKS: NavLink[] = [
   { label: 'Cabins', path: '/cabins' },
-  { label: 'Activities', path: '/preview/activities' },
+  { label: 'Activities', path: '/activities' },
   { label: 'Recommendations', path: '/preview/recommendations' },
   { label: 'Work Stays', path: '/preview/work-stays' },
   { label: 'Multi-Cabin', path: '/preview/multi-cabin-stays' },

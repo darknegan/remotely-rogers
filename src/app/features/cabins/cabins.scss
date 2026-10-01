@@ -614,42 +614,6 @@
   }
 }
 
-.rr-cabins-btn {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  padding: 1.0625rem 1.875rem;
-  font-family: var(--rr-font-ui);
-  font-size: 0.75rem;
-  font-weight: 600;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  text-decoration: none;
-  white-space: nowrap;
-  cursor: pointer;
-
-  &--primary {
-    border: 0;
-    background: var(--rr-oxblood);
-    color: var(--rr-cream-on-dark);
-
-    &:hover {
-      background: var(--rr-oxblood-hover);
-    }
-  }
-
-  &--outline {
-    padding: 1rem 1.75rem;
-    border: 1px solid var(--rr-brass);
-    background: transparent;
-    color: var(--rr-walnut);
-
-    &:hover {
-      background: rgba(176, 138, 74, 0.14);
-    }
-  }
-}
-
 @media (max-width: 1023px) {
   .rr-cabins-summary {
     padding: 1.125rem 1.25rem 0.5rem;
