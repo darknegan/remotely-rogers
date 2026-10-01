@@ -23,6 +23,18 @@ export const routes: Routes = [
         loadComponent: () =>
           import('./features/content/activities/activities').then((m) => m.Activities),
       },
+      {
+        path: 'recommendations',
+        loadComponent: () =>
+          import('./features/content/recommendations/recommendations').then(
+            (m) => m.Recommendations,
+          ),
+      },
+      {
+        path: 'work-stays',
+        loadComponent: () =>
+          import('./features/content/work-stays/work-stays').then((m) => m.WorkStays),
+      },
     ],
   },
   {

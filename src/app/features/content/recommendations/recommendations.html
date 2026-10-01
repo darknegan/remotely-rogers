@@ -1,191 +1,159 @@
-<div class="rr-page">
-  <p-panel styleClass="rr-hero-panel">
-    <div
-      class="rr-hero-banner"
-      style="background-image: url('https://upload.wikimedia.org/wikipedia/commons/4/45/Downtown_Rogers.jpg')"
-    >
-      <div class="rr-hero-banner__inner">
-        <p-tag value="Local picks" severity="secondary" [rounded]="true" />
-        <h1>Our Recommendations</h1>
-        <p>
-          Hand-picked favorites from the Remotely Rogers team — dining, culture, outdoor adventure,
-          and hidden gems across Northwest Arkansas.
-        </p>
-        <div class="rr-stat-row">
-          <div>
-            <strong>6</strong>
-            <span>Curated picks</span>
-          </div>
-          <div>
-            <strong>12 min</strong>
-            <span>To downtown Rogers</span>
-          </div>
-          <div>
-            <strong>NWA</strong>
-            <span>Day-trip region</span>
-          </div>
+<div class="rr-recs">
+  <section class="rr-recs-compact-header rr-recs-mobile-only">
+    <div class="rr-recs-eyebrow">From Jeff, for your stay</div>
+    <h1 class="rr-recs-display">Our Recommendations</h1>
+  </section>
+
+  <section class="rr-recs-hero rr-recs-desktop-only">
+    <div class="rr-recs-hero__copy">
+      <div class="rr-recs-eyebrow">From Jeff, for your stay</div>
+      <h1 class="rr-recs-display">Our Recommendations</h1>
+      <div class="rr-recs-hero__stats">
+        <div class="rr-recs-hero__stat">
+          <span class="rr-recs-hero__stat-label">Curated picks</span>
+          <span class="rr-recs-hero__stat-value">6</span>
+        </div>
+        <div class="rr-recs-hero__stat">
+          <span class="rr-recs-hero__stat-label">To downtown Rogers</span>
+          <span class="rr-recs-hero__stat-value">12 min</span>
+        </div>
+        <div class="rr-recs-hero__stat">
+          <span class="rr-recs-hero__stat-label">Day-trip region</span>
+          <span class="rr-recs-hero__stat-value">NWA</span>
         </div>
       </div>
     </div>
-  </p-panel>
+    <div class="rr-recs-hero__media">
+      <img [src]="heroImage" alt="Inside an A-frame cabin" loading="eager" />
+    </div>
+  </section>
 
-  <div class="rr-content-wrap">
-    <section class="rr-content-section">
-      <div class="rr-content-section__head">
-        <h2>Curated for your stay</h2>
-        <p>
-          Our team's go-to spots for guests — from slow weekend brunches to lake days and downtown
-          evenings.
-        </p>
+  <section class="rr-recs-picks">
+    <div class="rr-recs-picks__head">
+      <div>
+        <div class="rr-recs-eyebrow">Six picks</div>
+        <h2 class="rr-recs-section-title">If you only do six things.</h2>
       </div>
-
-      <div class="rr-card-grid rr-card-grid--cols-3">
-        @for (item of picks; track item.title) {
-          <a
-            [href]="item.websiteUrl"
-            target="_blank"
-            rel="noopener noreferrer"
-            class="rr-card-link"
-            [attr.aria-label]="'Visit ' + item.title + ' website'"
-          >
-            <p-card styleClass="rr-pick-card">
-              <ng-template #header>
-                <img [src]="item.imageUrl" [alt]="item.title" loading="lazy" />
-              </ng-template>
-              <ng-template #title>{{ item.title }}</ng-template>
-              <p-tag [value]="item.badge" [severity]="item.severity" [rounded]="true" />
-              <p class="mt-3">{{ item.description }}</p>
-              <p class="rr-card-meta mt-3">{{ item.detail }}</p>
-            </p-card>
-          </a>
-        }
-      </div>
-    </section>
-
-    <section class="rr-content-section">
-      <p-panel styleClass="rr-split-panel">
-        <div class="rr-split">
-          <div class="rr-split__media">
-            <img
-              src="https://upload.wikimedia.org/wikipedia/commons/d/df/Crystal_Bridges_Museum_of_American_Art_May_2017_17.jpg"
-              alt="Crystal Bridges Museum of American Art in Bentonville, Arkansas"
-              loading="lazy"
-            />
+      <span class="rr-recs-picks__note">Numbers match the map below</span>
+    </div>
+    <div class="rr-recs-picks__grid">
+      @for (pick of picks; track pick.number) {
+        <a
+          class="rr-recs-pick rr-recs-pick--{{ pick.variant }}"
+          [class.rr-recs-pick--large]="pick.large"
+          [href]="pick.websiteUrl"
+          target="_blank"
+          rel="noopener noreferrer"
+          [attr.aria-label]="'Visit ' + pick.title"
+        >
+          <div class="rr-recs-pick__meta">
+            <span class="rr-recs-pick__number">{{ pick.number }}</span>
+            <span class="rr-recs-pick__category">{{ pick.category }}</span>
           </div>
-          <div class="rr-split__copy">
-            <p-tag value="From our team" severity="success" [rounded]="true" />
-            <h3>How we recommend exploring</h3>
-            <p>
-              These aren't generic travel lists — they're the places we send guests who want the best
-              of Rogers, Bentonville, and the surrounding Ozarks without overplanning.
-            </p>
-            <p-divider />
-            <ul class="rr-feature-list">
-              @for (tip of localTips; track tip.text) {
-                <li class="rr-feature-list__item">
-                  <span class="rr-feature-list__icon">
-                    <i [class]="tip.icon"></i>
-                  </span>
-                  <span>
-                    <strong>{{ tip.text }}</strong>
-                    <span class="rr-feature-list__detail">{{ tip.detail }}</span>
-                  </span>
-                </li>
-              }
-            </ul>
-          </div>
+          @if (pick.minutes) {
+            <div class="rr-recs-pick__minutes">
+              {{ pick.minutes }}<span>min</span>
+            </div>
+          }
+          <h3 class="rr-recs-pick__title">{{ pick.title }}</h3>
+          <p class="rr-recs-pick__copy">{{ pick.description }}</p>
+          <span class="rr-recs-pick__link">Visit site ↗</span>
+        </a>
+      }
+    </div>
+  </section>
+
+  <section class="rr-recs-tips">
+    <div class="rr-recs-tips__intro">
+      <div class="rr-recs-eyebrow">Local tips</div>
+      <h2 class="rr-recs-section-title">What we tell every guest.</h2>
+    </div>
+    <div class="rr-recs-tips__grid">
+      @for (tip of localTips; track tip.number) {
+        <div class="rr-recs-tips__item">
+          <span class="rr-recs-tips__number">{{ tip.number }}</span>
+          <p>{{ tip.text }}</p>
         </div>
-      </p-panel>
-    </section>
+      }
+    </div>
+  </section>
 
-    <section class="rr-content-section">
-      <div class="rr-content-section__head">
-        <h2>Plan a day out</h2>
-        <p>A simple rhythm many guests follow — adjust based on season, weather, and your group.</p>
-      </div>
-      <div class="rr-step-grid">
-        @for (step of dayPlan; track step.label) {
-          <div class="rr-step-card">
-            <span
-              class="rr-step-card__label"
-              [class.rr-step-card__label--accent]="step.accent"
-            >
-              {{ step.label }}
-            </span>
-            <h3>{{ step.title }}</h3>
-            <p>{{ step.description }}</p>
+  <section class="rr-recs-day-plan">
+    <img
+      class="rr-recs-day-plan__image"
+      [src]="dayPlanImage"
+      alt="Evening light on the property"
+      loading="lazy"
+    />
+    <div class="rr-recs-day-plan__overlay" aria-hidden="true"></div>
+    <div class="rr-recs-day-plan__content">
+      <div class="rr-recs-eyebrow rr-recs-eyebrow--on-dark">Plan a day</div>
+      <div class="rr-recs-day-plan__timeline">
+        @for (step of dayPlan; track step.period; let last = $last) {
+          <div class="rr-recs-day-plan__step">
+            <div class="rr-recs-day-plan__period">{{ step.period }}</div>
+            <div class="rr-recs-day-plan__title">{{ step.title }}</div>
           </div>
+          @if (!last) {
+            <span class="rr-recs-day-plan__rule" aria-hidden="true"></span>
+          }
         }
       </div>
-    </section>
+    </div>
+  </section>
 
-    <section class="rr-content-section">
-      <div class="rr-content-section__head">
-        <h2>Pick your vibe</h2>
-        <p>Three easy itineraries depending on what kind of day you're after.</p>
-      </div>
-      <div class="rr-card-grid rr-card-grid--cols-3">
-        @for (idea of tripIdeas; track idea.title) {
-          <a
-            [href]="idea.websiteUrl"
-            target="_blank"
-            rel="noopener noreferrer"
-            class="rr-card-link"
-            [attr.aria-label]="'Explore ' + idea.title + ' itinerary'"
-          >
-            <p-card styleClass="rr-pick-card">
-              <ng-template #header>
-                <img [src]="idea.imageUrl" [alt]="idea.title" loading="lazy" />
-              </ng-template>
-              <ng-template #title>{{ idea.title }}</ng-template>
-              <ng-template #subtitle>{{ idea.subtitle }}</ng-template>
-              <p-tag [value]="idea.badge" [severity]="idea.severity" [rounded]="true" />
-              <p class="mt-3">{{ idea.description }}</p>
-            </p-card>
-          </a>
-        }
-      </div>
-    </section>
+  <section class="rr-recs-vibes">
+    <div class="rr-recs-eyebrow">Pick your vibe</div>
+    <div class="rr-recs-vibes__grid">
+      @for (vibe of tripVibes; track vibe.title) {
+        <div class="rr-recs-vibe rr-recs-vibe--{{ vibe.variant }}">
+          <h3>{{ vibe.title }}</h3>
+          <p>
+            @for (line of vibe.lines; track line; let last = $last) {
+              {{ line }}@if (!last) {<br />}
+            }
+          </p>
+        </div>
+      }
+    </div>
+  </section>
 
-    <section class="rr-content-section">
-      <div class="rr-content-section__head">
-        <h2>Explore the area</h2>
-        <p>
-          Replace the iframe URL with your Google My Maps embed — pin favorites, drive times, and
-          guest-only tips.
-        </p>
-      </div>
-      <p-panel header="Rogers &amp; Northwest Arkansas">
-        <iframe
-          class="rr-map-frame"
-          title="Remotely Rogers area map"
-          src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d103532!2d-94.118!3d36.332!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2sRogers%2C%20AR!5e0!3m2!1sen!2sus!4v1234567890"
-          loading="lazy"
-          referrerpolicy="no-referrer-when-downgrade"
-        ></iframe>
-      </p-panel>
-      <p class="rr-note mt-4">
-        Want trails, biking, and more outdoor ideas?
-        <a href="/preview/activities">Browse activities</a>
-        for the full adventure guide.
-      </p>
-    </section>
-  </div>
+  <section class="rr-recs-map">
+    <div class="rr-recs-map__frame">
+      <iframe
+        class="rr-recs-map__embed"
+        title="Rogers and Northwest Arkansas area map"
+        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d103532!2d-94.118!3d36.332!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2sRogers%2C%20AR!5e0!3m2!1sen!2sus!4v1234567890"
+        loading="lazy"
+        referrerpolicy="no-referrer-when-downgrade"
+      ></iframe>
+    </div>
+    <div class="rr-recs-map__legend">
+      <div class="rr-recs-eyebrow">Area map</div>
+      <h2 class="rr-recs-map__title">Rogers &amp; Northwest Arkansas</h2>
+      @for (item of mapLegend; track item.number) {
+        <div class="rr-recs-map__legend-row">
+          <span class="rr-recs-map__legend-pin">{{ item.number }}</span>
+          <span class="rr-recs-map__legend-name">{{ item.name }}</span>
+          @if (item.driveTime) {
+            <span class="rr-recs-map__legend-time">{{ item.driveTime }}</span>
+          }
+        </div>
+      }
+    </div>
+  </section>
 
-  <p-panel styleClass="rr-cta-panel">
-    <h2>Ready to explore Northwest Arkansas?</h2>
-    <p>
-      Book your stay at Remotely Rogers and use these picks as a starting point — we'll help you
-      make the most of your time in the Ozarks.
-    </p>
-    <a
-      href="https://remotelyrogers.com/en/all-properties/"
-      target="_blank"
-      rel="noopener"
-      class="p-button rr-accent-btn p-button-rounded"
-    >
-      <i class="pi pi-calendar p-button-icon p-button-icon-left"></i>
-      <span class="p-button-label">Book Your Stay</span>
-    </a>
-  </p-panel>
+  <section class="rr-recs-cta">
+    <img class="rr-recs-cta__image" [src]="ctaImage" alt="Black Gum Getaway at dusk" loading="lazy" />
+    <div class="rr-recs-cta__overlay" aria-hidden="true"></div>
+    <div class="rr-recs-cta__content">
+      <h2>Come back to the woods at night.</h2>
+      <div class="rr-recs-cta__actions">
+        <a class="rr-cabins-btn rr-cabins-btn--primary" routerLink="/cabins">Book your stay</a>
+        <a class="rr-cabins-btn rr-cabins-btn--outline rr-recs-cta-outline" routerLink="/activities">
+          Browse activities
+        </a>
+      </div>
+    </div>
+  </section>
 </div>
