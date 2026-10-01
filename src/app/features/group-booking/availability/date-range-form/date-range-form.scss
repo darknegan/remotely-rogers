@@ -3,36 +3,41 @@
 }
 
 .rr-date-form {
-  padding: 0.75rem 1rem;
-  border: 1px solid #e6e6e6;
-  border-radius: 8px;
-  background: #ffffff;
+  padding: 1.625rem 1.75rem 1.375rem;
+  border-bottom: 1px solid rgba(62, 44, 34, 0.12);
+  background: transparent;
 }
 
 .rr-date-form__fields {
-  display: grid;
-  gap: 0.75rem;
-  grid-template-columns: 1fr;
-}
-
-@media (min-width: 768px) {
-  .rr-date-form__fields {
-    grid-template-columns: minmax(12rem, 1fr) max-content max-content;
-    align-items: end;
-    column-gap: 1rem;
-  }
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: 1.125rem;
 }
 
 .rr-date-form__field label,
 .rr-date-form__action-label {
   display: block;
-  margin-bottom: 0.35rem;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-  font-size: 0.6875rem;
-  font-weight: 600;
-  letter-spacing: 0.04em;
+  margin-bottom: 0.4375rem;
+  font-family: var(--rr-font-ui);
+  font-size: 0.65625rem;
+  font-weight: 400;
+  letter-spacing: 0.2em;
   text-transform: uppercase;
-  color: #8a8a8a;
+  color: var(--rr-bark);
+}
+
+.rr-date-form__field--dates {
+  flex: 0 1 11.875rem;
+  min-width: 11.875rem;
+}
+
+.rr-date-form__field--guests {
+  flex: 0 0 auto;
+}
+
+.rr-date-form__field--action {
+  flex: 0 0 auto;
 }
 
 .rr-date-form__field :is(.p-datepicker) {
@@ -45,24 +50,88 @@
 }
 
 .rr-date-form__submit {
-  width: 100%;
-}
-
-@media (min-width: 768px) {
-  .rr-date-form__submit {
-    width: auto;
-    white-space: nowrap;
-  }
+  min-height: 3rem;
 }
 
 .rr-date-form__message {
-  margin-top: 0.65rem;
+  margin-top: 0.75rem;
 }
 
 .rr-date-form__hint {
-  margin: 0.65rem 0 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-  font-size: 0.8125rem;
-  line-height: 1.5;
-  color: #8a8a8a;
+  flex: 1 1 20rem;
+  margin: 0.25rem 0 0;
+  font-family: var(--rr-font-body);
+  font-size: 0.9375rem;
+  line-height: 1.55;
+  color: var(--rr-walnut-ink);
+}
+
+@media (min-width: 768px) {
+  .rr-date-form__fields {
+    gap: 1.125rem 1.5rem;
+  }
+
+  .rr-date-form__hint {
+    margin: 0 0 0.25rem;
+  }
+}
+
+:host ::ng-deep {
+  .rr-date-form__submit.p-button {
+    min-height: 3rem;
+    padding: 0 1.625rem;
+    border: 0;
+    border-radius: 0;
+    background: var(--rr-walnut);
+    font-family: var(--rr-font-ui);
+    font-size: 0.71875rem;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--rr-cream-on-dark);
+
+    &:not(:disabled):hover {
+      background: #56402f;
+    }
+
+    &:not(:disabled):active {
+      background: var(--rr-footer-ink);
+    }
+  }
+
+  .rr-date-picker .p-inputtext {
+    min-height: 3rem;
+    border: 1px solid rgba(62, 44, 34, 0.22);
+    border-radius: 0;
+    background: var(--rr-ground);
+    font-family: var(--rr-font-ui);
+    font-size: 0.9375rem;
+    color: var(--rr-walnut);
+  }
+
+  .p-inputnumber {
+    border: 1px solid rgba(62, 44, 34, 0.22);
+    background: var(--rr-ground);
+
+    .p-inputnumber-input {
+      min-height: 3rem;
+      font-family: var(--rr-font-ui);
+      font-size: 0.9375rem;
+      color: var(--rr-walnut);
+    }
+
+    .p-inputnumber-button {
+      width: 2.75rem;
+      color: var(--rr-oxblood);
+      background: transparent;
+
+      &:hover {
+        background: #ede5d6;
+      }
+
+      &:active {
+        background: #e3d8c4;
+      }
+    }
+  }
 }

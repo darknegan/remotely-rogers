@@ -1,17 +1,9 @@
-/* Shared styles for the group-booking iframe widget */
+/* Shared styles for the group-booking calendar widget */
 
 .rr-group-booking .p-button:not(:disabled),
 .rr-checkout .p-button:not(:disabled),
 .rr-checkout-success .p-button:not(:disabled) {
   cursor: pointer;
-}
-
-.rr-group-booking .p-tag {
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-  font-size: 0.6875rem;
-  font-weight: 600;
-  letter-spacing: 0.03em;
-  text-transform: uppercase;
 }
 
 .rr-date-picker {
@@ -20,28 +12,51 @@
 
 .rr-date-picker .p-inputtext {
   width: 100%;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-  font-size: 0.875rem;
+  font-family: var(--rr-font-ui);
+  font-size: 0.9375rem;
 }
 
 .rr-group-booking .p-inputnumber-input {
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-  font-size: 0.875rem;
+  font-family: var(--rr-font-ui);
+  font-size: 0.9375rem;
+}
+
+.rr-group-booking .p-message {
+  font-family: var(--rr-font-ui);
+  font-size: 0.8125rem;
+}
+
+.rr-group-booking .p-message.p-message-warn {
+  border-left: 3px solid var(--rr-rust);
+  background: #f7e7e1;
+  color: #7a2415;
+}
+
+.rr-group-booking .p-message.p-message-error {
+  border-left: 3px solid var(--rr-rust);
+  background: #f7e7e1;
+  color: #7a2415;
+}
+
+.rr-group-booking .p-message.p-message-info {
+  border-left: 3px solid var(--rr-brass);
+  background: #f1ebdf;
+  color: var(--rr-walnut-ink);
 }
 
 .rr-booking-widget {
-  margin-top: 0.5rem;
+  margin-top: 0;
 }
 
 .rr-booking-widget__note {
   margin: 0.75rem 0 0;
-  font-family: var(--rr-font-sans);
+  font-family: var(--rr-font-ui);
   font-size: 0.875rem;
-  color: var(--rr-sage);
+  color: var(--rr-bark);
   text-align: center;
 }
 
 .rr-booking-widget__note a {
-  color: var(--rr-forest);
+  color: var(--rr-oxblood);
   font-weight: 600;
 }

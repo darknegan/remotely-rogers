@@ -24,61 +24,77 @@
 
     <p-button
       label="Book more cabins"
-      styleClass="rr-cart__checkout rr-accent-btn"
+      styleClass="rr-cart__checkout rr-group-booking-cta"
       (onClick)="bookMoreCabins()"
     />
   } @else {
-    <h3>Your group cart</h3>
+    <div class="rr-cart__head">
+      <h3>Your cabins</h3>
+      @if (state.cartItems().length > 0) {
+        <span class="rr-cart__count">
+          {{ state.cartItems().length === 1 ? '1 cabin' : state.cartItems().length + ' cabins' }}
+        </span>
+      }
+    </div>
+
+    @if (state.selectionError(); as selectionError) {
+      <p-message severity="warn" [text]="selectionError" styleClass="rr-cart__warning" />
+    }
 
     @if (state.cartItems().length === 0) {
-      <p class="rr-cart__empty">
-        Click available nights on a cabin row to build a stay. Click another night 2–5 days away to
-        fill the dates in between. Click a selected night again to clear that cabin.
-      </p>
+      <div class="rr-cart__empty-box">
+        <p>
+          No cabins selected yet. Click an available night on any cabin to start.
+        </p>
+      </div>
     } @else {
       <ul class="rr-cart__list">
         @for (item of state.cartItems(); track item.cabin.id) {
           <li>
+            @if (item.cabin.imageUrl) {
+              <img [src]="item.cabin.imageUrl" [alt]="item.cabin.name" loading="lazy" />
+            }
             <div class="rr-cart__item-copy">
-              <span class="rr-cart__item-name">{{ item.cabin.name }}</span>
+              <div class="rr-cart__item-top">
+                <span class="rr-cart__item-name">{{ shortName(item.cabin.name) }}</span>
+                <button
+                  type="button"
+                  class="rr-cart__remove"
+                  (click)="removeCabin(item.cabin.id)"
+                >
+                  Remove
+                </button>
+              </div>
               <span class="rr-cart__item-dates">
-                {{ formatDateRangeLabel(item.selection.arrival, item.selection.departure) }}
+                {{ formatDateRangeLabel(item.selection.arrival, item.selection.departure) }} ·
+                check-out 11 AM
               </span>
+              <div class="rr-cart__item-price">
+                <span>{{ item.nights === 1 ? '1 night' : item.nights + ' nights' }}</span>
+                <strong>{{ item.totalPrice | currency: item.currency : 'symbol' : '1.0-0' }}</strong>
+              </div>
             </div>
-            <strong>{{ item.totalPrice | currency: item.currency : 'symbol' : '1.0-0' }}</strong>
           </li>
         }
       </ul>
 
-      <p-divider />
-
-      <div class="rr-cart__totals">
-        <div>
-          <span>{{ state.cartItems().length }} cabin(s)</span>
-          <span>{{ state.cartItems().length }} unique stay(s)</span>
-        </div>
-        <div class="rr-cart__total">
-          <span>Estimated total</span>
-          <strong>{{ state.selectedTotal() | currency: 'USD' : 'symbol' : '1.0-0' }}</strong>
-        </div>
+      <div class="rr-cart__total">
+        <span>Estimated total</span>
+        <strong>{{ state.selectedTotal() | currency: 'USD' : 'symbol' : '1.0-0' }}</strong>
       </div>
     }
 
     @if (mode() === 'calendar') {
       <p-button
         label="Continue to checkout"
-        icon="pi pi-arrow-right"
-        iconPos="right"
-        styleClass="rr-cart__checkout rr-accent-btn"
+        styleClass="rr-cart__checkout rr-group-booking-cta"
         [disabled]="!state.canCheckout()"
         (onClick)="continueToCheckout()"
       />
 
-      <p-message
-        severity="info"
-        text="You’ll pay for every selected cabin in one Stripe checkout."
-        styleClass="rr-cart__note"
-      />
+      <p class="rr-cart__note">
+        You'll pay for every selected cabin in one Stripe checkout.
+      </p>
     }
   }
 </aside>

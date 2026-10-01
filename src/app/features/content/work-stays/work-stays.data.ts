@@ -77,7 +77,7 @@ export const WORK_AMENITIES: WorkAmenity[] = [
     imageUrl: '',
     imageAlt: '',
     variant: 'oxblood',
-    linkPath: '/preview/multi-cabin-stays',
+    linkPath: '/multi-cabin',
     linkLabel: 'Multi-cabin stays →',
   },
 ];
@@ -132,7 +132,7 @@ export const STAY_OPTIONS: StayOption[] = [
     title: 'Team offsite',
     description: 'Up to six cabins, four people each, on one checkout.',
     variant: 'paper-link',
-    linkPath: '/preview/multi-cabin-stays',
+    linkPath: '/multi-cabin',
     linkLabel: 'Open the group calendar →',
   },
 ];

@@ -9,6 +9,7 @@
 /activities
 /recommendations
 /work-stays
+/multi-cabin
 /preview/foundations
 /preview/activities
 /preview/recommendations
