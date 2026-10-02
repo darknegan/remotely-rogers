@@ -51,42 +51,14 @@ export const routes: Routes = [
   },
   {
     path: 'preview',
-    loadComponent: () => import('./layout/site-shell/site-shell').then((m) => m.SiteShell),
     children: [
-      {
-        path: 'foundations',
-        loadComponent: () =>
-          import('./features/preview/foundations/foundations').then((m) => m.FoundationsPreview),
-      },
-      {
-        path: 'activities',
-        loadComponent: () =>
-          import('./features/content/activities/activities').then((m) => m.Activities),
-      },
-      {
-        path: 'recommendations',
-        loadComponent: () =>
-          import('./features/content/recommendations/recommendations').then(
-            (m) => m.Recommendations,
-          ),
-      },
-      {
-        path: 'work-stays',
-        loadComponent: () =>
-          import('./features/content/work-stays/work-stays').then((m) => m.WorkStays),
-      },
-      {
-        path: 'multi-cabin-stays',
-        loadComponent: () =>
-          import('./features/content/multi-cabin-stays/multi-cabin-stays').then(
-            (m) => m.MultiCabinStays,
-          ),
-      },
-      {
-        path: 'reviews',
-        loadComponent: () =>
-          import('./features/content/reviews/reviews').then((m) => m.Reviews),
-      },
+      { path: '', redirectTo: '/', pathMatch: 'full' },
+      { path: 'foundations', redirectTo: '/', pathMatch: 'full' },
+      { path: 'activities', redirectTo: '/activities', pathMatch: 'full' },
+      { path: 'recommendations', redirectTo: '/recommendations', pathMatch: 'full' },
+      { path: 'work-stays', redirectTo: '/work-stays', pathMatch: 'full' },
+      { path: 'multi-cabin-stays', redirectTo: '/multi-cabin', pathMatch: 'full' },
+      { path: 'reviews', redirectTo: '/', pathMatch: 'full' },
     ],
   },
   {
