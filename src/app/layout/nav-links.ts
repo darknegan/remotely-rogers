@@ -3,7 +3,7 @@ export interface NavLink {
   path: string;
 }
 
-/** Primary site navigation — preview paths until step 9 cutover. */
+/** Primary site navigation — public Ozark maison routes. */
 export const SITE_NAV_LINKS: NavLink[] = [
   { label: 'Home', path: '/' },
   { label: 'Cabins', path: '/cabins' },
