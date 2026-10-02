@@ -1,16 +1,30 @@
 <section class="rr-cabin-grid" aria-label="Cabin availability calendar">
   @if (!state.hasSearched()) {
-    <div class="rr-cabin-grid__empty">
-      <i class="pi pi-calendar" aria-hidden="true"></i>
-      <p>Loading calendar…</p>
+    <div class="rr-cabin-grid__state rr-cabin-grid__state--loading">
+      <p-progress-spinner strokeWidth="4" ariaLabel="Loading calendar" />
+      <p class="rr-cabin-grid__state-title">Loading calendar…</p>
     </div>
   } @else if (state.loading()) {
-    <div class="rr-cabin-grid__loading">
+    <div class="rr-cabin-grid__state rr-cabin-grid__state--loading">
       <p-progress-spinner strokeWidth="4" ariaLabel="Loading availability" />
-      <p>Loading availability across all cabins…</p>
+      <p class="rr-cabin-grid__state-title">Loading availability…</p>
+      <p class="rr-cabin-grid__state-detail">
+        Checking all six cabins for {{ state.headerMonth() }}
+      </p>
     </div>
   } @else if (state.error(); as error) {
-    <p-message severity="error" [text]="error" />
+    <div class="rr-cabin-grid__state rr-cabin-grid__state--error">
+      <div class="rr-cabin-grid__error-card">
+        <div class="rr-cabin-grid__error-label">Availability didn't load</div>
+        <p>{{ error }}</p>
+        <p-button
+          type="button"
+          label="Try again"
+          styleClass="rr-cabin-grid__retry-btn"
+          (onClick)="retryLoad()"
+        />
+      </div>
+    </div>
   } @else {
     <header class="rr-cabin-grid__toolbar">
       <div class="rr-cabin-grid__toolbar-start">
@@ -19,7 +33,6 @@
           <p-button
             type="button"
             icon="pi pi-chevron-left"
-            [rounded]="true"
             [text]="true"
             severity="secondary"
             styleClass="rr-cabin-grid__nav-btn"
@@ -29,7 +42,6 @@
           <p-button
             type="button"
             icon="pi pi-chevron-right"
-            [rounded]="true"
             [text]="true"
             severity="secondary"
             styleClass="rr-cabin-grid__nav-btn"
@@ -39,8 +51,7 @@
           <p-button
             type="button"
             label="Today"
-            icon="pi pi-calendar"
-            [rounded]="true"
+            [text]="true"
             severity="secondary"
             styleClass="rr-cabin-grid__today-btn"
             (onClick)="goToToday()"
@@ -64,9 +75,7 @@
       <table class="rr-cabin-grid__table">
         <thead>
           <tr>
-            <th scope="col" class="rr-cabin-grid__cabin-col">
-              <span class="rr-cabin-grid__sort-label">Cabins</span>
-            </th>
+            <th scope="col" class="rr-cabin-grid__cabin-col">Cabin</th>
             @for (date of state.timelineDates(); track toDateKey(date)) {
               <th
                 scope="col"
@@ -94,8 +103,8 @@
                     <img [src]="cabin.imageUrl" [alt]="cabin.name" loading="lazy" />
                   }
                   <div class="rr-cabin-grid__cabin-copy">
-                    <strong [attr.title]="cabin.name">{{ cabin.name }}</strong>
-                    <span class="rr-cabin-grid__cabin-id">{{ cabin.lodgifyPropertyId }}</span>
+                    <strong [attr.title]="cabin.name">{{ shortName(cabin.name) }}</strong>
+                    <span class="rr-cabin-grid__cabin-meta">4 guests · 2 night min</span>
                     @if (selection) {
                       <span class="rr-cabin-grid__rate">
                         {{ formatDateRangeLabel(selection.arrival, selection.departure) }}
@@ -111,10 +120,14 @@
                   @let selectable = state.isCellSelectable(cabin.id, date);
                   @let selected = state.isDateInCabinSelection(cabin.id, date);
                   @let pending = state.isPendingAnchor(cabin.id, date);
+                  @let checkIn = isSelectionCheckIn(cabin.id, date);
+                  @let checkOut = isSelectionCheckOut(cabin.id, date);
                   <td
                     class="rr-cabin-grid__cell rr-cabin-grid__cell--available"
                     [class.rr-cabin-grid__cell--selected]="selected"
                     [class.rr-cabin-grid__cell--pending]="pending"
+                    [class.rr-cabin-grid__cell--check-in]="checkIn"
+                    [class.rr-cabin-grid__cell--check-out]="checkOut"
                     [class.rr-cabin-grid__cell--today]="isToday(date)"
                     [class.rr-cabin-grid__cell--weekend]="isWeekend(date)"
                     [class.rr-cabin-grid__cell--past]="isPast(date)"
@@ -138,10 +151,18 @@
                           <span class="rr-cabin-grid__price">
                             {{ rate.price | currency: cabinQuote.currency : 'symbol' : '1.0-0' }}
                           </span>
-                          <span class="rr-cabin-grid__min-stay" title="Minimum stay">
-                            <i class="pi pi-moon" aria-hidden="true"></i>
-                            {{ rate.minStay }}
-                          </span>
+                          @if (pending) {
+                            <span class="rr-cabin-grid__stay-tag">1 night</span>
+                          } @else if (checkIn) {
+                            <span class="rr-cabin-grid__stay-tag">In</span>
+                          } @else if (checkOut) {
+                            <span class="rr-cabin-grid__stay-tag">Last</span>
+                          } @else {
+                            <span class="rr-cabin-grid__min-stay" title="Minimum stay">
+                              <i class="pi pi-moon" aria-hidden="true"></i>
+                              {{ rate.minStay }}
+                            </span>
+                          }
                         }
                       }
                     </button>
@@ -158,13 +179,14 @@
                       [class.rr-cabin-grid__bar--booked]="segment.status === 'booked'"
                       [class.rr-cabin-grid__bar--blocked]="segment.status === 'blocked'"
                     >
-                      <i
-                        class="pi"
-                        [class.pi-lock]="segment.status === 'booked'"
-                        [class.pi-ban]="segment.status === 'blocked'"
-                        aria-hidden="true"
-                      ></i>
-                      {{ barLabel(segment.status) }}
+                      @if (isBarStart(segment, quote, state.timelineDates())) {
+                        <i
+                          class="pi"
+                          [class.pi-lock]="segment.status === 'booked'"
+                          [class.pi-ban]="segment.status === 'blocked'"
+                          aria-hidden="true"
+                        ></i>
+                      }
                     </div>
                   </td>
                 }

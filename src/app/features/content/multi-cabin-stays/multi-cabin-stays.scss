@@ -1,106 +1,234 @@
-:host {
-  display: block;
+.rr-multi-cabin {
+  font-family: var(--rr-font-body);
+  color: var(--rr-walnut);
+  background: var(--rr-ground);
+  overflow-x: clip;
 }
 
-.mt-3 {
-  margin-top: 0.75rem;
-}
+.rr-multi-cabin-desktop-only {
+  display: none !important;
 
-.mt-4 {
-  margin-top: 1rem;
-}
-
-.rr-content-section--calendar {
-  margin-bottom: 2rem;
-}
-
-.rr-step-grid {
-  display: grid;
-  gap: 1.25rem;
-  grid-template-columns: 1fr;
-}
-
-@media (min-width: 768px) {
-  .rr-step-grid {
-    grid-template-columns: repeat(3, 1fr);
+  @media (min-width: 1024px) {
+    display: block !important;
   }
 }
 
-.rr-step-card {
-  padding: 1.35rem 1.25rem;
-  border: 1px solid var(--rr-border);
-  border-radius: var(--rr-radius);
-  background: var(--rr-white);
-  box-shadow: var(--rr-shadow);
+.rr-multi-cabin-mobile-only {
+  @media (min-width: 1024px) {
+    display: none !important;
+  }
 }
 
-.rr-step-card__label {
-  display: inline-block;
-  margin-bottom: 0.65rem;
-  padding: 0.25rem 0.65rem;
-  border-radius: 999px;
-  background: rgba(45, 74, 62, 0.1);
-  font-family: var(--rr-font-sans);
-  font-size: 0.75rem;
-  font-weight: 700;
-  letter-spacing: 0.04em;
+.rr-multi-cabin-eyebrow {
+  font-family: var(--rr-font-ui);
+  font-size: 0.6875rem;
+  letter-spacing: 0.26em;
   text-transform: uppercase;
-  color: var(--rr-forest);
+  color: var(--rr-oxblood);
 }
 
-.rr-step-card h3 {
-  margin: 0 0 0.45rem;
-  font-family: var(--rr-font);
-  font-size: 1.15rem;
-  font-weight: 700;
-  line-height: 1.25;
-  color: var(--rr-forest-dark);
-}
-
-.rr-step-card p {
+.rr-multi-cabin-display {
   margin: 0;
-  font-family: var(--rr-font-sans);
-  font-size: 0.95rem;
-  line-height: 1.6;
-  color: var(--rr-text);
-  opacity: 0.88;
+  font-family: var(--rr-font-display);
+  font-weight: 400;
+  font-size: clamp(2.25rem, 7vw, 6rem);
+  line-height: 1.02;
 }
 
-.rr-booking-widget-panel .p-panel-content {
-  padding: 0 !important;
+.rr-multi-cabin-compact-header {
+  padding: 1.75rem 1.25rem 1.375rem;
+  background: var(--rr-walnut);
+  color: var(--rr-cream-on-dark);
+
+  .rr-multi-cabin-display {
+    font-size: 2.25rem;
+    line-height: 1.05;
+    color: var(--rr-cream-on-dark);
+  }
+
+  &__tagline {
+    margin: 0.625rem 0 0;
+    font-family: var(--rr-font-ui);
+    font-size: 0.8125rem;
+    color: var(--rr-brass-light);
+  }
 }
 
-.rr-booking-placeholder__lead {
-  margin: 0 0 1rem;
-  font-family: var(--rr-font-sans);
-  font-size: 1rem;
-  line-height: 1.6;
-  color: var(--rr-text);
-  opacity: 0.88;
+.rr-multi-cabin-hero {
+  position: relative;
+  height: min(47.5rem, 85vh);
+  overflow: hidden;
+
+  &__image {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: 50% 55%;
+  }
+
+  &__overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      to top,
+      rgba(36, 27, 21, 0.9) 0%,
+      rgba(36, 27, 21, 0.2) 55%,
+      rgba(36, 27, 21, 0.35)
+    );
+  }
+
+  &__copy {
+    position: absolute;
+    left: 3.75rem;
+    right: 3.75rem;
+    bottom: 4rem;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: flex-end;
+    gap: 3.75rem;
+    color: var(--rr-cream-on-dark);
+  }
+
+  &__eyebrow {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+    font-family: var(--rr-font-ui);
+    font-size: 0.6875rem;
+    letter-spacing: 0.28em;
+    text-transform: uppercase;
+    color: var(--rr-brass-light);
+  }
+
+  &__rule {
+    width: 3.25rem;
+    height: 2px;
+    background: var(--rr-brass);
+  }
+
+  &__lede {
+    margin: 1.375rem 0 0;
+    max-width: 37.5rem;
+    font-size: 1.25rem;
+    line-height: 1.6;
+    color: #e8e0d2;
+  }
+
+  &__stats {
+    display: flex;
+    flex-wrap: wrap;
+    border-top: 1px solid rgba(230, 211, 174, 0.4);
+    font-family: var(--rr-font-ui);
+  }
+
+  &__stat {
+    padding: 1.125rem 2.125rem 0 0;
+
+    &:not(:first-child) {
+      padding-left: 2.125rem;
+      border-left: 1px solid rgba(230, 211, 174, 0.4);
+    }
+  }
+
+  &__stat-value {
+    display: block;
+    font-family: var(--rr-font-display);
+    font-size: 2.75rem;
+    line-height: 1;
+    color: var(--rr-brass-light);
+  }
+
+  &__stat-label {
+    display: block;
+    margin-top: 0.25rem;
+    font-size: 0.6875rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--rr-cream-on-dark);
+  }
 }
 
-.footnote {
-  margin: 1rem 0 0;
-  font-family: var(--rr-font-sans);
-  font-size: 0.85rem;
-  color: var(--rr-sage);
+.rr-multi-cabin-steps {
+  display: grid;
+  grid-template-columns: 22.5rem 1fr;
+  gap: 4.375rem;
+  padding: 6.25rem 3.75rem 4.375rem;
+
+  &__title {
+    margin: 1rem 0 0;
+    font-family: var(--rr-font-display);
+    font-weight: 400;
+    font-size: clamp(2rem, 4vw, 2.875rem);
+    line-height: 1.1;
+  }
+
+  &__grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    border-top: 2px solid var(--rr-brass);
+  }
+
+  &__step {
+    padding: 1.75rem 1.875rem 0 0;
+
+    &:not(:first-child) {
+      padding-left: 1.875rem;
+      border-left: 1px solid rgba(62, 44, 34, 0.16);
+    }
+
+    h3 {
+      margin: 0.875rem 0 0;
+      font-family: var(--rr-font-display);
+      font-weight: 400;
+      font-size: 1.625rem;
+      line-height: 1.2;
+    }
+
+    p {
+      margin: 0.625rem 0 0;
+      font-size: 1.03125rem;
+      line-height: 1.65;
+      color: var(--rr-walnut-ink);
+    }
+  }
+
+  &__number {
+    font-family: var(--rr-font-display);
+    font-size: 5rem;
+    line-height: 1;
+    color: var(--rr-oxblood);
+  }
 }
 
-.rr-note {
-  margin: 0;
-  font-family: var(--rr-font-sans);
-  font-size: 0.95rem;
-  line-height: 1.55;
-  color: var(--rr-sage);
+.rr-multi-cabin-calendar {
+  padding: 0 3.75rem 7.5rem;
+
+  &__note {
+    margin: 1.25rem 0 0;
+    font-family: var(--rr-font-ui);
+    font-size: 0.875rem;
+    text-align: center;
+    color: var(--rr-bark);
+
+    a {
+      color: var(--rr-oxblood);
+      font-weight: 600;
+      text-decoration: underline;
+      text-underline-offset: 2px;
+
+      &:hover {
+        color: var(--rr-oxblood-hover);
+      }
+    }
+  }
 }
 
-.rr-note a {
-  color: var(--rr-forest);
-  font-weight: 600;
-  text-decoration: underline;
-  text-underline-offset: 2px;
-}
-
-.rr-note a:hover {
-  color: var(--rr-terracotta);
+@media (max-width: 1023px) {
+  .rr-multi-cabin-calendar {
+    padding: 0 0 6.5rem;
+  }
 }

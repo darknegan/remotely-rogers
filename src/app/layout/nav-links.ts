@@ -10,7 +10,7 @@ export const SITE_NAV_LINKS: NavLink[] = [
   { label: 'Activities', path: '/activities' },
   { label: 'Recommendations', path: '/recommendations' },
   { label: 'Work Stays', path: '/work-stays' },
-  { label: 'Multi-Cabin', path: '/preview/multi-cabin-stays' },
+  { label: 'Multi-Cabin', path: '/multi-cabin' },
   { label: 'Contact', path: '/contact' },
 ];
 
@@ -19,6 +19,6 @@ export const FOOTER_NAV_LINKS: NavLink[] = [
   { label: 'Activities', path: '/activities' },
   { label: 'Recommendations', path: '/recommendations' },
   { label: 'Work Stays', path: '/work-stays' },
-  { label: 'Multi-Cabin', path: '/preview/multi-cabin-stays' },
+  { label: 'Multi-Cabin', path: '/multi-cabin' },
   { label: 'Contact', path: '/contact' },
 ];

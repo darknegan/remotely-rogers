@@ -35,6 +35,13 @@ export const routes: Routes = [
         loadComponent: () =>
           import('./features/content/work-stays/work-stays').then((m) => m.WorkStays),
       },
+      {
+        path: 'multi-cabin',
+        loadComponent: () =>
+          import('./features/content/multi-cabin-stays/multi-cabin-stays').then(
+            (m) => m.MultiCabinStays,
+          ),
+      },
     ],
   },
   {
