@@ -1,0 +1,130 @@
+<div class="rr-contact">
+  <header class="rr-contact__hero">
+    <div class="rr-contact-eyebrow">Get in touch</div>
+    <h1 class="rr-contact-display">Contact</h1>
+    <p class="rr-contact__lede">
+      Questions about a stay, directions, or booking several cabins? Jeff replies personally.
+    </p>
+  </header>
+
+  <section class="rr-contact__details" aria-label="Contact information">
+    <div class="rr-contact__info">
+      <div class="rr-contact-eyebrow">Host</div>
+      <h2>{{ hostName }}</h2>
+      <div class="rr-contact__links">
+        <a [href]="hostPhoneHref">{{ hostPhone }}</a>
+        <a [href]="'mailto:' + hostEmail">{{ hostEmail }}</a>
+      </div>
+      <div class="rr-contact__address">
+        <div class="rr-contact-eyebrow">Visit</div>
+        <p>
+          {{ addressLine1 }}<br />
+          {{ addressLine2 }}
+        </p>
+        <a class="rr-contact__map-link" [href]="mapUrl" target="_blank" rel="noopener noreferrer">
+          Map &amp; directions →
+        </a>
+      </div>
+    </div>
+
+    <div class="rr-contact__map">
+      <app-cabins-map [compact]="true" />
+    </div>
+  </section>
+
+  <section id="inquire" class="rr-contact-inquiry">
+    <div class="rr-contact-inquiry__intro">
+      <div class="rr-contact-eyebrow">Inquire</div>
+      <h2>Send a message</h2>
+      <p>Tell us your dates, which cabin interests you, and how we can help.</p>
+      <div class="rr-contact-inquiry__contact">
+        <a [href]="hostPhoneHref">{{ hostPhone }}</a>
+        <a [href]="'mailto:' + hostEmail">{{ hostEmail }}</a>
+      </div>
+    </div>
+
+    @if (submitSuccess()) {
+      <p-message
+        severity="success"
+        text="Thanks — Jeff will reply personally with availability and next steps."
+        styleClass="rr-contact-inquiry__success"
+      />
+    }
+
+    <form class="rr-contact-inquiry__form" [formGroup]="form" (ngSubmit)="submit()">
+      <label class="rr-contact-field rr-contact-field--full">
+        <span>Email *</span>
+        <input
+          pInputText
+          type="email"
+          formControlName="email"
+          autocomplete="email"
+          placeholder="you@example.com"
+        />
+        @if (invalid('email')) {
+          <small class="rr-contact-field__error">Enter a valid email.</small>
+        }
+      </label>
+
+      <label class="rr-contact-field">
+        <span>Name</span>
+        <input pInputText formControlName="name" autocomplete="name" placeholder="Your name" />
+      </label>
+
+      <label class="rr-contact-field">
+        <span>Phone</span>
+        <input pInputText type="tel" formControlName="phone" autocomplete="tel" placeholder="Phone" />
+      </label>
+
+      <label class="rr-contact-field">
+        <span>Date</span>
+        <p-datepicker
+          formControlName="date"
+          [showIcon]="true"
+          dateFormat="M d, yy"
+          placeholder="Add date"
+          inputStyleClass="rr-contact-datepicker-input"
+        />
+      </label>
+
+      <label class="rr-contact-field">
+        <span>Time window</span>
+        <p-select
+          formControlName="timeWindow"
+          [options]="timeWindowOptions"
+          optionLabel="label"
+          optionValue="value"
+          placeholder="Select a time"
+          styleClass="rr-contact-select"
+        />
+      </label>
+
+      <label class="rr-contact-field rr-contact-field--full">
+        <span>Which rental</span>
+        <p-select
+          formControlName="rental"
+          [options]="cabinOptions"
+          optionLabel="label"
+          optionValue="value"
+          placeholder="No preference"
+          styleClass="rr-contact-select"
+        />
+      </label>
+
+      <label class="rr-contact-field rr-contact-field--full">
+        <span>Notes</span>
+        <textarea
+          pTextarea
+          formControlName="notes"
+          rows="4"
+          placeholder="Dates, group size, questions…"
+        ></textarea>
+      </label>
+
+      <div class="rr-contact-inquiry__actions">
+        <span>* Required</span>
+        <p-button type="submit" label="Send" styleClass="rr-cabins-btn rr-cabins-btn--primary" />
+      </div>
+    </form>
+  </section>
+</div>

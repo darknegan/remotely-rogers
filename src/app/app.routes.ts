@@ -42,6 +42,11 @@ export const routes: Routes = [
             (m) => m.MultiCabinStays,
           ),
       },
+      {
+        path: 'contact',
+        loadComponent: () =>
+          import('./features/content/contact/contact').then((m) => m.Contact),
+      },
     ],
   },
   {

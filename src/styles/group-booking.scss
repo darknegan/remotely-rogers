@@ -21,27 +21,43 @@
   font-size: 0.9375rem;
 }
 
-.rr-group-booking .p-message {
+.rr-group-booking .p-message,
+.rr-checkout .p-message,
+.rr-checkout-success .p-message,
+.rr-guest-form .p-message {
   font-family: var(--rr-font-ui);
   font-size: 0.8125rem;
 }
 
-.rr-group-booking .p-message.p-message-warn {
+.rr-group-booking .p-message.p-message-warn,
+.rr-checkout .p-message.p-message-warn,
+.rr-checkout-success .p-message.p-message-warn,
+.rr-guest-form .p-message.p-message-warn {
   border-left: 3px solid var(--rr-rust);
   background: #f7e7e1;
   color: #7a2415;
 }
 
-.rr-group-booking .p-message.p-message-error {
+.rr-group-booking .p-message.p-message-error,
+.rr-checkout .p-message.p-message-error,
+.rr-checkout-success .p-message.p-message-error,
+.rr-guest-form .p-message.p-message-error {
   border-left: 3px solid var(--rr-rust);
   background: #f7e7e1;
   color: #7a2415;
 }
 
-.rr-group-booking .p-message.p-message-info {
+.rr-group-booking .p-message.p-message-info,
+.rr-checkout .p-message.p-message-info,
+.rr-checkout-success .p-message.p-message-info,
+.rr-guest-form .p-message.p-message-info {
   border-left: 3px solid var(--rr-brass);
   background: #f1ebdf;
   color: var(--rr-walnut-ink);
+}
+
+.rr-checkout-success .p-progressspinner-circle {
+  stroke: var(--rr-oxblood);
 }
 
 .rr-booking-widget {
