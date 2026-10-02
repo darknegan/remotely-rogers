@@ -5,6 +5,7 @@ export const serverRoutes: ServerRoute[] = [
   { path: 'recommendations', renderMode: RenderMode.Prerender },
   { path: 'work-stays', renderMode: RenderMode.Prerender },
   { path: 'multi-cabin', renderMode: RenderMode.Prerender },
+  { path: 'contact', renderMode: RenderMode.Prerender },
   { path: 'preview/activities', renderMode: RenderMode.Prerender },
   { path: 'preview/recommendations', renderMode: RenderMode.Prerender },
   { path: 'preview/work-stays', renderMode: RenderMode.Prerender },
