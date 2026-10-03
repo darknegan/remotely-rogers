@@ -11,6 +11,15 @@
   box-sizing: border-box;
 }
 
+html {
+  /* Keep in-page anchor targets visible below the fixed site header. */
+  scroll-padding-top: var(--rr-mobile-header-height);
+
+  @media (min-width: 1024px) {
+    scroll-padding-top: var(--rr-nav-height);
+  }
+}
+
 body {
   margin: 0;
   background: var(--rr-ground);

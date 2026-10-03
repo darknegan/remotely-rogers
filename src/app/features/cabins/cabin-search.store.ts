@@ -3,6 +3,7 @@ import { toSignal } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router } from '@angular/router';
 import { map } from 'rxjs';
 
+import { scrollPageToTop } from '../../core/scroll/viewport-scroll';
 import { SearchStateService } from '../../core/search/search-state.service';
 import { formatShortDate, nightCount, parseDateKey, toDateKey } from '../../core/utils/date-utils';
 import {
@@ -252,6 +253,7 @@ export class CabinSearchStore {
 
   setSort(value: CabinSort): void {
     this.sort.set(value);
+    scrollPageToTop();
   }
 
   toggleAmenity(amenity: CabinAmenityId): void {
@@ -264,6 +266,7 @@ export class CabinSearchStore {
       }
       return next;
     });
+    scrollPageToTop();
   }
 
   isAmenitySelected(amenity: CabinAmenityId): boolean {
@@ -272,11 +275,13 @@ export class CabinSearchStore {
 
   setBedroomFilter(value: BedroomFilter): void {
     this.bedroomFilter.set(value);
+    scrollPageToTop();
   }
 
   clearFilters(): void {
     this.amenityFilters.set(new Set());
     this.bedroomFilter.set('any');
+    scrollPageToTop();
   }
 
   openFilters(): void {

@@ -2,6 +2,7 @@ import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@a
 import { Title } from '@angular/platform-browser';
 import { RouterLink } from '@angular/router';
 
+import { scrollPageToTop } from '../../../core/scroll/viewport-scroll';
 import {
   ACTIVITY_CULTURE_IMAGE,
   ACTIVITY_EMPTY_IMAGE,
@@ -88,10 +89,12 @@ export class Activities {
 
   protected selectCategory(category: ActivityCategory): void {
     this.selectedCategory.set(category);
+    scrollPageToTop();
   }
 
   protected showAll(): void {
     this.selectedCategory.set('All');
+    scrollPageToTop();
   }
 
   protected isFeaturedLarge(item: FeaturedActivity): boolean {
