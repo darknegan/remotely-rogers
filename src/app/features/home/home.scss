@@ -349,12 +349,16 @@
     height: 100%;
     min-height: 16rem;
     object-fit: cover;
-    object-position: 50% 58%;
+    object-position: 50% 38%;
   }
 
   @media (min-width: 1024px) {
     order: 1;
     min-height: 47.5rem;
+
+    img {
+      object-position: 50% 58%;
+    }
   }
 }
 
