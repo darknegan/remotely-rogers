@@ -10,12 +10,26 @@
 
 .rr-shell__main {
   flex: 1;
+  /* Offset fixed headers so page content is not hidden underneath. */
+  padding-top: var(--rr-mobile-header-height);
+
+  @media (min-width: 1024px) {
+    padding-top: var(--rr-nav-height);
+  }
+}
+
+/* Angular hosts wrap fixed headers; collapse so they do not reserve layout space. */
+app-site-header,
+app-mobile-header {
+  display: block;
 }
 
 /* Site header (desktop nav) */
 .rr-site-header {
-  position: sticky;
+  position: fixed;
   top: 0;
+  left: 0;
+  right: 0;
   z-index: 40;
   display: none;
   align-items: center;
@@ -168,8 +182,10 @@
 
 /* Mobile header */
 .rr-mobile-header {
-  position: sticky;
+  position: fixed;
   top: 0;
+  left: 0;
+  right: 0;
   z-index: 40;
   display: flex;
   align-items: center;
