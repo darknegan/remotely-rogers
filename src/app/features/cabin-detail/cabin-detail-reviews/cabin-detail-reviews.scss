@@ -1,0 +1,131 @@
+.rr-cabin-reviews__head {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: 1rem;
+}
+
+.rr-cabin-reviews__title {
+  margin: 0;
+  font-family: var(--rr-font-display);
+  font-size: 2.375rem;
+  font-weight: 400;
+}
+
+.rr-cabin-reviews__meta {
+  font-family: var(--rr-font-ui);
+  font-size: 0.875rem;
+  color: var(--rr-walnut-soft);
+}
+
+.rr-cabin-reviews__stars {
+  color: var(--rr-brass);
+}
+
+.rr-cabin-reviews__grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+  margin-top: 1.375rem;
+}
+
+.rr-cabin-reviews__card {
+  padding: 1.875rem 1.875rem 1.625rem;
+  background: var(--rr-cream);
+  border-top: 2px solid var(--rr-brass);
+
+  &--muted {
+    border-top-color: rgba(176, 138, 74, 0.4);
+
+    .rr-cabin-reviews__quote {
+      color: #a8977f;
+    }
+  }
+}
+
+.rr-cabin-reviews__quote {
+  margin: 0;
+  font-size: 1.3125rem;
+  font-style: italic;
+  line-height: 1.55;
+}
+
+.rr-cabin-reviews__guest {
+  margin-top: 1.125rem;
+  font-family: var(--rr-font-ui);
+  font-size: 0.8125rem;
+
+  span {
+    color: var(--rr-walnut-muted);
+  }
+}
+
+.rr-cabin-reviews__footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 1rem;
+  font-family: var(--rr-font-ui);
+}
+
+.rr-cabin-reviews__nav {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.rr-cabin-reviews__arrow {
+  width: 2.5rem;
+  height: 2.5rem;
+  border: 1px solid rgba(62, 44, 34, 0.22);
+  background: transparent;
+  color: inherit;
+  font-size: 1.125rem;
+  cursor: pointer;
+
+  &:hover {
+    border-color: var(--rr-oxblood);
+    color: var(--rr-oxblood);
+  }
+}
+
+.rr-cabin-reviews__range {
+  margin-left: 0.5rem;
+  font-size: 0.78rem;
+  color: var(--rr-walnut-muted);
+}
+
+.rr-cabin-reviews__all {
+  padding: 0 0 0.1875rem;
+  border: none;
+  border-bottom: 1px solid rgba(108, 32, 41, 0.35);
+  background: transparent;
+  color: var(--rr-oxblood);
+  font-family: var(--rr-font-ui);
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+
+@media (max-width: 767px) {
+  .rr-cabin-reviews__head {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .rr-cabin-reviews__title {
+    font-size: 1.875rem;
+  }
+
+  .rr-cabin-reviews__grid {
+    grid-template-columns: 1fr;
+  }
+
+  .rr-cabin-reviews__footer {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.75rem;
+  }
+}

@@ -1,0 +1,87 @@
+<footer class="rr-site-footer">
+  <div class="rr-site-footer__grid">
+    <div>
+      <div class="rr-site-footer__brand">Remotely Rogers</div>
+      <p class="rr-site-footer__lede">
+        Six private A-frames on 70 acres of Ozark woodland in Rogers, Arkansas.
+      </p>
+      <a class="rr-btn rr-btn--brass" routerLink="/cabins">Check availability</a>
+    </div>
+
+    <div class="rr-site-footer__col">
+      <span class="rr-site-footer__label">Call or write</span>
+      <a class="rr-site-footer__phone" href="tel:4794405011">479-440-5011</a>
+      <a class="rr-site-footer__email" href="mailto:Jeff@remotelyrogers.com">Jeff@remotelyrogers.com</a>
+    </div>
+
+    <div class="rr-site-footer__col">
+      <span class="rr-site-footer__label">Visit</span>
+      <span class="rr-site-footer__text">11611–11601 Lindy Lane<br>Rogers, AR 72756</span>
+      <a
+        class="rr-site-footer__map-link"
+        href="https://maps.google.com/?q=11611+Lindy+Lane+Rogers+AR+72756"
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        Map &amp; directions →
+      </a>
+    </div>
+
+    <div class="rr-site-footer__col">
+      <span class="rr-site-footer__label">Follow</span>
+      <a
+        class="rr-site-footer__social"
+        href="https://instagram.com/remotely.rogers"
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        Instagram @remotely.rogers
+      </a>
+      <span class="rr-site-footer__label" style="margin-top: 0.875rem">Stays</span>
+      <span class="rr-site-footer__text">Check-in 3:00 PM<br>Check-out 11:00 AM</span>
+    </div>
+  </div>
+
+  <div class="rr-site-footer__bar">
+    <span>© {{ year }} Remotely Rogers · Rogers, Arkansas</span>
+    <div class="rr-site-footer__bar-links">
+      @for (link of links; track link.path) {
+        <a [routerLink]="link.path">{{ link.label }}</a>
+      }
+    </div>
+  </div>
+
+  <div class="rr-site-footer__mobile">
+    <div class="rr-site-footer__mobile-brand">Remotely Rogers</div>
+
+    <div class="rr-site-footer__col">
+      <span class="rr-site-footer__label">Call or write</span>
+      <a class="rr-site-footer__phone" href="tel:4794405011">479-440-5011</a>
+      <a class="rr-site-footer__email" href="mailto:Jeff@remotelyrogers.com">Jeff@remotelyrogers.com</a>
+    </div>
+
+    <div class="rr-site-footer__col">
+      <span class="rr-site-footer__label">Visit</span>
+      <span class="rr-site-footer__text">11611–11601 Lindy Lane, Rogers, AR 72756</span>
+      <a
+        class="rr-site-footer__map-link"
+        href="https://maps.google.com/?q=11611+Lindy+Lane+Rogers+AR+72756"
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        Map &amp; directions →
+      </a>
+    </div>
+
+    <a
+      class="rr-site-footer__social"
+      href="https://instagram.com/remotely.rogers"
+      target="_blank"
+      rel="noopener noreferrer"
+    >
+      Instagram @remotely.rogers
+    </a>
+
+    <span class="rr-site-footer__mobile-copy">© {{ year }} Remotely Rogers</span>
+  </div>
+</footer>

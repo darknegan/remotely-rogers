@@ -3,72 +3,101 @@
 }
 
 .rr-guest-form {
-  display: flex;
-  flex-direction: column;
-  gap: 0.35rem;
-  padding: 1.25rem;
-  border: 1px solid var(--rr-border);
-  border-radius: var(--rr-radius);
-  background: var(--rr-white);
-  box-shadow: var(--rr-shadow);
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1.25rem;
+  padding: 1.75rem 1.5rem 2rem;
+  font-family: var(--rr-font-ui);
 }
 
 .rr-guest-form h3 {
-  margin: 0 0 0.25rem;
-  font-family: Georgia, 'Times New Roman', serif;
-  font-size: 1.15rem;
-  color: #1a1a1a;
+  grid-column: 1 / -1;
+  margin: 0;
+  font-family: var(--rr-font-display);
+  font-size: 1.75rem;
+  font-weight: 400;
+  color: var(--rr-walnut);
 }
 
 .rr-guest-form__lead {
-  margin: 0 0 0.5rem;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-  font-size: 0.8125rem;
-  line-height: 1.5;
-  color: #666666;
+  grid-column: 1 / -1;
+  margin: 0;
+  font-family: var(--rr-font-body);
+  font-size: 0.9375rem;
+  line-height: 1.6;
+  color: var(--rr-walnut-ink);
 }
 
-.rr-guest-form label {
-  margin-top: 0.45rem;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-  font-size: 0.6875rem;
-  font-weight: 600;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
-  color: #8a8a8a;
-}
+.rr-guest-form__field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4375rem;
 
-.rr-guest-form label span {
-  font-weight: 500;
-  text-transform: none;
-  letter-spacing: 0;
-}
+  &--full {
+    grid-column: 1 / -1;
+  }
 
-.rr-guest-form input,
-.rr-guest-form textarea {
-  width: 100%;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-  font-size: 0.875rem;
+  span {
+    font-size: 0.65625rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--rr-bark);
+
+    em {
+      font-style: normal;
+      text-transform: none;
+      letter-spacing: 0;
+      font-weight: 400;
+    }
+  }
+
+  input,
+  textarea,
+  :host ::ng-deep .p-inputtext,
+  :host ::ng-deep .p-textarea {
+    width: 100%;
+    min-height: 3.25rem;
+    padding: 0 1rem;
+    border: 1px solid rgba(62, 44, 34, 0.24);
+    background: var(--rr-ground);
+    font-family: var(--rr-font-ui);
+    font-size: 0.9375rem;
+    color: var(--rr-walnut);
+  }
+
+  textarea,
+  :host ::ng-deep .p-textarea {
+    min-height: 6rem;
+    padding: 0.875rem 1rem;
+    resize: vertical;
+  }
 }
 
 .rr-guest-form__error {
-  margin: 0.15rem 0 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-  font-size: 0.75rem;
-  color: #b42318;
+  color: var(--rr-rust);
+  font-size: 0.8125rem;
 }
 
 .rr-guest-form__message {
-  margin-top: 0.65rem;
+  grid-column: 1 / -1;
 }
 
 .rr-guest-form__actions {
+  grid-column: 1 / -1;
   display: flex;
   flex-wrap: wrap;
-  gap: 0.5rem;
-  margin-top: 0.85rem;
+  gap: 0.75rem;
+  margin-top: 0.25rem;
+
+  :host ::ng-deep .p-button {
+    flex: 1 1 9rem;
+    border: 0;
+  }
 }
 
-.rr-guest-form__actions .p-button {
-  flex: 1 1 7rem;
+@media (max-width: 639px) {
+  .rr-guest-form {
+    grid-template-columns: 1fr;
+    padding: 1.25rem 1rem 1.5rem;
+  }
 }

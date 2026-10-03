@@ -6,6 +6,7 @@ import { ProgressSpinner } from 'primeng/progressspinner';
 
 import { BookingStateService } from '../../booking-state.service';
 import {
+  addDays,
   formatDateRangeLabel,
   formatShortDate,
   formatWeekday,
@@ -13,6 +14,7 @@ import {
   toDateKey,
 } from '../../../../core/utils/date-utils';
 import { CabinAvailability, DayRate, DayStatus } from '../../../../core/models/booking.models';
+import { shortCabinName } from '../../../../core/utils/reviews';
 
 export interface DaySegment {
   status: DayStatus | 'available';
@@ -34,6 +36,7 @@ export class CabinGrid {
   readonly formatWeekday = formatWeekday;
   readonly formatDateRangeLabel = formatDateRangeLabel;
   readonly toDateKey = toDateKey;
+  readonly shortName = shortCabinName;
 
   isToday(date: Date): boolean {
     return toDateKey(date) === toDateKey(this.today);
@@ -101,8 +104,43 @@ export class CabinGrid {
     return segments;
   }
 
-  barLabel(status: DayStatus): string {
-    return status === 'booked' ? 'Reserved' : 'Closed period';
+  isBarStart(
+    segment: DaySegment,
+    quote: CabinAvailability | undefined,
+    dates: Date[],
+  ): boolean {
+    if (segment.status === 'available') {
+      return false;
+    }
+
+    const firstDate = segment.dates[0];
+    const index = dates.findIndex((date) => toDateKey(date) === toDateKey(firstDate));
+    if (index <= 0) {
+      return true;
+    }
+
+    const previousDate = dates[index - 1];
+    const previousStatus = quote?.days?.[toDateKey(previousDate)] ?? 'available';
+    return previousStatus !== segment.status;
+  }
+
+  isSelectionCheckIn(cabinId: number, date: Date): boolean {
+    const selection = this.state.getCabinSelection(cabinId);
+    if (!selection || this.state.isPendingAnchor(cabinId, date)) {
+      return false;
+    }
+
+    return toDateKey(selection.arrival) === toDateKey(date);
+  }
+
+  isSelectionCheckOut(cabinId: number, date: Date): boolean {
+    const selection = this.state.getCabinSelection(cabinId);
+    if (!selection || this.state.isPendingAnchor(cabinId, date)) {
+      return false;
+    }
+
+    const lastNight = addDays(selection.departure, -1);
+    return toDateKey(lastNight) === toDateKey(date);
   }
 
   onCellClick(cabinId: number, date: Date): void {
@@ -115,5 +153,9 @@ export class CabinGrid {
 
   goToToday(): void {
     this.state.resetToDefaultView();
+  }
+
+  retryLoad(): void {
+    this.state.searchAvailability();
   }
 }

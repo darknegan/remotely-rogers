@@ -10,10 +10,12 @@
       <p>Confirming your payment and creating reservations…</p>
     </div>
   } @else if (bookingState.checkoutError(); as checkoutError) {
-    <p-message severity="error" [text]="checkoutError" />
+    <p-message severity="error" [text]="checkoutError" styleClass="rr-checkout-success__message" />
   }
 
   @if (bookingState.checkoutResult()) {
-    <app-cart-summary mode="result" />
+    <div class="rr-checkout-success__widget">
+      <app-cart-summary mode="result" />
+    </div>
   }
 </div>

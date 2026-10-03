@@ -1,0 +1,645 @@
+.rr-cabins {
+  font-family: var(--rr-font-body);
+  color: var(--rr-walnut);
+  background: var(--rr-ground);
+}
+
+.rr-cabins-eyebrow {
+  font-family: var(--rr-font-ui);
+  font-size: 0.6875rem;
+  letter-spacing: 0.26em;
+  text-transform: uppercase;
+  color: var(--rr-oxblood);
+}
+
+.rr-cabins-display {
+  margin: 1rem 0 0;
+  font-family: var(--rr-font-display);
+  font-weight: 400;
+  font-size: clamp(2.25rem, 6vw, 4.5rem);
+  line-height: 1.02;
+}
+
+.rr-cabins-hero {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: 2.5rem;
+  padding: 4.5rem 3.75rem 2.75rem;
+  background: var(--rr-ground-deep);
+
+  &__lede {
+    margin: 0;
+    max-width: 26.25rem;
+    font-size: 1.125rem;
+    line-height: 1.7;
+    color: var(--rr-walnut-ink);
+  }
+}
+
+.rr-cabins-hero-mobile {
+  padding: 1.875rem 1.25rem 1.125rem;
+  background: var(--rr-ground-deep);
+
+  &__search {
+    display: flex;
+    gap: 0.5rem;
+    margin-top: 1.125rem;
+  }
+
+  &__dates,
+  &__filters {
+    border: 1px solid rgba(62, 44, 34, 0.2);
+    background: var(--rr-paper);
+    font-family: var(--rr-font-ui);
+    color: var(--rr-walnut);
+    cursor: pointer;
+  }
+
+  &__dates {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    min-height: 3.125rem;
+    padding: 0 0.875rem;
+    text-align: left;
+  }
+
+  &__dates-main {
+    font-size: 0.875rem;
+  }
+
+  &__dates-sub {
+    margin-top: 0.125rem;
+    font-size: 0.71875rem;
+    color: var(--rr-bark);
+  }
+
+  &__filters {
+    padding: 0 0.875rem;
+    min-height: 3.125rem;
+    border-color: var(--rr-brass);
+    font-size: 0.6875rem;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+  }
+}
+
+.rr-cabins-toolbar {
+  position: sticky;
+  top: var(--rr-nav-height);
+  z-index: 20;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 1rem 3.75rem;
+  background: var(--rr-paper);
+  border-bottom: 1px solid rgba(62, 44, 34, 0.14);
+  box-shadow: 0 0.5rem 1.5rem rgba(62, 44, 34, 0.06);
+  font-family: var(--rr-font-ui);
+
+  app-booking-bar {
+    flex: 1;
+    min-width: 0;
+  }
+
+  &__divider {
+    width: 1px;
+    height: 2.125rem;
+    background: rgba(62, 44, 34, 0.18);
+  }
+
+  &__filters {
+    display: flex;
+    align-items: center;
+    gap: 0.625rem;
+    min-height: 3.375rem;
+    padding: 0 1.25rem;
+    border: 1px solid var(--rr-brass);
+    background: transparent;
+    font-size: 0.75rem;
+    font-weight: 500;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    white-space: nowrap;
+    color: var(--rr-walnut);
+    cursor: pointer;
+
+    &:hover {
+      background: rgba(176, 138, 74, 0.14);
+    }
+  }
+
+  &__sort {
+    min-width: 11.5rem;
+  }
+}
+
+.rr-cabins-tabs {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  background: var(--rr-paper);
+  border-bottom: 1px solid rgba(62, 44, 34, 0.14);
+  font-family: var(--rr-font-ui);
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  text-align: center;
+
+  &__tab {
+    padding: 0.9375rem 0;
+    border: 0;
+    background: transparent;
+    color: var(--rr-bark);
+    cursor: pointer;
+
+    &--active {
+      color: var(--rr-oxblood);
+      box-shadow: inset 0 -2px 0 var(--rr-oxblood);
+    }
+  }
+}
+
+.rr-cabins-summary {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 1rem;
+  padding: 1.875rem 3.75rem 0;
+  font-family: var(--rr-font-ui);
+
+  &--empty {
+    padding-bottom: 0;
+  }
+
+  &__count {
+    font-family: var(--rr-font-display);
+    font-size: 1.625rem;
+  }
+
+  &__note,
+  &__sort {
+    font-size: 0.8125rem;
+    color: var(--rr-bark);
+  }
+}
+
+.rr-cabins-layout {
+  display: grid;
+  gap: 2.25rem;
+  padding: 1.625rem 3.75rem 7.5rem;
+
+  @media (min-width: 1024px) {
+    grid-template-columns: minmax(0, 52.5rem) minmax(0, 1fr);
+    align-items: start;
+  }
+}
+
+.rr-cabins-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1.875rem;
+}
+
+.rr-cabins-card {
+  display: block;
+  background: var(--rr-paper);
+  box-shadow: 0 1.25rem 3.125rem rgba(62, 44, 34, 0.12);
+  color: inherit;
+  text-decoration: none;
+  transition:
+    box-shadow 0.22s ease,
+    transform 0.22s ease;
+
+  &:hover {
+    box-shadow: 0 1.75rem 4rem rgba(62, 44, 34, 0.2);
+  }
+
+  &--featured:hover {
+    box-shadow: 0 1.75rem 4rem rgba(62, 44, 34, 0.2);
+  }
+
+  &--grid:hover {
+    transform: translateY(-3px);
+  }
+
+  &__media {
+    position: relative;
+    overflow: hidden;
+
+    img {
+      display: block;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    &--grid {
+      height: 25rem;
+    }
+  }
+
+  &--featured .rr-cabins-card__media {
+    height: 31.25rem;
+  }
+
+  &__badge {
+    position: absolute;
+    top: 1.25rem;
+    left: 1.25rem;
+    padding: 0.5rem 0.875rem;
+    background: var(--rr-walnut);
+    color: var(--rr-brass-light);
+    font-family: var(--rr-font-ui);
+    font-size: 0.65625rem;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+  }
+
+  &__body {
+    padding: 1.375rem 1.5rem 1.5rem;
+  }
+
+  &__body--featured {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 1.5rem;
+    align-items: end;
+    padding: 1.75rem 2rem 1.875rem;
+  }
+
+  &__name {
+    font-family: var(--rr-font-display);
+    font-size: 2.25rem;
+    color: var(--rr-walnut);
+
+    &--grid {
+      font-size: 1.625rem;
+    }
+
+    &--mobile {
+      font-size: 1.4375rem;
+      line-height: 1.2;
+    }
+  }
+
+  &__meta {
+    margin-top: 0.625rem;
+    font-family: var(--rr-font-ui);
+    font-size: 0.875rem;
+    color: var(--rr-bark);
+  }
+
+  &__price {
+    font-family: var(--rr-font-ui);
+    font-size: 0.8125rem;
+    color: var(--rr-walnut-ink);
+
+    &--grid {
+      margin-top: 1rem;
+      padding-top: 0.875rem;
+      border-top: 1px solid rgba(62, 44, 34, 0.12);
+    }
+
+    &--mobile {
+      margin-top: 0.75rem;
+      font-size: 0.8125rem;
+    }
+  }
+
+  &__rate {
+    font-family: var(--rr-font-display);
+    font-size: 1.875rem;
+    color: var(--rr-walnut);
+  }
+
+  &__price-block {
+    text-align: right;
+    font-family: var(--rr-font-ui);
+  }
+
+  &__cta {
+    display: inline-block;
+    margin-top: 0.75rem;
+    padding: 0.8125rem 1.5rem;
+    background: var(--rr-oxblood);
+    color: var(--rr-cream-on-dark);
+    font-size: 0.71875rem;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+  }
+}
+
+.rr-cabins-grid-pair {
+  display: grid;
+  grid-template-columns: 1.15fr 1fr;
+  gap: 1.875rem;
+  align-items: start;
+}
+
+.rr-cabins-card--offset {
+  margin-top: 4.375rem;
+}
+
+.rr-cabins-rows-label {
+  margin-top: 0.75rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 1px solid rgba(62, 44, 34, 0.16);
+  font-family: var(--rr-font-ui);
+  font-size: 0.6875rem;
+  letter-spacing: 0.26em;
+  text-transform: uppercase;
+  color: var(--rr-oxblood);
+}
+
+.rr-cabins-row {
+  display: grid;
+  grid-template-columns: 20rem 1fr auto;
+  gap: 1.875rem;
+  align-items: center;
+  padding-bottom: 1.875rem;
+  border-bottom: 1px solid rgba(62, 44, 34, 0.14);
+  color: inherit;
+  text-decoration: none;
+  transition: padding-left 0.2s ease;
+
+  &:hover {
+    padding-left: 0.625rem;
+  }
+
+  &__media {
+    height: 13.75rem;
+    overflow: hidden;
+
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+  }
+
+  &__tagline {
+    margin: 0.875rem 0 0;
+    font-size: 1rem;
+    line-height: 1.65;
+    color: var(--rr-walnut-ink);
+  }
+
+  &__price {
+    text-align: right;
+    font-family: var(--rr-font-ui);
+    white-space: nowrap;
+  }
+
+  &__from,
+  &__per {
+    font-size: 0.8125rem;
+    color: var(--rr-walnut-ink);
+  }
+
+  &__rate {
+    font-family: var(--rr-font-display);
+    font-size: 1.75rem;
+    color: var(--rr-walnut);
+  }
+
+  &__link {
+    margin-top: 0.875rem;
+    font-size: 0.6875rem;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--rr-oxblood);
+  }
+}
+
+.rr-cabins-map-panel {
+  position: sticky;
+  top: calc(var(--rr-nav-height) + 7.5rem);
+  height: 48.75rem;
+}
+
+.rr-cabins-mobile-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  padding: 0 1.25rem 6.875rem;
+}
+
+.rr-cabins-mobile-card {
+  display: block;
+  background: var(--rr-paper);
+  box-shadow: 0 0.875rem 2.125rem rgba(62, 44, 34, 0.12);
+  color: inherit;
+  text-decoration: none;
+
+  img {
+    display: block;
+    width: 100%;
+    height: 15rem;
+    object-fit: cover;
+  }
+
+  &__body {
+    padding: 1.125rem 1.125rem 1.25rem;
+  }
+}
+
+.rr-cabins-show-map {
+  position: sticky;
+  bottom: 1.375rem;
+  z-index: 15;
+  display: flex;
+  align-items: center;
+  gap: 0.625rem;
+  width: max-content;
+  margin: -5rem auto 0;
+  padding: 0.875rem 1.375rem;
+  border: 0;
+  border-radius: 1.875rem;
+  background: var(--rr-walnut);
+  color: var(--rr-cream-on-dark);
+  box-shadow: 0 0.75rem 1.875rem rgba(43, 31, 23, 0.35);
+  font-family: var(--rr-font-ui);
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+
+.rr-cabins-map-mobile {
+  position: relative;
+  min-height: calc(100vh - 8rem);
+}
+
+.rr-cabins-map-sheet {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  padding: 0.625rem 1.25rem 1.5rem;
+  background: var(--rr-paper);
+  box-shadow: 0 -0.875rem 2.5rem rgba(43, 31, 23, 0.2);
+
+  &__handle {
+    width: 2.5rem;
+    height: 0.25rem;
+    margin: 0 auto 0.875rem;
+    border-radius: 0.125rem;
+    background: rgba(62, 44, 34, 0.2);
+  }
+
+  &__eyebrow {
+    font-size: 0.65625rem;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--rr-oxblood);
+  }
+
+  &__title {
+    margin-top: 0.5rem;
+    font-family: var(--rr-font-display);
+    font-size: 1.375rem;
+  }
+
+  &__thumbs {
+    display: flex;
+    gap: 0.5rem;
+    margin-top: 0.875rem;
+    overflow: hidden;
+
+    img {
+      width: 4.625rem;
+      height: 3.75rem;
+      object-fit: cover;
+    }
+  }
+
+  &__actions {
+    display: flex;
+    gap: 0.625rem;
+    margin-top: 1rem;
+  }
+}
+
+.rr-cabins-empty {
+  padding: 0 3.75rem 7.5rem;
+
+  &__panel {
+    display: grid;
+    grid-template-columns: 1fr 35rem;
+    margin-top: 1.75rem;
+    background: var(--rr-paper);
+    box-shadow: 0 1.25rem 3.125rem rgba(62, 44, 34, 0.1);
+  }
+
+  &__copy {
+    padding: 4.375rem 4rem;
+  }
+
+  &__title {
+    margin: 1.125rem 0 0;
+    font-family: var(--rr-font-display);
+    font-weight: 400;
+    font-size: clamp(2rem, 4vw, 3.125rem);
+    line-height: 1.1;
+  }
+
+  &__lede {
+    margin: 1.375rem 0 0;
+    max-width: 32.5rem;
+    font-size: 1.1875rem;
+    line-height: 1.72;
+    color: var(--rr-walnut-ink);
+  }
+
+  &__chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    margin-top: 1.875rem;
+    font-family: var(--rr-font-ui);
+  }
+
+  &__chip {
+    padding: 0.75rem 1.125rem;
+    border: 1px solid rgba(62, 44, 34, 0.25);
+    background: transparent;
+    font-size: 0.875rem;
+    color: var(--rr-walnut);
+    cursor: pointer;
+
+    &:hover {
+      border-color: var(--rr-oxblood);
+      color: var(--rr-oxblood);
+    }
+  }
+
+  &__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    margin-top: 2.5rem;
+  }
+
+  &__image-wrap {
+    position: relative;
+    overflow: hidden;
+    min-height: 37.5rem;
+  }
+
+  &__image {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: 60% 55%;
+  }
+
+  &__caption {
+    position: absolute;
+    left: 1.5rem;
+    bottom: 1.375rem;
+    font-family: var(--rr-font-ui);
+    font-size: 0.75rem;
+    letter-spacing: 0.08em;
+    color: var(--rr-cream-on-dark);
+    text-shadow: 0 1px 8px rgba(0, 0, 0, 0.6);
+  }
+}
+
+@media (max-width: 1023px) {
+  .rr-cabins-summary {
+    padding: 1.125rem 1.25rem 0.5rem;
+
+    &__count {
+      font-size: 1.25rem;
+    }
+  }
+
+  .rr-cabins-layout {
+    padding: 0;
+  }
+
+  .rr-cabins-empty {
+    padding: 0 1.25rem 4rem;
+
+    &__panel {
+      grid-template-columns: 1fr;
+    }
+
+    &__copy {
+      padding: 2rem 1.5rem;
+    }
+
+    &__image-wrap {
+      min-height: 18rem;
+    }
+  }
+}

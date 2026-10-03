@@ -1,0 +1,263 @@
+<div class="rr-cabins">
+  <section class="rr-cabins-hero rr-cabins-desktop-only">
+    <div class="rr-cabins-hero__copy">
+      <div class="rr-cabins-eyebrow">The cabins</div>
+      <h1 class="rr-cabins-display">Six A-frames, one hill.</h1>
+    </div>
+    <p class="rr-cabins-hero__lede">
+      Each cabin sleeps four, has a two-night minimum, and welcomes one pet by arrangement.
+    </p>
+  </section>
+
+  <section class="rr-cabins-hero-mobile rr-cabins-mobile-only">
+    <h1 class="rr-cabins-display">Six A-frames, one hill.</h1>
+    <div class="rr-cabins-hero-mobile__search">
+      <button type="button" class="rr-cabins-hero-mobile__dates" (click)="store.applySearch()">
+        <span class="rr-cabins-hero-mobile__dates-main">{{ mobileDateLabel() }}</span>
+        <span class="rr-cabins-hero-mobile__dates-sub">{{ search.guestSummary() }}</span>
+      </button>
+      <button type="button" class="rr-cabins-hero-mobile__filters" (click)="store.openFilters()">
+        Filters
+      </button>
+    </div>
+  </section>
+
+  <div class="rr-cabins-toolbar rr-cabins-desktop-only">
+    <app-booking-bar />
+    <div class="rr-cabins-toolbar__divider" aria-hidden="true"></div>
+    <button type="button" class="rr-cabins-toolbar__filters" (click)="store.openFilters()">
+      More filters
+    </button>
+    <p-select
+      class="rr-cabins-toolbar__sort"
+      [options]="sortOptions"
+      optionLabel="label"
+      optionValue="value"
+      [ngModel]="store.sort()"
+      (ngModelChange)="store.setSort($event)"
+      appendTo="body"
+      [ariaLabel]="'Sort cabins'"
+    />
+  </div>
+
+  <div class="rr-cabins-tabs rr-cabins-mobile-only">
+    <button
+      type="button"
+      class="rr-cabins-tabs__tab"
+      [class.rr-cabins-tabs__tab--active]="store.mobileView() === 'list'"
+      (click)="store.showList()"
+    >
+      List
+    </button>
+    <button
+      type="button"
+      class="rr-cabins-tabs__tab"
+      [class.rr-cabins-tabs__tab--active]="store.mobileView() === 'map'"
+      (click)="store.showMap()"
+    >
+      Map
+    </button>
+  </div>
+
+  @if (!store.isEmpty()) {
+    <div class="rr-cabins-summary">
+      <span class="rr-cabins-summary__count">{{ store.resultCountLabel() }}</span>
+      <span class="rr-cabins-summary__note rr-cabins-desktop-only">Rates vary by date · shown in USD</span>
+      <span class="rr-cabins-summary__sort rr-cabins-mobile-only">{{ store.sortLabel() }} ▾</span>
+    </div>
+  }
+
+  @if (store.isEmpty()) {
+    <section class="rr-cabins-empty">
+      <div class="rr-cabins-summary rr-cabins-summary--empty">
+        <span class="rr-cabins-summary__count">{{ store.resultCountLabel() }}</span>
+      </div>
+
+      <div class="rr-cabins-empty__panel">
+        <div class="rr-cabins-empty__copy">
+          @if (store.isHolidayEmpty()) {
+            <div class="rr-cabins-eyebrow">{{ store.emptyDateLabel() }}</div>
+            <h2 class="rr-cabins-empty__title">Every cabin is taken for those nights.</h2>
+            <p class="rr-cabins-empty__lede">
+              The holidays book early on the hill. These nearby dates still have cabins open, or ask
+              Jeff about holding several for next year.
+            </p>
+            <div class="rr-cabins-empty__chips">
+              @for (suggestion of store.suggestedDates; track suggestion.label) {
+                <button
+                  type="button"
+                  class="rr-cabins-empty__chip"
+                  (click)="store.applySuggestedDates(suggestion)"
+                >
+                  {{ suggestion.label }} · <strong>{{ suggestion.availableCount }} cabins</strong>
+                </button>
+              }
+            </div>
+          } @else {
+            <div class="rr-cabins-eyebrow">No matches</div>
+            <h2 class="rr-cabins-empty__title">No cabins match your filters.</h2>
+            <p class="rr-cabins-empty__lede">
+              Try clearing a filter or adjusting your dates to see all six A-frames on the hill.
+            </p>
+          }
+
+          <div class="rr-cabins-empty__actions">
+            <button type="button" class="rr-cabins-btn rr-cabins-btn--primary" (click)="store.clearDates()">
+              Try different dates
+            </button>
+            <a class="rr-cabins-btn rr-cabins-btn--outline" routerLink="/multi-cabin">
+              Ask about a group stay
+            </a>
+          </div>
+        </div>
+        <div class="rr-cabins-empty__image-wrap">
+          <img class="rr-cabins-empty__image" [src]="emptyImage" alt="Cabins in snow" />
+          <span class="rr-cabins-empty__caption">The hill in December</span>
+        </div>
+      </div>
+    </section>
+  } @else {
+    <div
+      class="rr-cabins-layout"
+      [class.rr-cabins-layout--map]="store.mobileView() === 'map'"
+      [class.rr-cabins-layout--list]="store.mobileView() === 'list'"
+    >
+      <div class="rr-cabins-list rr-cabins-mobile-list">
+        @if (store.featuredCabin(); as featured) {
+          <a
+            class="rr-cabins-card rr-cabins-card--featured"
+            [routerLink]="['/cabins', featured.slug]"
+            [queryParams]="cabinQueryParams()"
+          >
+            <div class="rr-cabins-card__media">
+              <img [src]="featuredImage(featured, 1400)" [alt]="featured.name" />
+              <span class="rr-cabins-card__badge">Featured</span>
+            </div>
+            <div class="rr-cabins-card__body rr-cabins-card__body--featured">
+              <div>
+                <div class="rr-cabins-card__name">{{ featured.name }}</div>
+                <div class="rr-cabins-card__meta">{{ cabinMeta(featured) }}</div>
+              </div>
+              <div class="rr-cabins-card__price-block">
+                <div class="rr-cabins-card__price">
+                  from <span class="rr-cabins-card__rate">${{ featured.nightlyRate }}</span> per night
+                </div>
+                <span class="rr-cabins-card__cta">View cabin</span>
+              </div>
+            </div>
+          </a>
+        }
+
+        @if (store.gridCabins().length > 0) {
+          <div class="rr-cabins-grid-pair rr-cabins-desktop-only">
+            @for (cabin of store.gridCabins(); track cabin.id) {
+              <a
+                class="rr-cabins-card rr-cabins-card--grid"
+                [class.rr-cabins-card--offset]="cabin.layoutRole === 'grid-offset'"
+                [routerLink]="['/cabins', cabin.slug]"
+                [queryParams]="cabinQueryParams()"
+              >
+                <div class="rr-cabins-card__media rr-cabins-card__media--grid">
+                  <img [src]="featuredImage(cabin, 1000)" [alt]="cabin.name" />
+                </div>
+                <div class="rr-cabins-card__body">
+                  <div class="rr-cabins-card__name rr-cabins-card__name--grid">{{ cabin.name }}</div>
+                  <div class="rr-cabins-card__meta">{{ cabinMeta(cabin) }}</div>
+                  <div class="rr-cabins-card__price rr-cabins-card__price--grid">
+                    from <span class="rr-cabins-card__rate">${{ cabin.nightlyRate }}</span> per night
+                  </div>
+                </div>
+              </a>
+            }
+          </div>
+        }
+
+        @if (store.rowCabins().length > 0) {
+          <div class="rr-cabins-rows-label rr-cabins-desktop-only">Also on the property</div>
+          @for (cabin of store.rowCabins(); track cabin.id) {
+            <a
+              class="rr-cabins-row rr-cabins-desktop-only"
+              [routerLink]="['/cabins', cabin.slug]"
+              [queryParams]="cabinQueryParams()"
+            >
+              <div class="rr-cabins-row__media">
+                <img [src]="featuredImage(cabin, 800)" [alt]="cabin.name" />
+              </div>
+              <div class="rr-cabins-row__copy">
+                <div class="rr-cabins-card__name">{{ cabin.name }}</div>
+                <div class="rr-cabins-card__meta">{{ cabinMeta(cabin) }}</div>
+                @if (cabin.tagline) {
+                  <p class="rr-cabins-row__tagline">{{ cabin.tagline }}</p>
+                }
+              </div>
+              <div class="rr-cabins-row__price">
+                <div class="rr-cabins-row__from">from</div>
+                <div class="rr-cabins-row__rate">${{ cabin.nightlyRate }}</div>
+                <div class="rr-cabins-row__per">per night</div>
+                <div class="rr-cabins-row__link">View →</div>
+              </div>
+            </a>
+          }
+        }
+
+        <div class="rr-cabins-mobile-stack rr-cabins-mobile-only">
+          @for (cabin of store.mobileListCabins(); track cabin.id) {
+            <a
+              class="rr-cabins-mobile-card"
+              [routerLink]="['/cabins', cabin.slug]"
+              [queryParams]="cabinQueryParams()"
+            >
+              <img [src]="featuredImage(cabin, 600)" [alt]="cabin.name" />
+              <div class="rr-cabins-mobile-card__body">
+                <div class="rr-cabins-card__name rr-cabins-card__name--mobile">{{ cabin.name }}</div>
+                <div class="rr-cabins-card__meta">4 guests · Wifi</div>
+                <div class="rr-cabins-card__price rr-cabins-card__price--mobile">
+                  from <span class="rr-cabins-card__rate">${{ cabin.nightlyRate }}</span> per night
+                </div>
+              </div>
+            </a>
+          }
+        </div>
+      </div>
+
+      <aside class="rr-cabins-map-panel rr-cabins-desktop-map">
+        <app-cabins-map />
+      </aside>
+
+      <div class="rr-cabins-map-mobile rr-cabins-mobile-map">
+        <app-cabins-map [showCard]="false" [compact]="true" />
+        <div class="rr-cabins-map-sheet">
+          <div class="rr-cabins-map-sheet__handle" aria-hidden="true"></div>
+          <div class="rr-cabins-map-sheet__eyebrow">11611–11601 Lindy Lane · Rogers</div>
+          <div class="rr-cabins-map-sheet__title">All six cabins are here</div>
+          <div class="rr-cabins-map-sheet__thumbs">
+            @for (cabin of store.results(); track cabin.id) {
+              <img [src]="featuredImage(cabin, 200)" [alt]="cabin.name" />
+            }
+          </div>
+          <div class="rr-cabins-map-sheet__actions">
+            <button type="button" class="rr-cabins-btn rr-cabins-btn--primary" (click)="store.showList()">
+              See {{ store.resultCountLabel() }}
+            </button>
+            <a
+              class="rr-cabins-btn rr-cabins-btn--outline"
+              href="https://maps.google.com/?q=11611+Lindy+Lane+Rogers+AR+72756"
+              target="_blank"
+              rel="noopener"
+            >
+              Directions
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    @if (store.mobileView() === 'list') {
+      <button type="button" class="rr-cabins-show-map rr-cabins-mobile-only" (click)="store.showMap()">
+        Show map
+      </button>
+    }
+  }
+
+  <app-cabins-filters />
+</div>

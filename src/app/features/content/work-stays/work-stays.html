@@ -1,154 +1,248 @@
-<div class="rr-page">
-  <p-panel styleClass="rr-hero-panel">
-    <div
-      class="rr-hero-banner"
-      style="background-image: url('https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&w=1600&q=80')"
-    >
-      <div class="rr-hero-banner__inner">
-        <p-tag value="Remote work" severity="secondary" [rounded]="true" />
-        <h1>Work Stays at Remotely Rogers</h1>
-        <p>
-          Private A-frame cabins on 70 acres — built for focused remote work, extended stays, and
-          team retreats with room to breathe between meetings.
-        </p>
-        <div class="rr-stat-row">
-          <div>
-            <strong>6</strong>
-            <span>Private cabins</span>
-          </div>
-          <div>
-            <strong>70</strong>
-            <span>Work-ready acres</span>
-          </div>
-          <div>
-            <strong>Wi‑Fi</strong>
-            <span>In every cabin</span>
-          </div>
+<div class="rr-work-stays">
+  <section class="rr-work-stays-hero">
+    <img class="rr-work-stays-hero__image" [src]="heroImage" alt="Workspace at Black Walnut Bungalow" loading="eager" />
+    <div class="rr-work-stays-hero__overlay" aria-hidden="true"></div>
+    <div class="rr-work-stays-hero__content">
+      <div class="rr-work-stays-hero__main">
+        <div class="rr-work-stays-hero__eyebrow">
+          <span class="rr-work-stays-hero__rule" aria-hidden="true"></span>
+          <span>Remote work · retreats · long stays</span>
+        </div>
+        <h1 class="rr-work-stays-display">Work Stays at Remotely Rogers</h1>
+        <a class="rr-cabins-btn rr-cabins-btn--primary rr-work-stays-hero__cta" href="#inquire">
+          Inquire about a work stay
+        </a>
+      </div>
+      <div class="rr-work-stays-hero__stats rr-work-stays-desktop-only">
+        <div class="rr-work-stays-hero__stat">
+          <span>Private cabins</span>
+          <strong>6</strong>
+        </div>
+        <div class="rr-work-stays-hero__stat">
+          <span>Work-ready acres</span>
+          <strong>70</strong>
+        </div>
+        <div class="rr-work-stays-hero__stat">
+          <span>Wi-Fi</span>
+          <strong>Every cabin</strong>
         </div>
       </div>
     </div>
-  </p-panel>
+  </section>
 
-  <div class="rr-content-wrap">
-    <section class="rr-content-section">
-      <div class="rr-content-section__head">
-        <h2>Your cabin, your office</h2>
-        <p>
-          Trade the hotel desk for a private A-frame with dedicated workspace, fast internet, and
-          nature outside your door — minutes from Rogers and Bentonville.
-        </p>
+  <section class="rr-work-stays-amenities">
+    <div class="rr-work-stays-amenities__primary">
+      <div class="rr-work-stays-amenities__media">
+        <img [src]="amenities[0].imageUrl" [alt]="amenities[0].imageAlt" loading="lazy" />
       </div>
-
-      <div class="rr-card-grid rr-card-grid--cols-3">
-        @for (item of amenities; track item.title) {
-          <p-card styleClass="rr-pick-card">
-            <ng-template #header>
-              <img [src]="item.imageUrl" [alt]="item.title" loading="lazy" />
-            </ng-template>
-            <ng-template #title>{{ item.title }}</ng-template>
-            <p-tag [value]="item.badge" [severity]="item.severity" [rounded]="true" />
-            <p class="mt-3">{{ item.description }}</p>
-            <p class="rr-card-meta mt-3">{{ item.detail }}</p>
-          </p-card>
-        }
+      <div class="rr-work-stays-amenities__copy">
+        <span class="rr-work-stays-amenities__number">{{ amenities[0].number }}</span>
+        <h2>{{ amenities[0].title }}</h2>
+        <p>{{ amenities[0].description }}</p>
       </div>
-    </section>
-
-    <section class="rr-content-section">
-      <p-panel styleClass="rr-split-panel">
-        <div class="rr-split">
-          <div class="rr-split__media">
-            <img
-              src="https://images.unsplash.com/photo-1486312338219-ce68d2c6f44d?auto=format&fit=crop&w=1000&q=80"
-              alt="Laptop workspace with natural light"
-              loading="lazy"
-            />
-          </div>
-          <div class="rr-split__copy">
-            <p-tag value="Built for productivity" severity="success" [rounded]="true" />
-            <h3>Everything you need to get work done</h3>
-            <p>
-              Extended stays for freelancers, remote teams, and corporate retreats who want more
-              than a hotel room — without sacrificing comfort or connection.
-            </p>
-            <p-divider />
-            <ul class="rr-feature-list">
-              @for (feature of features; track feature.text) {
-                <li class="rr-feature-list__item">
-                  <span class="rr-feature-list__icon">
-                    <i [class]="feature.icon"></i>
-                  </span>
-                  <span>
-                    <strong>{{ feature.text }}</strong>
-                    <span class="rr-feature-list__detail">{{ feature.detail }}</span>
-                  </span>
-                </li>
+    </div>
+    <div class="rr-work-stays-amenities__secondary">
+      @for (item of amenities.slice(1); track item.number) {
+        @if (item.linkPath) {
+          <a
+            class="rr-work-stays-amenity rr-work-stays-amenity--link rr-work-stays-amenity--oxblood"
+            [routerLink]="item.linkPath"
+          >
+            <div class="rr-work-stays-amenity__copy">
+              <span>{{ item.number }}</span>
+              <h3>{{ item.title }}</h3>
+              <p>{{ item.description }}</p>
+              @if (item.linkLabel) {
+                <span class="rr-work-stays-amenity__link">{{ item.linkLabel }}</span>
               }
-            </ul>
+            </div>
+          </a>
+        } @else {
+          <div class="rr-work-stays-amenity">
+            <img [src]="item.imageUrl" [alt]="item.imageAlt" loading="lazy" />
+            @if (item.overlay) {
+              <div class="rr-work-stays-amenity__overlay" aria-hidden="true"></div>
+            }
+            <div class="rr-work-stays-amenity__copy rr-work-stays-amenity__copy--overlay">
+              <span>{{ item.number }}</span>
+              <h3>{{ item.title }}</h3>
+              <p>{{ item.description }}</p>
+            </div>
           </div>
+        }
+      }
+    </div>
+  </section>
+
+  <section class="rr-work-stays-needs">
+    <div class="rr-work-stays-needs__intro">
+      <div class="rr-work-stays-eyebrow rr-work-stays-eyebrow--on-dark">What you need</div>
+      <h2>Everything on the list.</h2>
+    </div>
+    <div class="rr-work-stays-needs__grid">
+      @for (need of needs; track need.text) {
+        <div class="rr-work-stays-needs__item">
+          <span aria-hidden="true">✓</span>
+          <span>{{ need.text }}</span>
         </div>
-      </p-panel>
-    </section>
+      }
+    </div>
+  </section>
 
-    <section class="rr-content-section">
-      <div class="rr-content-section__head">
-        <h2>A balanced workday</h2>
-        <p>How guests typically structure a productive day at Remotely Rogers.</p>
-      </div>
-      <div class="rr-workday-grid">
-        @for (step of workdayFlow; track step.time) {
-          <div class="rr-workday-step">
-            <span class="rr-workday-step__time">{{ step.time }}</span>
-            <h3>{{ step.title }}</h3>
-            <p>{{ step.description }}</p>
+  <section class="rr-work-stays-workday">
+    <div class="rr-work-stays-eyebrow">A balanced workday</div>
+    <div class="rr-work-stays-workday__grid">
+      @for (step of workdayFlow; track step.time) {
+        <div class="rr-work-stays-workday__step">
+          <div class="rr-work-stays-workday__time">{{ step.time }}</div>
+          <h3>{{ step.title }}</h3>
+          <p>{{ step.description }}</p>
+        </div>
+      }
+    </div>
+  </section>
+
+  <section class="rr-work-stays-options">
+    <div class="rr-work-stays-options__head">
+      <h2>Stay options</h2>
+      <span>From $132 per night · rates vary by date</span>
+    </div>
+    <div class="rr-work-stays-options__grid">
+      @for (option of stayOptions; track option.title) {
+        @if (option.linkPath) {
+          <a
+            class="rr-work-stays-option rr-work-stays-option--{{ option.variant }}"
+            [routerLink]="option.linkPath"
+          >
+            <span class="rr-work-stays-option__eyebrow">{{ option.eyebrow }}</span>
+            <h3>{{ option.title }}</h3>
+            <p>{{ option.description }}</p>
+            @if (option.linkLabel) {
+              <span class="rr-work-stays-option__link">{{ option.linkLabel }}</span>
+            }
+          </a>
+        } @else {
+          <div class="rr-work-stays-option rr-work-stays-option--{{ option.variant }}">
+            <span class="rr-work-stays-option__eyebrow">{{ option.eyebrow }}</span>
+            <h3>{{ option.title }}</h3>
+            <p>{{ option.description }}</p>
+            @if (option.ctaPath && option.ctaLabel) {
+              <a class="rr-work-stays-option__cta" [href]="option.ctaPath">{{ option.ctaLabel }}</a>
+            }
           </div>
         }
-      </div>
-    </section>
+      }
+    </div>
+  </section>
 
-    <section class="rr-content-section">
-      <div class="rr-content-section__head">
-        <h2>Choose your stay</h2>
-        <p>Flexible options for solo workers, long-term remote stays, and team offsites.</p>
+  <section id="inquire" class="rr-work-stays-inquiry">
+    <div class="rr-work-stays-inquiry__intro">
+      <div class="rr-work-stays-eyebrow">Inquire</div>
+      <h2>Inquire about a work stay</h2>
+      <p>Tell us the dates, the team size and what you need. Jeff replies personally.</p>
+      <div class="rr-work-stays-inquiry__contact">
+        <a [href]="'tel:' + hostPhone.replace(/-/g, '')">{{ hostPhone }}</a>
+        <a [href]="'mailto:' + hostEmail">{{ hostEmail }}</a>
       </div>
-      <div class="rr-card-grid rr-card-grid--cols-3">
-        @for (option of stayOptions; track option.title) {
-          <p-card styleClass="rr-pick-card">
-            <ng-template #header>
-              <img [src]="option.imageUrl" [alt]="option.title" loading="lazy" />
-            </ng-template>
-            <ng-template #title>{{ option.title }}</ng-template>
-            <ng-template #subtitle>{{ option.subtitle }}</ng-template>
-            <p-tag [value]="option.badge" [severity]="option.severity" [rounded]="true" />
-            <p class="mt-3">{{ option.description }}</p>
-          </p-card>
+    </div>
+
+    @if (submitSuccess()) {
+      <p-message
+        severity="success"
+        text="Thanks — Jeff will reply personally with availability and next steps."
+        styleClass="rr-work-stays-inquiry__success"
+      />
+    }
+
+    <form class="rr-work-stays-inquiry__form" [formGroup]="form" (ngSubmit)="submit()">
+      <label class="rr-work-stays-field rr-work-stays-field--full">
+        <span>Email *</span>
+        <input
+          pInputText
+          type="email"
+          formControlName="email"
+          autocomplete="email"
+          placeholder="you@company.com"
+        />
+        @if (invalid('email')) {
+          <small class="rr-work-stays-field__error">Enter a valid email.</small>
         }
+      </label>
+
+      <label class="rr-work-stays-field">
+        <span>First name</span>
+        <input pInputText formControlName="firstName" autocomplete="given-name" placeholder="First name" />
+      </label>
+
+      <label class="rr-work-stays-field">
+        <span>Last name</span>
+        <input pInputText formControlName="lastName" autocomplete="family-name" placeholder="Last name" />
+      </label>
+
+      <label class="rr-work-stays-field">
+        <span>Guests</span>
+        <p-inputNumber
+          formControlName="guests"
+          [min]="1"
+          [max]="24"
+          placeholder="e.g. 8"
+          inputStyleClass="rr-work-stays-input-number"
+        />
+      </label>
+
+      <label class="rr-work-stays-field">
+        <span>Phone</span>
+        <input pInputText type="tel" formControlName="phone" autocomplete="tel" placeholder="Phone" />
+      </label>
+
+      <label class="rr-work-stays-field">
+        <span>Check-in</span>
+        <p-datepicker
+          formControlName="checkIn"
+          [showIcon]="true"
+          dateFormat="M d, yy"
+          placeholder="Add date"
+          inputStyleClass="rr-work-stays-datepicker-input"
+        />
+      </label>
+
+      <label class="rr-work-stays-field">
+        <span>Check-out</span>
+        <p-datepicker
+          formControlName="checkOut"
+          [showIcon]="true"
+          dateFormat="M d, yy"
+          placeholder="Add date"
+          inputStyleClass="rr-work-stays-datepicker-input"
+        />
+      </label>
+
+      <label class="rr-work-stays-field rr-work-stays-field--full">
+        <span>Which rental</span>
+        <p-select
+          formControlName="cabin"
+          [options]="cabinOptions"
+          optionLabel="label"
+          optionValue="value"
+          placeholder="No preference"
+          styleClass="rr-work-stays-select"
+        />
+      </label>
+
+      <label class="rr-work-stays-field rr-work-stays-field--full">
+        <span>Comment</span>
+        <textarea
+          pTextarea
+          formControlName="comment"
+          rows="4"
+          placeholder="Team size, dates, desk or call needs…"
+        ></textarea>
+      </label>
+
+      <div class="rr-work-stays-inquiry__actions">
+        <span>* Required</span>
+        <p-button type="submit" label="Send" styleClass="rr-cabins-btn rr-cabins-btn--primary" />
       </div>
-    </section>
-
-    <section class="rr-content-section">
-      <p class="rr-note">
-        Booking multiple cabins for a team?
-        <a href="/preview/multi-cabin-stays">Explore multi-cabin stays</a>
-        for group booking options.
-      </p>
-    </section>
-  </div>
-
-  <p-panel styleClass="rr-cta-panel">
-    <h2>Ready for a better work stay?</h2>
-    <p>
-      Book a private A-frame cabin and experience remote work surrounded by nature — with
-      downtown Rogers and Bentonville just minutes away.
-    </p>
-    <a
-      href="https://remotelyrogers.com/en/all-properties/"
-      target="_blank"
-      rel="noopener"
-      class="p-button rr-accent-btn p-button-rounded"
-    >
-      <i class="pi pi-calendar p-button-icon p-button-icon-left"></i>
-      <span class="p-button-label">Inquire About a Work Stay</span>
-    </a>
-  </p-panel>
+    </form>
+  </section>
 </div>
