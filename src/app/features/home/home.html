@@ -82,6 +82,42 @@
     </figure>
   </section>
 
+  <section class="rr-home-nearby" aria-label="Nearby destinations">
+    <div class="rr-home-nearby__image">
+      <img [src]="nearbyImage" alt="Post Oak Perch from the drive" loading="lazy" />
+    </div>
+    <div class="rr-home-nearby__copy">
+      <div class="rr-home-eyebrow rr-home-eyebrow--brass">Nearby</div>
+      <h2 class="rr-home-display rr-home-display--light">Worth the drive, and it is a short one.</h2>
+
+      <ul class="rr-home-nearby__drives">
+        @for (drive of nearbyDrives; track drive.destination) {
+          <li class="rr-home-nearby__drive">
+            <span class="rr-home-nearby__drive-time">{{ drive.time }}</span>
+            <span class="rr-home-nearby__drive-dest">{{ drive.destination }}</span>
+          </li>
+        }
+      </ul>
+
+      <div class="rr-home-nearby__regional">
+        <div class="rr-home-eyebrow rr-home-eyebrow--brass">How far from home</div>
+        <h3 class="rr-home-nearby__regional-title">Most of the region is a morning away.</h3>
+        <ul class="rr-home-nearby__regional-grid">
+          @for (drive of regionalDrives; track drive.city) {
+            <li class="rr-home-nearby__regional-row">
+              <span>{{ drive.city }}</span>
+              <span class="rr-home-nearby__regional-time">{{ drive.time }}</span>
+            </li>
+          }
+        </ul>
+        <p class="rr-home-nearby__airport">
+          Flying in? Northwest Arkansas National Airport is about twenty-five minutes from the gate
+          to the gravel.
+        </p>
+      </div>
+    </div>
+  </section>
+
   <section class="rr-home-comfort rr-home-desktop-only">
     <div class="rr-home-comfort__image">
       <img [src]="comfortImage" alt="Kitchenette and desk" loading="lazy" />

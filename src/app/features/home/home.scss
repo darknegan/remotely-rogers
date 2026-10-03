@@ -326,6 +326,133 @@
   color: var(--rr-bark);
 }
 
+.rr-home-nearby {
+  display: grid;
+  background: var(--rr-walnut);
+  color: var(--rr-muted-on-dark);
+  border-bottom: 1px solid rgba(176, 138, 74, 0.35);
+
+  @media (min-width: 1024px) {
+    grid-template-columns: 1fr 40rem;
+    align-items: stretch;
+  }
+}
+
+.rr-home-nearby__image {
+  min-height: 16rem;
+  overflow: hidden;
+  order: -1;
+
+  img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    min-height: 16rem;
+    object-fit: cover;
+    object-position: 50% 58%;
+  }
+
+  @media (min-width: 1024px) {
+    order: 1;
+    min-height: 47.5rem;
+  }
+}
+
+.rr-home-nearby__copy {
+  padding: 3rem 1.375rem;
+
+  @media (min-width: 1024px) {
+    padding: 6.875rem 5rem 6.25rem 3.75rem;
+  }
+}
+
+.rr-home-nearby__drives {
+  margin: 2.5rem 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.rr-home-nearby__drive {
+  display: flex;
+  align-items: baseline;
+  gap: 1.5rem;
+  padding: 1rem 0;
+  border-top: 1px solid rgba(176, 138, 74, 0.5);
+  font-size: 1.125rem;
+
+  &:last-child {
+    border-bottom: 1px solid rgba(176, 138, 74, 0.5);
+  }
+}
+
+.rr-home-nearby__drive-time {
+  flex: 0 0 6.875rem;
+  font-family: var(--rr-font-display);
+  font-size: clamp(1.375rem, 3vw, 1.75rem);
+  color: var(--rr-brass-light);
+}
+
+.rr-home-nearby__drive-dest {
+  color: var(--rr-muted-on-dark);
+}
+
+.rr-home-nearby__regional {
+  margin-top: 4rem;
+}
+
+.rr-home-nearby__regional-title {
+  margin: 1rem 0 0;
+  font-family: var(--rr-font-display);
+  font-weight: 400;
+  font-size: clamp(1.5rem, 3.5vw, 2rem);
+  line-height: 1.2;
+  color: var(--rr-cream-on-dark);
+}
+
+.rr-home-nearby__regional-grid {
+  margin: 1.75rem 0 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  gap: 0 2.75rem;
+
+  @media (min-width: 480px) {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+.rr-home-nearby__regional-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.875rem 0;
+  border-top: 1px solid rgba(176, 138, 74, 0.5);
+  font-size: 1rem;
+
+  &:last-child {
+    border-bottom: 1px solid rgba(176, 138, 74, 0.5);
+  }
+
+  @media (min-width: 480px) {
+    &:nth-last-child(2) {
+      border-bottom: 1px solid rgba(176, 138, 74, 0.5);
+    }
+  }
+}
+
+.rr-home-nearby__regional-time {
+  color: var(--rr-brass-light);
+}
+
+.rr-home-nearby__airport {
+  margin: 2.125rem 0 0;
+  padding-left: 1.25rem;
+  border-left: 2px solid var(--rr-brass);
+  font-size: 1rem;
+  line-height: 1.7;
+  color: var(--rr-muted-on-dark);
+}
+
 .rr-home-comfort {
   display: grid;
   background: var(--rr-walnut);

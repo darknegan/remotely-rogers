@@ -27,6 +27,16 @@ interface HomeAmenity {
   description: string;
 }
 
+interface NearbyDrive {
+  time: string;
+  destination: string;
+}
+
+interface RegionalDrive {
+  city: string;
+  time: string;
+}
+
 interface HomeCabinCard {
   slug: string;
   name: string;
@@ -54,6 +64,23 @@ export class Home {
     { value: '6', label: 'A-frame cabins', mobileLabel: 'A-frames' },
     { value: '4', label: 'Guests per cabin', mobileLabel: 'Guests each' },
     { value: '1', label: 'Pet welcome, arranged first', mobileLabel: 'Pet welcome' },
+  ];
+
+  readonly nearbyDrives: NearbyDrive[] = [
+    { time: '8 min', destination: 'Lake Atalanta' },
+    { time: '15 min', destination: 'Downtown Rogers' },
+    { time: '20 min', destination: 'Bentonville trails' },
+    { time: '20 min', destination: 'Beaver Lake' },
+    { time: '25 min', destination: 'Crystal Bridges' },
+  ];
+
+  readonly regionalDrives: RegionalDrive[] = [
+    { city: 'Fayetteville', time: '30 min' },
+    { city: 'Little Rock', time: '3 hr' },
+    { city: 'Tulsa', time: '1.5 hr' },
+    { city: 'Kansas City', time: '3.5 hr' },
+    { city: 'Springfield', time: '2 hr' },
+    { city: 'Dallas', time: '5 hr' },
   ];
 
   readonly amenities: HomeAmenity[] = [
@@ -86,6 +113,7 @@ export class Home {
   readonly heroImage = cabinImageUrl(CABIN_CONFIG.cabins[0].imageUrl ?? '', 1600);
   readonly galleryPrimaryImage = cabinImageUrl(CABIN_CONFIG.cabins[4].imageUrl ?? '', 1200);
   readonly galleryLoftImage = cabinImageUrl(CABIN_CONFIG.cabins[1].imageUrl ?? '', 1200);
+  readonly nearbyImage = cabinImageUrl(CABIN_CONFIG.cabins[5].imageUrl ?? '', 1200);
   readonly comfortImage = cabinImageUrl(CABIN_CONFIG.cabins[3].imageUrl ?? '', 1200);
   readonly multiCabinImage = cabinImageUrl(CABIN_CONFIG.cabins[2].imageUrl ?? '', 1600);
   readonly cabinsCtaImage = cabinImageUrl(CABIN_CONFIG.cabins[0].imageUrl ?? '', 1200);
