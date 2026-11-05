@@ -10,7 +10,6 @@ export const SITE_LINKS: SiteLink[] = [
   { label: 'Activities', path: '/activities' },
   { label: 'Recommendations', path: '/recommendations' },
   { label: 'Work Stays', path: '/work-stays' },
-  { label: 'Multi-Cabin', path: '/multi-cabin' },
   { label: 'Contact', path: '/contact' },
 ];
 

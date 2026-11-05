@@ -1,4 +1,9 @@
-import { Routes } from '@angular/router';
+import { inject } from '@angular/core';
+import { Router, Routes, UrlTree } from '@angular/router';
+
+function redirectToCabinsGroup(): UrlTree {
+  return inject(Router).createUrlTree(['/cabins'], { fragment: 'group' });
+}
 
 export const routes: Routes = [
   {
@@ -28,8 +33,8 @@ export const routes: Routes = [
   },
   {
     path: 'multi-cabin',
-    loadComponent: () =>
-      import('./features/content/multi-cabin-stays/multi-cabin-stays').then((m) => m.MultiCabinStays),
+    redirectTo: redirectToCabinsGroup,
+    pathMatch: 'full',
   },
   {
     path: 'contact',
@@ -42,7 +47,11 @@ export const routes: Routes = [
   { path: 'preview/activities', redirectTo: 'activities', pathMatch: 'full' },
   { path: 'preview/recommendations', redirectTo: 'recommendations', pathMatch: 'full' },
   { path: 'preview/work-stays', redirectTo: 'work-stays', pathMatch: 'full' },
-  { path: 'preview/multi-cabin-stays', redirectTo: 'multi-cabin', pathMatch: 'full' },
+  {
+    path: 'preview/multi-cabin-stays',
+    redirectTo: redirectToCabinsGroup,
+    pathMatch: 'full',
+  },
   {
     path: 'preview/reviews',
     loadComponent: () => import('./features/content/reviews/reviews').then((m) => m.Reviews),
