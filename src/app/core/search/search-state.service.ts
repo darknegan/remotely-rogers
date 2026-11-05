@@ -1,180 +1,143 @@
-import { computed, Injectable, signal } from '@angular/core';
+import { Injectable, computed, signal } from '@angular/core';
+import { ParamMap } from '@angular/router';
 
-import { nightCount, parseDateKey, startOfDay, validateDateRange } from '../utils/date-utils';
+import {
+  addDays,
+  parseDateKey,
+  startOfDay,
+  toDateKey,
+  validateDateRange,
+} from '../utils/date-utils';
 
-export interface GuestCounts {
-  adults: number;
-  children: number;
-  infants: number;
-  pets: number;
-}
-
-export const MAX_CABIN_GUESTS = 4;
-export const MIN_STAY_NIGHTS = 2;
-
-const DEFAULT_GUESTS: GuestCounts = {
-  adults: 2,
-  children: 0,
-  infants: 0,
-  pets: 0,
-};
+export const MAX_GUESTS_PER_CABIN = 4;
+export const MIN_NIGHTS = 2;
+export const MAX_PETS = 1;
 
 @Injectable({ providedIn: 'root' })
-export class SearchStateService {
+export class SearchState {
   readonly checkIn = signal<Date | null>(null);
   readonly checkOut = signal<Date | null>(null);
-  readonly guests = signal<GuestCounts>({ ...DEFAULT_GUESTS });
+  readonly adults = signal(2);
+  readonly children = signal(0);
+  readonly infants = signal(0);
+  readonly pets = signal(0);
 
-  readonly totalPeople = computed(() => {
-    const { adults, children } = this.guests();
-    return adults + children;
-  });
-
-  readonly guestSummary = computed(() => {
-    const { adults, children, infants, pets } = this.guests();
-    const people = adults + children;
-    const parts = [`${people} guest${people === 1 ? '' : 's'}`];
-
-    if (infants > 0) {
-      parts.push(`${infants} infant${infants === 1 ? '' : 's'}`);
-    }
-
-    if (pets > 0) {
-      parts.push(`${pets} pet${pets === 1 ? '' : 's'}`);
-    }
-
-    return parts.join(' · ');
-  });
-
-  readonly capNote = computed(() =>
-    this.totalPeople() >= MAX_CABIN_GUESTS
-      ? 'Each cabin sleeps 4 — you’ve reached the limit.'
-      : 'Each cabin sleeps up to 4 guests.',
-  );
+  readonly partySize = computed(() => this.adults() + this.children() + this.infants());
 
   readonly dateError = computed(() =>
-    validateDateRange(this.checkIn(), this.checkOut(), MIN_STAY_NIGHTS),
+    validateDateRange(this.checkIn(), this.checkOut(), MIN_NIGHTS),
   );
-
-  readonly nights = computed(() => {
-    const arrival = this.checkIn();
-    const departure = this.checkOut();
-    if (!arrival || !departure) {
-      return 0;
-    }
-
-    return nightCount(arrival, departure);
-  });
 
   readonly canSearch = computed(
-    () => !this.dateError() && this.checkIn() !== null && this.checkOut() !== null,
+    () => this.checkIn() !== null && this.checkOut() !== null && this.dateError() === null,
   );
 
-  setCheckIn(value: Date | null): void {
-    this.checkIn.set(value ? startOfDay(value) : null);
+  readonly minDate = startOfDay(new Date());
+
+  setCheckIn(value: Date | Date[] | null): void {
+    const date = Array.isArray(value) ? (value[0] ?? null) : value;
+    this.checkIn.set(date ? startOfDay(date) : null);
   }
 
-  setCheckOut(value: Date | null): void {
-    this.checkOut.set(value ? startOfDay(value) : null);
+  setCheckOut(value: Date | Date[] | null): void {
+    const date = Array.isArray(value) ? (value[0] ?? null) : value;
+    this.checkOut.set(date ? startOfDay(date) : null);
   }
 
-  setGuests(value: GuestCounts): void {
-    this.guests.set(clampGuests(value));
+  setAdults(value: number | null): void {
+    this.applyParty(value ?? 1, this.children(), this.infants());
   }
 
-  updateGuestCount(key: keyof GuestCounts, value: number): void {
-    this.guests.update((current) => clampGuests({ ...current, [key]: value }));
+  setChildren(value: number | null): void {
+    this.applyParty(this.adults(), value ?? 0, this.infants());
+  }
+
+  setInfants(value: number | null): void {
+    this.applyParty(this.adults(), this.children(), value ?? 0);
+  }
+
+  setPets(value: number | null): void {
+    const next = Math.max(0, Math.floor(value ?? 0));
+    this.pets.set(Math.min(MAX_PETS, next));
   }
 
   resetGuests(): void {
-    this.guests.set({ ...DEFAULT_GUESTS });
+    this.adults.set(2);
+    this.children.set(0);
+    this.infants.set(0);
+    this.pets.set(0);
   }
 
-  clearDates(): void {
-    this.checkIn.set(null);
-    this.checkOut.set(null);
-  }
-
-  fromQueryParams(params: Partial<Record<string, string | null | undefined>>): void {
-    const checkIn = params['checkIn'];
-    const checkOut = params['checkOut'];
-
-    if (checkIn) {
-      this.setCheckIn(parseDateKey(checkIn));
-    }
-
-    if (checkOut) {
-      this.setCheckOut(parseDateKey(checkOut));
-    }
-
-    const adults = Number(params['adults']);
-    const children = Number(params['children']);
-    const infants = Number(params['infants']);
-    const pets = Number(params['pets']);
-
-    if (
-      params['adults'] !== undefined ||
-      params['children'] !== undefined ||
-      params['infants'] !== undefined ||
-      params['pets'] !== undefined
-    ) {
-      this.setGuests({
-        adults: Number.isFinite(adults) && adults > 0 ? adults : DEFAULT_GUESTS.adults,
-        children: Number.isFinite(children) && children >= 0 ? children : DEFAULT_GUESTS.children,
-        infants: Number.isFinite(infants) && infants >= 0 ? infants : DEFAULT_GUESTS.infants,
-        pets: Number.isFinite(pets) && pets >= 0 ? pets : DEFAULT_GUESTS.pets,
-      });
-    }
-  }
-
-  toQueryParams(): Record<string, string> {
-    const checkIn = this.checkIn();
-    const checkOut = this.checkOut();
-    const { adults, children, infants, pets } = this.guests();
-
-    if (!checkIn || !checkOut) {
-      return {};
-    }
-
-    const format = (date: Date) => date.toISOString().slice(0, 10);
-
-    return {
-      checkIn: format(checkIn),
-      checkOut: format(checkOut),
-      adults: String(adults),
-      children: String(children),
-      infants: String(infants),
-      pets: String(pets),
+  toQuery(): Record<string, string> {
+    const query: Record<string, string> = {
+      adults: String(this.adults()),
+      children: String(this.children()),
+      infants: String(this.infants()),
+      pets: String(this.pets()),
     };
+    const arrival = this.checkIn();
+    const departure = this.checkOut();
+    if (arrival) {
+      query['from'] = toDateKey(arrival);
+    }
+    if (departure) {
+      query['to'] = toDateKey(departure);
+    }
+    return query;
+  }
+
+  hydrate(params: ParamMap): void {
+    if (params.has('from')) {
+      const from = params.get('from');
+      this.checkIn.set(from ? parseDateKey(from) : null);
+    }
+    if (params.has('to')) {
+      const to = params.get('to');
+      this.checkOut.set(to ? parseDateKey(to) : null);
+    }
+    this.applyParty(
+      numberParam(params, 'adults', this.adults()),
+      numberParam(params, 'children', this.children()),
+      numberParam(params, 'infants', this.infants()),
+    );
+    if (params.has('pets')) {
+      this.setPets(Number(params.get('pets')));
+    }
+  }
+
+  /** A sample range used by specs and the foundations preview. */
+  previewRange(): void {
+    const arrival = addDays(startOfDay(new Date()), 14);
+    this.checkIn.set(arrival);
+    this.checkOut.set(addDays(arrival, MIN_NIGHTS));
+  }
+
+  private applyParty(adults: number, children: number, infants: number): void {
+    let nextAdults = Math.max(1, Math.floor(adults));
+    let nextChildren = Math.max(0, Math.floor(children));
+    let nextInfants = Math.max(0, Math.floor(infants));
+
+    while (nextAdults + nextChildren + nextInfants > MAX_GUESTS_PER_CABIN) {
+      if (nextInfants > 0) {
+        nextInfants -= 1;
+      } else if (nextChildren > 0) {
+        nextChildren -= 1;
+      } else {
+        nextAdults = Math.max(1, nextAdults - 1);
+        break;
+      }
+    }
+
+    this.adults.set(nextAdults);
+    this.children.set(nextChildren);
+    this.infants.set(nextInfants);
   }
 }
 
-export function clampGuests(guests: GuestCounts): GuestCounts {
-  const adults = Math.max(1, Math.min(guests.adults, MAX_CABIN_GUESTS));
-  const maxChildren = Math.max(0, MAX_CABIN_GUESTS - adults);
-  const children = Math.max(0, Math.min(guests.children, maxChildren));
-  const infants = Math.max(0, Math.min(guests.infants, 2));
-  const pets = Math.max(0, Math.min(guests.pets, 1));
-
-  return { adults, children, infants, pets };
-}
-
-export function guestStepperLimits(
-  guests: GuestCounts,
-  key: keyof GuestCounts,
-): { min: number; max: number } {
-  const people = guests.adults + guests.children;
-
-  switch (key) {
-    case 'adults':
-      return { min: 1, max: MAX_CABIN_GUESTS - guests.children };
-    case 'children':
-      return { min: 0, max: MAX_CABIN_GUESTS - guests.adults };
-    case 'infants':
-      return { min: 0, max: 2 };
-    case 'pets':
-      return { min: 0, max: 1 };
-    default:
-      return { min: 0, max: people >= MAX_CABIN_GUESTS ? guests[key] : guests[key] };
+function numberParam(params: ParamMap, key: string, fallback: number): number {
+  if (!params.has(key)) {
+    return fallback;
   }
+  const value = Number(params.get(key));
+  return Number.isFinite(value) ? value : fallback;
 }

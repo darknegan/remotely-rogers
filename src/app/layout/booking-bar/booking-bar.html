@@ -1,87 +1,97 @@
-<div class="rr-booking-bar" [class.rr-booking-bar--home]="layout() === 'home'">
-  <button type="button" class="rr-booking-bar__field" (click)="checkInPopover.toggle($event)">
-    <div class="rr-booking-bar__label">Check-in</div>
-    <div class="rr-booking-bar__value">{{ checkInLabel() }}</div>
-  </button>
-
-  <button type="button" class="rr-booking-bar__field" (click)="checkOutPopover.toggle($event)">
-    <div class="rr-booking-bar__label">Check-out</div>
-    <div class="rr-booking-bar__value">{{ checkOutLabel() }}</div>
-  </button>
-
-  <button type="button" class="rr-booking-bar__field" (click)="guestPopover.toggle($event)">
-    <div class="rr-booking-bar__label">Guests</div>
-    <div class="rr-booking-bar__value">
-      {{ search.guestSummary() }}<span class="rr-booking-bar__guest-cap"> · up to 4 per cabin</span>
-    </div>
-  </button>
-
-  <button
-    type="button"
-    class="rr-booking-bar__search"
-    [disabled]="!search.canSearch()"
-    (click)="searchCabins()"
-  >
-    Search
-  </button>
-</div>
-
-<p-popover #checkInPopover styleClass="rr-date-popover-panel">
-  <p-date-picker
-    [ngModel]="search.checkIn()"
-    (ngModelChange)="onCheckInChange($event)"
-    name="checkIn"
-    [minDate]="minDate"
-    dateFormat="D, M d"
-    [inline]="true"
-    [showIcon]="false"
-  />
-</p-popover>
-
-<p-popover #checkOutPopover styleClass="rr-date-popover-panel">
-  <p-date-picker
-    [ngModel]="search.checkOut()"
-    (ngModelChange)="onCheckOutChange($event)"
-    name="checkOut"
-    [minDate]="search.checkIn() ?? minDate"
-    dateFormat="D, M d"
-    [inline]="true"
-    [showIcon]="false"
-  />
-</p-popover>
-
-<p-popover #guestPopover styleClass="rr-guest-popover-panel">
-  <div class="rr-guest-popover">
-    <div style="padding: 1.375rem 1.5rem 0.375rem">
-      @for (stepper of guestSteppers; track stepper.key) {
-        <div class="rr-guest-popover__row">
-          <div>
-            <div class="rr-guest-popover__label">{{ stepper.label }}</div>
-            <div class="rr-guest-popover__sub">{{ stepper.sub }}</div>
-          </div>
-          <div class="rr-guest-popover__stepper">
-            <p-input-number
-              [ngModel]="search.guests()[stepper.key]"
-              (ngModelChange)="updateGuest(stepper.key, $event)"
-              [name]="stepper.key"
-              [min]="limits(stepper.key).min"
-              [max]="limits(stepper.key).max"
-              [showButtons]="true"
-              buttonLayout="horizontal"
-              incrementButtonIcon="pi pi-plus"
-              decrementButtonIcon="pi pi-minus"
-            />
-          </div>
+<form class="rr-book-bar" (ngSubmit)="searchCabins()">
+  <label class="rr-field">
+    Check-in
+    <p-datepicker
+      [ngModel]="search.checkIn()"
+      (ngModelChange)="search.setCheckIn($event)"
+      name="checkIn"
+      [minDate]="search.minDate"
+      dateFormat="M d, yy"
+      placeholder="Add date"
+      [showIcon]="true"
+      appendTo="body"
+      inputId="check-in"
+    />
+  </label>
+  <label class="rr-field">
+    Check-out
+    <p-datepicker
+      [ngModel]="search.checkOut()"
+      (ngModelChange)="search.setCheckOut($event)"
+      name="checkOut"
+      [minDate]="search.checkIn() ?? search.minDate"
+      dateFormat="M d, yy"
+      placeholder="Add date"
+      [showIcon]="true"
+      appendTo="body"
+      inputId="check-out"
+    />
+  </label>
+  <div class="rr-field">
+    <span>Guests</span>
+    <p-button
+      type="button"
+      [label]="search.partySize() + ' guests'"
+      [outlined]="true"
+      (onClick)="guests.toggle($event)"
+    />
+    <p-popover #guests>
+      <div class="rr-guest-pop">
+        <div class="rr-guest-row">
+          <span>Adults</span>
+          <p-inputnumber
+            [ngModel]="search.adults()"
+            (ngModelChange)="search.setAdults($event)"
+            name="adults"
+            [min]="1"
+            [max]="4"
+            [showButtons]="true"
+            buttonLayout="horizontal"
+          />
         </div>
-      }
-      <p class="rr-guest-popover__note">
-        {{ search.capNote() }}
-        <a routerLink="/multi-cabin">Book several cabins</a>
-      </p>
-    </div>
-    <div class="rr-guest-popover__actions" style="padding: 0 1.5rem 1.25rem">
-      <button type="button" class="rr-btn rr-btn--text" (click)="search.resetGuests()">Reset</button>
-      <button type="button" class="rr-btn rr-btn--primary" (click)="guestPopover.hide()">Apply</button>
-    </div>
+        <div class="rr-guest-row">
+          <span>Children</span>
+          <p-inputnumber
+            [ngModel]="search.children()"
+            (ngModelChange)="search.setChildren($event)"
+            name="children"
+            [min]="0"
+            [max]="4"
+            [showButtons]="true"
+            buttonLayout="horizontal"
+          />
+        </div>
+        <div class="rr-guest-row">
+          <span>Infants</span>
+          <p-inputnumber
+            [ngModel]="search.infants()"
+            (ngModelChange)="search.setInfants($event)"
+            name="infants"
+            [min]="0"
+            [max]="4"
+            [showButtons]="true"
+            buttonLayout="horizontal"
+          />
+        </div>
+        <div class="rr-guest-row">
+          <span>Pets</span>
+          <p-inputnumber
+            [ngModel]="search.pets()"
+            (ngModelChange)="search.setPets($event)"
+            name="pets"
+            [min]="0"
+            [max]="1"
+            [showButtons]="true"
+            buttonLayout="horizontal"
+          />
+        </div>
+        <p>Up to 4 guests per cabin. One pet, arranged first.</p>
+        <p-button type="button" label="Reset" [text]="true" (onClick)="search.resetGuests()" />
+      </div>
+    </p-popover>
   </div>
-</p-popover>
+  <p-button type="submit" label="Search" [disabled]="!search.canSearch()" (onClick)="searchCabins()" />
+  @if (search.checkIn() && search.checkOut() && search.dateError(); as error) {
+    <p class="rr-error">{{ error }}</p>
+  }
+</form>

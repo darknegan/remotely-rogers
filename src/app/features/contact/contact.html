@@ -1,0 +1,13 @@
+<section class="rr-section">
+  <p class="rr-kicker">Contact</p>
+  <h1 class="rr-display" style="font-size: clamp(42px, 5vw, 72px)">Write or call Jeff.</h1>
+  <div class="rr-split">
+    <div>
+      <p><a [href]="phoneHref">{{ phone }}</a></p>
+      <p><a [href]="emailHref">{{ email }}</a></p>
+      <p>{{ address }}</p>
+      <app-inquiry-form variant="contact" />
+    </div>
+    <app-map-embed />
+  </div>
+</section>

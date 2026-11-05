@@ -1,0 +1,105 @@
+@if (cabin(); as cabin) {
+  <section class="rr-gallery">
+    <button type="button" (click)="showPhoto(0)">
+      <img [src]="cabin.gallery[0]" [alt]="cabin.name" />
+    </button>
+    <button type="button" (click)="showPhoto(1)">
+      <img [src]="cabin.gallery[1]" [alt]="cabin.name + ' detail'" />
+    </button>
+  </section>
+  <p class="rr-section" style="padding-bottom: 0">
+    <button type="button" class="rr-btn rr-btn--ghost" (click)="galleryOpen.set(true)">View more pictures</button>
+  </p>
+
+  <section class="rr-detail">
+    <div class="rr-cabin-copy">
+      <p class="rr-kicker">Vacation home</p>
+      <h1>{{ cabin.name }}</h1>
+      <p>{{ cabin.guests }} guests · {{ cabin.bedrooms }} bedrooms · {{ cabin.beds }} beds · {{ cabin.baths }} bathroom</p>
+      <p class="rr-lede">{{ description }}</p>
+      <div class="rr-amenity-grid">
+        <article><h3>Parking</h3></article>
+        <article><h3>Pets welcome</h3></article>
+        <article><h3>Wireless internet</h3></article>
+      </div>
+      <h2>Amenities</h2>
+      @for (group of groups; track group.title) {
+        <article class="rr-pick">
+          <h3>{{ group.title }}</h3>
+          <p>{{ group.items }}</p>
+        </article>
+      }
+      <h2>House rules</h2>
+      <p>Quiet hours 10:00 PM–8:00 AM. Pets only after arrangement. No smoking. Children welcome.</p>
+      <p>Check-in 3:00 PM. Check-out 11:00 AM.</p>
+      <h2>Location</h2>
+      <p>Rogers, Benton County, AR. 12.6 miles to the airport.</p>
+      <app-map-embed />
+      <h2>Rates</h2>
+      <p>Prices vary by date. From {{ cabin.nightlyFrom | currency: 'USD' : 'symbol' : '1.0-0' }} per night.</p>
+      <h2>Payment</h2>
+      <p>50% is due at reservation. The remainder is due 7 days before arrival.</p>
+      <h2>Cancellation</h2>
+      <p>100% refund 30 or more days out. 50% at 14 or more days. No refund after that.</p>
+      <h2>Security deposit</h2>
+      <p>$250 pre-authorization, voided 2 days after departure.</p>
+      <h2>Reviews</h2>
+      <app-review-band [slug]="cabin.slug" [name]="cabin.name" [imageUrl]="cabin.imageUrl" />
+      <h2>About the host</h2>
+      <p>Jeff Wolfe</p>
+      <p>{{ email }} · {{ phone }}</p>
+      <h2>More cabins on this property</h2>
+      <div class="rr-card-grid">
+        @for (other of others(); track other.slug) {
+          <a class="rr-pick" [routerLink]="['/cabins', other.slug]">
+            <img [src]="other.imageUrl" [alt]="other.name" style="width: 100%; height: 140px; object-fit: cover" />
+            <h3>{{ other.name }}</h3>
+          </a>
+        }
+      </div>
+    </div>
+
+    <aside class="rr-widget">
+      <h2>From {{ cabin.nightlyFrom | currency: 'USD' : 'symbol' : '1.0-0' }} / night</h2>
+      <p class="rr-stars">{{ rating() }} · Airbnb</p>
+      <app-booking-bar />
+      @if (nights() > 0) {
+        <p>{{ nights() }} nights × {{ cabin.nightlyFrom | currency: 'USD' : 'symbol' : '1.0-0' }}</p>
+        <p><strong>Estimated {{ total() | currency: 'USD' : 'symbol' : '1.0-0' }}</strong></p>
+      }
+      <a class="rr-btn" [href]="bookHref()" style="margin-top: 16px">Book now</a>
+    </aside>
+  </section>
+
+  <div class="rr-mobile-book">
+    <span>From {{ cabin.nightlyFrom | currency: 'USD' : 'symbol' : '1.0-0' }}</span>
+    <button type="button" class="rr-btn" (click)="widgetOpen.set(true)">Check availability</button>
+  </div>
+
+  <p-drawer header="Book this cabin" [visible]="widgetOpen()" (visibleChange)="widgetOpen.set($event)" position="bottom" [style]="{ height: '70vh' }">
+    <app-booking-bar />
+    @if (nights() > 0) {
+      <p>{{ nights() }} nights · {{ total() | currency: 'USD' : 'symbol' : '1.0-0' }}</p>
+    }
+    <a class="rr-btn" [href]="bookHref()">Book now</a>
+  </p-drawer>
+
+  <p-dialog
+    header="Pictures"
+    [visible]="galleryOpen()"
+    (visibleChange)="galleryOpen.set($event)"
+    [modal]="true"
+    [style]="{ width: 'min(960px, 96vw)' }"
+  >
+    <img [src]="cabin.gallery[galleryIndex()]" [alt]="cabin.name" style="width: 100%; max-height: 70vh; object-fit: cover" />
+    <div style="display: flex; gap: 8px; margin-top: 12px">
+      <button type="button" class="rr-btn rr-btn--ghost" (click)="galleryIndex.set((galleryIndex() + cabin.gallery.length - 1) % cabin.gallery.length)">Previous</button>
+      <button type="button" class="rr-btn rr-btn--ghost" (click)="galleryIndex.set((galleryIndex() + 1) % cabin.gallery.length)">Next</button>
+    </div>
+  </p-dialog>
+} @else {
+  <section class="rr-section">
+    <h1>Cabin not found</h1>
+    <a class="rr-btn" routerLink="/cabins">Back to cabins</a>
+  </section>
+}

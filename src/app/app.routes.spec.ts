@@ -1,45 +1,36 @@
-import { describe, expect, it } from 'vitest';
+import { TestBed } from '@angular/core/testing';
+import { provideRouter, Router, UrlTree } from '@angular/router';
+import { describe, expect, it, beforeEach } from 'vitest';
 
 import { routes } from './app.routes';
+import { SITE_LINKS } from './core/content/site-nav';
 
-type RouteConfig = {
-  path?: string;
-  redirectTo?: string | ((...args: unknown[]) => string);
-  pathMatch?: string;
-  children?: RouteConfig[];
-};
-
-function findPreviewRedirects(routeList: RouteConfig[]): RouteConfig[] {
-  const preview = routeList.find((route) => route.path === 'preview');
-  return preview?.children ?? [];
+function runRedirect(path: string): UrlTree {
+  const route = routes.find((entry) => entry.path === path);
+  expect(route?.redirectTo).toBeDefined();
+  const redirectTo = route!.redirectTo!;
+  expect(typeof redirectTo).toBe('function');
+  return TestBed.runInInjectionContext(() => (redirectTo as () => UrlTree)());
 }
 
-describe('app.routes preview cutover', () => {
-  const previewRedirects = findPreviewRedirects(routes as RouteConfig[]);
-
-  it('redirects legacy preview URLs to public paths', () => {
-    const expected: Record<string, string> = {
-      '': '/',
-      foundations: '/',
-      activities: '/activities',
-      recommendations: '/recommendations',
-      'work-stays': '/work-stays',
-      'multi-cabin-stays': '/multi-cabin',
-      reviews: '/',
-    };
-
-    for (const [path, redirectTo] of Object.entries(expected)) {
-      const route = previewRedirects.find((entry) => entry.path === path);
-      expect(route, `missing /preview/${path || '(root)'} redirect`).toBeDefined();
-      expect(route?.redirectTo).toBe(redirectTo);
-      expect(route?.pathMatch).toBe('full');
-    }
+describe('app routes', () => {
+  beforeEach(async () => {
+    await TestBed.configureTestingModule({
+      providers: [provideRouter(routes)],
+    }).compileComponents();
   });
 
-  it('does not mount preview feature components', () => {
-    for (const route of previewRedirects) {
-      expect(route).not.toHaveProperty('loadComponent');
-      expect(route).not.toHaveProperty('component');
-    }
+  it('redirects multi-cabin to /cabins#group', () => {
+    const url = runRedirect('multi-cabin');
+    expect(url.toString()).toBe('/cabins#group');
+  });
+
+  it('redirects preview/multi-cabin-stays to /cabins#group', () => {
+    const url = runRedirect('preview/multi-cabin-stays');
+    expect(url.toString()).toBe('/cabins#group');
+  });
+
+  it('does not expose Multi-Cabin in primary nav links', () => {
+    expect(SITE_LINKS.some((link) => link.path === '/multi-cabin')).toBe(false);
   });
 });

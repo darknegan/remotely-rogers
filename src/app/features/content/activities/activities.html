@@ -1,347 +1,134 @@
-<div class="rr-activities">
-  @if (isAllView()) {
-    <section class="rr-activities-compact-header rr-activities-mobile-only">
-      <h1 class="rr-activities-display">Activities &amp; Adventures</h1>
-    </section>
+<section class="rr-section">
+  <p class="rr-kicker">Northwest Arkansas</p>
+  <h1 class="rr-display" style="font-size: clamp(42px, 5vw, 72px)">Activities &amp; Adventures</h1>
+  <div class="rr-stats">
+    <div><strong>70</strong><span>Private acres</span></div>
+    <div><strong>6</strong><span>A-frames</span></div>
+    <div><strong>15</strong><span>Min to downtown</span></div>
+  </div>
+  <p class="rr-lede">
+    Remotely Rogers puts you minutes from lakes, world-class bike trails, and historic downtown Rogers.
+  </p>
+  <div style="margin-top: 28px">
+    <p-selectbutton
+      [options]="categoryOptions"
+      optionLabel="label"
+      optionValue="value"
+      [ngModel]="selectedCategory()"
+      (ngModelChange)="selectedCategory.set($event)"
+      [allowEmpty]="false"
+    />
+  </div>
+</section>
 
-    <section class="rr-activities-hero rr-activities-desktop-only">
-      <img
-        class="rr-activities-hero__image"
-        [src]="heroImage"
-        alt="The property in winter"
-        loading="eager"
-      />
-      <div class="rr-activities-hero__overlay" aria-hidden="true"></div>
-      <div class="rr-activities-hero__copy">
-        <div class="rr-activities-hero__eyebrow">
-          <span class="rr-activities-hero__rule" aria-hidden="true"></span>
-          <span>Northwest Arkansas from the hill</span>
-        </div>
-        <h1 class="rr-activities-display">Activities &amp; Adventures</h1>
-        <div class="rr-activities-hero__stats">
-          <div class="rr-activities-hero__stat">
-            <span class="rr-activities-hero__stat-value">70</span>
-            <span class="rr-activities-hero__stat-label">Private acres</span>
-          </div>
-          <div class="rr-activities-hero__stat">
-            <span class="rr-activities-hero__stat-value">6</span>
-            <span class="rr-activities-hero__stat-label">A-frames</span>
-          </div>
-          <div class="rr-activities-hero__stat">
-            <span class="rr-activities-hero__stat-value">15</span>
-            <span class="rr-activities-hero__stat-label">Min to downtown</span>
-          </div>
+@if (!hasVisibleContent()) {
+  <section class="rr-section">
+    <div class="rr-split">
+      <div>
+        <p class="rr-kicker">Weekend trips</p>
+        <h2>Nothing listed here yet.</h2>
+        <p class="rr-lede">
+          We're still writing up our favorite longer drives. Jeff has plenty of ideas in the meantime — ask when you book.
+        </p>
+        <div style="display: flex; gap: 12px; margin-top: 28px; flex-wrap: wrap">
+          <button type="button" class="rr-btn" (click)="showAll()">Show all</button>
+          <a class="rr-btn rr-btn--ghost" routerLink="/contact">Ask Jeff</a>
         </div>
       </div>
-    </section>
-  } @else {
-    <section class="rr-activities-compact-header">
-      <h1 class="rr-activities-display">Activities &amp; Adventures</h1>
+      <img src="/media/cabins/running-spring.jpg" alt="Running Spring Retreat" style="width: 100%; height: 420px; object-fit: cover" />
+    </div>
+  </section>
+} @else {
+  @if (filteredFeatured().length) {
+    <section class="rr-section">
+      <p class="rr-kicker">Featured</p>
+      <div class="rr-card-grid rr-card-grid--3">
+        @for (item of filteredFeatured(); track item.title) {
+          <a class="rr-pick" [href]="item.websiteUrl" target="_blank" rel="noopener">
+            <img [src]="item.imageUrl" [alt]="item.title" style="width: 100%; height: 180px; object-fit: cover" />
+            <h3>{{ item.title }}</h3>
+            <p>{{ item.description }}</p>
+            <p>{{ item.detail }}</p>
+          </a>
+        }
+      </div>
     </section>
   }
 
-  <div class="rr-activities-filter-bar">
-    <span class="rr-activities-filter-bar__label">Show</span>
-    <div class="rr-activities-filter-bar__chips" aria-label="Activity categories">
-      @for (opt of categoryOptions; track opt.value) {
-        <button
-          type="button"
-          class="rr-activities-chip"
-          [class.rr-activities-chip--active]="selectedCategory() === opt.value"
-          [attr.aria-pressed]="selectedCategory() === opt.value"
-          (click)="selectCategory(opt.value)"
-        >
-          {{ opt.label }}
-        </button>
+  @if (showOutdoorSection()) {
+    <section class="rr-section">
+      <h2>Nature at your doorstep</h2>
+      <div class="rr-amenity-grid">
+        @for (spot of outdoorSpots; track spot.label) {
+          <article>
+            <h3>{{ spot.label }}</h3>
+            <p>{{ spot.detail }}</p>
+          </article>
+        }
+      </div>
+    </section>
+  }
+
+  @if (showBikingSection()) {
+    <section class="rr-section">
+      <h2>Pedal the Ozarks</h2>
+      <div class="rr-card-grid">
+        @for (trail of trails; track trail.name) {
+          <a class="rr-pick" [href]="trail.websiteUrl" target="_blank" rel="noopener">
+            <img [src]="trail.imageUrl" [alt]="trail.name" style="width: 100%; height: 180px; object-fit: cover" />
+            <h3>{{ trail.name }}</h3>
+            <p>{{ trail.type }} · {{ trail.distance }}</p>
+            <p>{{ trail.description }}</p>
+          </a>
+        }
+      </div>
+    </section>
+  }
+
+  @if (filteredCultureSpots().length) {
+    <section class="rr-section">
+      <h2>History, culture &amp; local flavor</h2>
+      <div class="rr-card-grid rr-card-grid--3">
+        @for (spot of filteredCultureSpots(); track spot.title) {
+          <a class="rr-pick" [href]="spot.websiteUrl" target="_blank" rel="noopener">
+            <h3>{{ spot.title }}</h3>
+            <p>{{ spot.description }}</p>
+            <p>{{ spot.detail }}</p>
+          </a>
+        }
+      </div>
+    </section>
+  }
+
+  @if (showDiningSection()) {
+    <section class="rr-section">
+      <h2>Local dining favorites</h2>
+      <div class="rr-card-grid rr-card-grid--3">
+        @for (spot of diningSpots; track spot.name) {
+          <a class="rr-pick" [href]="spot.websiteUrl" target="_blank" rel="noopener">
+            <h3>{{ spot.name }}</h3>
+            <p>{{ spot.cuisine }}</p>
+            <p>{{ spot.description }}</p>
+          </a>
+        }
+      </div>
+    </section>
+  }
+
+  <section class="rr-section">
+    <h2>Sample adventure day</h2>
+    <div class="rr-steps">
+      @for (step of adventureDay; track step.title) {
+        <article class="rr-step">
+          <p class="rr-kicker">{{ step.label }}</p>
+          <h3>{{ step.title }}</h3>
+          <p>{{ step.description }}</p>
+        </article>
       }
     </div>
-    @if (filterSummaryLabel()) {
-      <span class="rr-activities-filter-bar__summary">{{ filterSummaryLabel() }}</span>
-    }
-  </div>
-
-  @if (isEmptyFilter()) {
-    <section class="rr-activities-empty">
-      <div class="rr-activities-empty__copy">
-        <div class="rr-activities-eyebrow">Weekend trips</div>
-        <h2 class="rr-activities-empty__title">Nothing listed here yet.</h2>
-        <p class="rr-activities-empty__lede">
-          We're still writing up our favorite longer drives. Jeff has plenty of ideas in the
-          meantime — ask when you book.
-        </p>
-        <div class="rr-activities-empty__actions">
-          <button type="button" class="rr-cabins-btn rr-cabins-btn--primary" (click)="showAll()">
-            Show all
-          </button>
-          <a class="rr-cabins-btn rr-cabins-btn--outline" routerLink="/contact">Ask Jeff</a>
-        </div>
-      </div>
-      <div class="rr-activities-empty__image-wrap">
-        <img [src]="emptyImage" alt="Running Spring Retreat" loading="lazy" />
-      </div>
-    </section>
-  } @else {
-    @if (filteredFeatured().length > 0) {
-      <section
-        class="rr-activities-featured"
-        [class.rr-activities-featured--all]="isAllView()"
-        [class.rr-activities-featured--biking]="bikingFilter()"
-      >
-        @if (isAllView()) {
-          <div class="rr-activities-eyebrow">Featured</div>
-        }
-
-        @if (showFeaturedLayout()) {
-          <div class="rr-activities-featured__grid">
-            @for (item of filteredFeatured(); track item.id) {
-              <a
-                class="rr-activities-feature-card rr-activities-feature-card--{{ item.variant }}"
-                [class.rr-activities-feature-card--large]="isFeaturedLarge(item)"
-                [href]="item.websiteUrl"
-                target="_blank"
-                rel="noopener noreferrer"
-                [attr.aria-label]="'Visit ' + item.title"
-              >
-                <span class="rr-activities-feature-card__eyebrow">{{ item.eyebrow }}</span>
-                <div class="rr-activities-feature-card__minutes">
-                  {{ item.minutes }}<span>min</span>
-                </div>
-                <h3 class="rr-activities-feature-card__title">{{ item.title }}</h3>
-                <p class="rr-activities-feature-card__copy">{{ item.description }}</p>
-              </a>
-            }
-          </div>
-        } @else if (bikingFilter()) {
-          @for (item of filteredFeatured(); track item.id) {
-            <a
-              class="rr-activities-biking-feature"
-              [href]="item.websiteUrl"
-              target="_blank"
-              rel="noopener noreferrer"
-              [attr.aria-label]="'Visit ' + item.title"
-            >
-              <span class="rr-activities-biking-feature__eyebrow">Featured · Biking</span>
-              <div class="rr-activities-biking-feature__body">
-                <div>
-                  <h3 class="rr-activities-biking-feature__title">{{ item.title }}</h3>
-                  <p class="rr-activities-biking-feature__copy">
-                    Slaughter Pen and Coler in Bentonville are twenty minutes away. Load the bikes at
-                    your cabin's parking spot and be on dirt before lunch.
-                  </p>
-                </div>
-                <div class="rr-activities-biking-feature__minutes">
-                  {{ item.minutes }}<span>min</span>
-                </div>
-              </div>
-            </a>
-          }
-        } @else {
-          <div class="rr-activities-featured__stack">
-            @for (item of filteredFeatured(); track item.id) {
-              <a
-                class="rr-activities-feature-card rr-activities-feature-card--{{ item.variant }}"
-                [href]="item.websiteUrl"
-                target="_blank"
-                rel="noopener noreferrer"
-                [attr.aria-label]="'Visit ' + item.title"
-              >
-                <span class="rr-activities-feature-card__eyebrow">{{ item.eyebrow }}</span>
-                <div class="rr-activities-feature-card__minutes">
-                  {{ item.minutes }}<span>min</span>
-                </div>
-                <h3 class="rr-activities-feature-card__title">{{ item.title }}</h3>
-                <p class="rr-activities-feature-card__copy">{{ item.description }}</p>
-              </a>
-            }
-          </div>
-        }
-      </section>
-    }
-
-    @if (showTrailsCardGrid()) {
-      <section class="rr-activities-trail-cards">
-        <div class="rr-activities-trail-cards__grid">
-          @for (trail of trails; track trail.name) {
-            <a
-              class="rr-activities-trail-card"
-              [href]="trail.websiteUrl"
-              target="_blank"
-              rel="noopener noreferrer"
-              [attr.aria-label]="'Visit ' + trail.name"
-            >
-              <div class="rr-activities-trail-card__minutes">
-                {{ trail.minutes }}<span>min</span>
-              </div>
-              <div class="rr-activities-trail-card__name">{{ trail.name }}</div>
-              <div class="rr-activities-trail-card__where">{{ trail.where }}</div>
-            </a>
-          }
-        </div>
-      </section>
-    }
-
-    @if (showOutdoor()) {
-      <section class="rr-activities-outdoor">
-        <div class="rr-activities-outdoor__intro">
-          <div class="rr-activities-eyebrow">Outdoor</div>
-          <h2 class="rr-activities-section-title">Water, woods and one cave.</h2>
-        </div>
-        <div class="rr-activities-outdoor__list">
-          @for (spot of outdoorSpots; track spot.name) {
-            <a
-              class="rr-activities-outdoor__item"
-              [href]="spot.websiteUrl"
-              target="_blank"
-              rel="noopener noreferrer"
-              [attr.aria-label]="'Visit ' + spot.name"
-            >
-              <div class="rr-activities-outdoor__item-head">
-                <h3>{{ spot.name }}</h3>
-                <span>{{ spot.meta }}</span>
-              </div>
-              <p>{{ spot.line }}</p>
-            </a>
-          }
-        </div>
-      </section>
-    }
-
-    @if (showTrailsBandSection()) {
-      <section class="rr-activities-trails-band">
-        <div class="rr-activities-trails-band__head">
-          <div>
-            <div class="rr-activities-eyebrow">Trails</div>
-            <h2 class="rr-activities-section-title">Ride from the porch.</h2>
-          </div>
-          <span class="rr-activities-trails-band__note">Drive times from Remotely Rogers</span>
-        </div>
-        <div class="rr-activities-trails-band__grid">
-          @for (trail of trails; track trail.name) {
-            <a
-              class="rr-activities-trails-band__item"
-              [href]="trail.websiteUrl"
-              target="_blank"
-              rel="noopener noreferrer"
-              [attr.aria-label]="'Visit ' + trail.name"
-            >
-              <div class="rr-activities-trails-band__minutes">
-                {{ trail.minutes }}<span>min</span>
-              </div>
-              <div class="rr-activities-trails-band__name">{{ trail.name }}</div>
-              <div class="rr-activities-trails-band__where">{{ trail.where }}</div>
-            </a>
-          }
-        </div>
-      </section>
-    }
-
-    @if (showCulture() && isAllView()) {
-      <section class="rr-activities-culture">
-        <img
-          class="rr-activities-culture__image"
-          [src]="cultureImage"
-          alt="Evening in Dogwood Den"
-          loading="lazy"
-        />
-        <div class="rr-activities-culture__overlay" aria-hidden="true"></div>
-        <div class="rr-activities-culture__copy">
-          <div class="rr-activities-culture__eyebrow">Culture &amp; history</div>
-          <h2 class="rr-activities-culture__title">An evening in old Rogers.</h2>
-          <div class="rr-activities-culture__list">
-            @for (spot of cultureSpots; track spot.name) {
-              <a
-                class="rr-activities-culture__row"
-                [href]="spot.websiteUrl"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                <span>{{ spot.name }}</span>
-                <span>{{ spot.meta }}</span>
-              </a>
-            }
-          </div>
-        </div>
-      </section>
-    } @else if (showCulture() && !isAllView()) {
-      <section class="rr-activities-culture-list">
-        <div class="rr-activities-eyebrow">Culture &amp; history</div>
-        <h2 class="rr-activities-section-title">An evening in old Rogers.</h2>
-        <div class="rr-activities-culture-list__rows">
-          @for (spot of filteredCulture(); track spot.name) {
-            <a
-              class="rr-activities-culture-list__row"
-              [href]="spot.websiteUrl"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              <span>{{ spot.name }}</span>
-              <span>{{ spot.meta }}</span>
-            </a>
-          }
-        </div>
-      </section>
-    }
-
-    @if (showDining()) {
-      <section class="rr-activities-dining">
-        <div class="rr-activities-dining__intro">
-          <div class="rr-activities-eyebrow">Dining</div>
-          <h2 class="rr-activities-section-title">Where we send guests to eat.</h2>
-          <p class="rr-activities-dining__lede">
-            Book ahead on weekends. Ask Jeff which ones are open late.
-          </p>
-        </div>
-        <div class="rr-activities-dining__menu">
-          @for (spot of diningSpots; track spot.name) {
-            <a
-              class="rr-activities-dining__row"
-              [href]="spot.websiteUrl"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              <span class="rr-activities-dining__name">{{ spot.name }}</span>
-              <span class="rr-activities-dining__dots" aria-hidden="true"></span>
-              <span class="rr-activities-dining__kind">{{ spot.kind }}</span>
-            </a>
-          }
-        </div>
-      </section>
-    }
-
-    @if (isAllView()) {
-      <section class="rr-activities-day-plan">
-        <div class="rr-activities-eyebrow">A sample adventure day</div>
-        <div class="rr-activities-day-plan__grid">
-          @for (step of adventureDay; track step.period) {
-            <div class="rr-activities-day-plan__step">
-              <div class="rr-activities-day-plan__period">{{ step.period }}</div>
-              <h3>{{ step.title }}</h3>
-              <p>{{ step.description }}</p>
-            </div>
-          }
-        </div>
-      </section>
-
-      <section class="rr-activities-cta">
-        <p class="rr-activities-cta__title">Want Jeff's short list?</p>
-        <div class="rr-activities-cta__actions">
-          <a class="rr-cabins-btn rr-cabins-btn--outline rr-activities-cta-outline" routerLink="/recommendations">
-            Our recommendations
-          </a>
-          <a class="rr-cabins-btn rr-cabins-btn--primary" routerLink="/cabins">Check availability</a>
-        </div>
-      </section>
-    }
-
-    @if (bikingFilter()) {
-      <div class="rr-activities-filter-hint">
-        <span>
-          Outdoor, culture, dining and day-plan sections are hidden while Biking is selected.
-        </span>
-        <button type="button" class="rr-activities-filter-hint__link" (click)="showAll()">
-          Show all
-        </button>
-      </div>
-    }
-  }
-</div>
+    <div style="display: flex; gap: 12px; margin-top: 28px; flex-wrap: wrap">
+      <a class="rr-btn rr-btn--ghost" routerLink="/recommendations">Recommendations</a>
+      <a class="rr-btn" routerLink="/cabins">Check availability</a>
+    </div>
+  </section>
+}

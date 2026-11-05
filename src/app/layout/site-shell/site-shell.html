@@ -1,11 +1,11 @@
-<div class="rr-shell">
-  <app-site-header />
-  <app-mobile-header [menuOpen]="menuOpen()" (menuOpenChange)="menuOpen.set($event)" />
-  <app-mobile-nav [visible]="menuOpen()" (visibleChange)="menuOpen.set($event)" />
-
-  <main class="rr-shell__main">
-    <router-outlet />
+<div [class.rr-shell]="showChrome()">
+  @if (showChrome()) {
+    <app-site-header />
+  }
+  <main>
+    <ng-content />
   </main>
-
-  <app-site-footer />
+  @if (showChrome()) {
+    <app-site-footer />
+  }
 </div>

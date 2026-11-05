@@ -21,6 +21,7 @@ import {
   startOfDay,
   toDateKey,
 } from '../../core/utils/date-utils';
+import { findNextOpenStay, formatNextOpenLabel } from './booking-next-open';
 
 const MAX_AUTO_FILL_GAP_DAYS = 5;
 const CART_STORAGE_KEY = 'rr-group-booking-cart';
@@ -59,6 +60,10 @@ export class BookingStateService {
   readonly checkoutLoading = signal(false);
   readonly checkoutError = signal<string | null>(null);
   readonly checkoutResult = signal<GroupCheckoutResponse | null>(null);
+  readonly nextOpenLabels = signal<Record<number, string>>({});
+  /** Stay dates from the cabins listing bar (checkout-exclusive). */
+  readonly listingStayRange = signal<DateRange | null>(null);
+  private readonly listingQuotes = signal<Record<number, CabinAvailability>>({});
 
   readonly viewRange = computed((): DateRange | null => {
     const start = this.viewStartDate();
@@ -142,6 +147,99 @@ export class BookingStateService {
     this.guestCount.set(Math.min(max, Math.max(1, count)));
   }
 
+  /** Align embedded calendar with the cabins listing date bar. */
+  syncFromListingSearch(arrival: Date, departure: Date, adults: number): void {
+    this.listingStayRange.set({ arrival, departure });
+    this.setGuestCount(adults);
+    this.setViewStartDate(arrival);
+    if (this.dateError()) {
+      return;
+    }
+
+    this.searchAvailability();
+  }
+
+  /** Merge day-level quotes from the listing search into the calendar map (same API payload). */
+  mergeListingAvailability(quotes: Record<number, CabinAvailability>): void {
+    if (Object.keys(quotes).length === 0) {
+      return;
+    }
+
+    this.listingQuotes.set(quotes);
+    this.applyListingQuoteMerge();
+  }
+
+  isInListingStay(date: Date): boolean {
+    const range = this.listingStayRange();
+    if (!range) {
+      return false;
+    }
+
+    const key = toDateKey(date);
+    return key >= toDateKey(range.arrival) && key < toDateKey(range.departure);
+  }
+
+  refreshNextOpenLabels(
+    cabinIds: number[],
+    checkout: Date,
+    quotes: Record<number, CabinAvailability>,
+  ): void {
+    if (cabinIds.length === 0) {
+      this.nextOpenLabels.set({});
+      return;
+    }
+
+    const minNights = this.config.minNights;
+    const labels: Record<number, string> = {};
+    const needsHorizon: number[] = [];
+
+    for (const cabinId of cabinIds) {
+      const quote = quotes[cabinId];
+      const window = findNextOpenStay(quote?.days ?? {}, checkout, minNights);
+      if (window) {
+        labels[cabinId] = formatNextOpenLabel(window);
+      } else {
+        needsHorizon.push(cabinId);
+      }
+    }
+
+    if (needsHorizon.length === 0) {
+      this.nextOpenLabels.set(labels);
+      return;
+    }
+
+    const horizonStart = startOfDay(checkout);
+    const horizonEnd = addDays(horizonStart, 60);
+
+    this.api
+      .fetchAvailability({
+        arrival: toDateKey(horizonStart),
+        departure: toDateKey(horizonEnd),
+        adults: this.guestCount(),
+      })
+      .subscribe({
+        next: (response) => {
+          const extended = Object.fromEntries(response.cabins.map((c) => [c.cabinId, c]));
+          for (const cabinId of needsHorizon) {
+            const quote = extended[cabinId];
+            const window = findNextOpenStay(quote?.days ?? {}, checkout, minNights);
+            if (window) {
+              labels[cabinId] = formatNextOpenLabel(window);
+            } else {
+              labels[cabinId] = 'Check calendar for open nights';
+            }
+          }
+          this.nextOpenLabels.set({ ...labels });
+        },
+        error: () => {
+          for (const cabinId of needsHorizon) {
+            labels[cabinId] = 'Check calendar for open nights';
+          }
+          this.nextOpenLabels.set({ ...labels });
+        },
+      });
+  }
+
   getDefaultViewStartDate(): Date {
     return startOfDay(new Date());
   }
@@ -215,6 +313,7 @@ export class BookingStateService {
             map[cabin.cabinId] = cabin;
           }
           this.availabilityMap.set(map);
+          this.applyListingQuoteMerge();
         },
         error: () => {
           this.error.set('Unable to load availability. Please try again.');
@@ -479,6 +578,32 @@ export class BookingStateService {
     return eachNight(arrival, departure).every(
       (night) => quote.days[toDateKey(night)] === 'available',
     );
+  }
+
+  private applyListingQuoteMerge(): void {
+    const quotes = this.listingQuotes();
+    if (Object.keys(quotes).length === 0) {
+      return;
+    }
+
+    this.availabilityMap.update((current) => {
+      const next = { ...current };
+      for (const [id, quote] of Object.entries(quotes)) {
+        const cabinId = Number(id);
+        const existing = next[cabinId];
+        if (!existing) {
+          next[cabinId] = quote;
+          continue;
+        }
+
+        next[cabinId] = {
+          ...existing,
+          days: { ...existing.days, ...quote.days },
+          dayRates: { ...existing.dayRates, ...quote.dayRates },
+        };
+      }
+      return next;
+    });
   }
 
   private hydrateCart(): void {

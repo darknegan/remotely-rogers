@@ -1,159 +1,66 @@
-<div class="rr-recs">
-  <section class="rr-recs-compact-header rr-recs-mobile-only">
-    <div class="rr-recs-eyebrow">From Jeff, for your stay</div>
-    <h1 class="rr-recs-display">Our Recommendations</h1>
-  </section>
+<section class="rr-section">
+  <p class="rr-kicker">Local picks</p>
+  <h1 class="rr-display" style="font-size: clamp(42px, 5vw, 72px)">Our Recommendations</h1>
+  <div class="rr-stats">
+    <div><strong>6</strong><span>Curated picks</span></div>
+    <div><strong>12</strong><span>Min to downtown</span></div>
+    <div><strong>NWA</strong><span>Day-trip region</span></div>
+  </div>
+  <div class="rr-card-grid rr-card-grid--3" style="margin-top: 36px">
+    @for (item of picks; track item.title) {
+      <a class="rr-pick" [href]="item.websiteUrl" target="_blank" rel="noopener">
+        <img [src]="item.imageUrl" [alt]="item.title" style="width: 100%; height: 180px; object-fit: cover" />
+        <p class="rr-kicker">{{ item.badge }}</p>
+        <h3>{{ item.title }}</h3>
+        <p>{{ item.description }}</p>
+        <p>{{ item.detail }}</p>
+      </a>
+    }
+  </div>
+</section>
 
-  <section class="rr-recs-hero rr-recs-desktop-only">
-    <div class="rr-recs-hero__copy">
-      <div class="rr-recs-eyebrow">From Jeff, for your stay</div>
-      <h1 class="rr-recs-display">Our Recommendations</h1>
-      <div class="rr-recs-hero__stats">
-        <div class="rr-recs-hero__stat">
-          <span class="rr-recs-hero__stat-label">Curated picks</span>
-          <span class="rr-recs-hero__stat-value">6</span>
-        </div>
-        <div class="rr-recs-hero__stat">
-          <span class="rr-recs-hero__stat-label">To downtown Rogers</span>
-          <span class="rr-recs-hero__stat-value">12 min</span>
-        </div>
-        <div class="rr-recs-hero__stat">
-          <span class="rr-recs-hero__stat-label">Day-trip region</span>
-          <span class="rr-recs-hero__stat-value">NWA</span>
-        </div>
-      </div>
-    </div>
-    <div class="rr-recs-hero__media">
-      <img [src]="heroImage" alt="Inside an A-frame cabin" loading="eager" />
-    </div>
-  </section>
+<section class="rr-section">
+  <h2>How we recommend exploring</h2>
+  <div class="rr-amenity-grid">
+    @for (tip of localTips; track tip.text) {
+      <article>
+        <h3>{{ tip.text }}</h3>
+        <p>{{ tip.detail }}</p>
+      </article>
+    }
+  </div>
+</section>
 
-  <section class="rr-recs-picks">
-    <div class="rr-recs-picks__head">
-      <div>
-        <div class="rr-recs-eyebrow">Six picks</div>
-        <h2 class="rr-recs-section-title">If you only do six things.</h2>
-      </div>
-      <span class="rr-recs-picks__note">Numbers match the map below</span>
-    </div>
-    <div class="rr-recs-picks__grid">
-      @for (pick of picks; track pick.number) {
-        <a
-          class="rr-recs-pick rr-recs-pick--{{ pick.variant }}"
-          [class.rr-recs-pick--large]="pick.large"
-          [href]="pick.websiteUrl"
-          target="_blank"
-          rel="noopener noreferrer"
-          [attr.aria-label]="'Visit ' + pick.title"
-        >
-          <div class="rr-recs-pick__meta">
-            <span class="rr-recs-pick__number">{{ pick.number }}</span>
-            <span class="rr-recs-pick__category">{{ pick.category }}</span>
-          </div>
-          @if (pick.minutes) {
-            <div class="rr-recs-pick__minutes">
-              {{ pick.minutes }}<span>min</span>
-            </div>
-          }
-          <h3 class="rr-recs-pick__title">{{ pick.title }}</h3>
-          <p class="rr-recs-pick__copy">{{ pick.description }}</p>
-          <span class="rr-recs-pick__link">Visit site ↗</span>
-        </a>
-      }
-    </div>
-  </section>
+<section class="rr-section">
+  <h2>Plan a day out</h2>
+  <div class="rr-steps">
+    @for (step of dayPlan; track step.title) {
+      <article class="rr-step">
+        <p class="rr-kicker">{{ step.label }}</p>
+        <h3>{{ step.title }}</h3>
+        <p>{{ step.description }}</p>
+      </article>
+    }
+  </div>
+</section>
 
-  <section class="rr-recs-tips">
-    <div class="rr-recs-tips__intro">
-      <div class="rr-recs-eyebrow">Local tips</div>
-      <h2 class="rr-recs-section-title">What we tell every guest.</h2>
-    </div>
-    <div class="rr-recs-tips__grid">
-      @for (tip of localTips; track tip.number) {
-        <div class="rr-recs-tips__item">
-          <span class="rr-recs-tips__number">{{ tip.number }}</span>
-          <p>{{ tip.text }}</p>
-        </div>
-      }
-    </div>
-  </section>
+<section class="rr-section">
+  <h2>Pick your vibe</h2>
+  <div class="rr-card-grid rr-card-grid--3">
+    @for (idea of tripIdeas; track idea.title) {
+      <a class="rr-pick" [href]="idea.websiteUrl" target="_blank" rel="noopener">
+        <img [src]="idea.imageUrl" [alt]="idea.title" style="width: 100%; height: 160px; object-fit: cover" />
+        <p class="rr-kicker">{{ idea.badge }}</p>
+        <h3>{{ idea.title }}</h3>
+        <p>{{ idea.subtitle }}</p>
+        <p>{{ idea.description }}</p>
+      </a>
+    }
+  </div>
+</section>
 
-  <section class="rr-recs-day-plan">
-    <img
-      class="rr-recs-day-plan__image"
-      [src]="dayPlanImage"
-      alt="Evening light on the property"
-      loading="lazy"
-    />
-    <div class="rr-recs-day-plan__overlay" aria-hidden="true"></div>
-    <div class="rr-recs-day-plan__content">
-      <div class="rr-recs-eyebrow rr-recs-eyebrow--on-dark">Plan a day</div>
-      <div class="rr-recs-day-plan__timeline">
-        @for (step of dayPlan; track step.period; let last = $last) {
-          <div class="rr-recs-day-plan__step">
-            <div class="rr-recs-day-plan__period">{{ step.period }}</div>
-            <div class="rr-recs-day-plan__title">{{ step.title }}</div>
-          </div>
-          @if (!last) {
-            <span class="rr-recs-day-plan__rule" aria-hidden="true"></span>
-          }
-        }
-      </div>
-    </div>
-  </section>
-
-  <section class="rr-recs-vibes">
-    <div class="rr-recs-eyebrow">Pick your vibe</div>
-    <div class="rr-recs-vibes__grid">
-      @for (vibe of tripVibes; track vibe.title) {
-        <div class="rr-recs-vibe rr-recs-vibe--{{ vibe.variant }}">
-          <h3>{{ vibe.title }}</h3>
-          <p>
-            @for (line of vibe.lines; track line; let last = $last) {
-              {{ line }}@if (!last) {<br />}
-            }
-          </p>
-        </div>
-      }
-    </div>
-  </section>
-
-  <section class="rr-recs-map">
-    <div class="rr-recs-map__frame">
-      <iframe
-        class="rr-recs-map__embed"
-        title="Rogers and Northwest Arkansas area map"
-        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d103532!2d-94.118!3d36.332!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2sRogers%2C%20AR!5e0!3m2!1sen!2sus!4v1234567890"
-        loading="lazy"
-        referrerpolicy="no-referrer-when-downgrade"
-      ></iframe>
-    </div>
-    <div class="rr-recs-map__legend">
-      <div class="rr-recs-eyebrow">Area map</div>
-      <h2 class="rr-recs-map__title">Rogers &amp; Northwest Arkansas</h2>
-      @for (item of mapLegend; track item.number) {
-        <div class="rr-recs-map__legend-row">
-          <span class="rr-recs-map__legend-pin">{{ item.number }}</span>
-          <span class="rr-recs-map__legend-name">{{ item.name }}</span>
-          @if (item.driveTime) {
-            <span class="rr-recs-map__legend-time">{{ item.driveTime }}</span>
-          }
-        </div>
-      }
-    </div>
-  </section>
-
-  <section class="rr-recs-cta">
-    <img class="rr-recs-cta__image" [src]="ctaImage" alt="Black Gum Getaway at dusk" loading="lazy" />
-    <div class="rr-recs-cta__overlay" aria-hidden="true"></div>
-    <div class="rr-recs-cta__content">
-      <h2>Come back to the woods at night.</h2>
-      <div class="rr-recs-cta__actions">
-        <a class="rr-cabins-btn rr-cabins-btn--primary" routerLink="/cabins">Book your stay</a>
-        <a class="rr-cabins-btn rr-cabins-btn--outline rr-recs-cta-outline" routerLink="/activities">
-          Browse activities
-        </a>
-      </div>
-    </div>
-  </section>
-</div>
+<section class="rr-section">
+  <h2>Explore the area</h2>
+  <app-map-embed />
+  <a class="rr-btn" routerLink="/cabins" style="margin-top: 24px">Book your stay</a>
+</section>

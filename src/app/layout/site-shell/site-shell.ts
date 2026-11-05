@@ -1,17 +1,14 @@
-import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
+import { ChangeDetectionStrategy, Component, input } from '@angular/core';
 
-import { MobileHeader } from '../mobile-header/mobile-header';
-import { MobileNav } from '../mobile-nav/mobile-nav';
 import { SiteFooter } from '../site-footer/site-footer';
 import { SiteHeader } from '../site-header/site-header';
 
 @Component({
   selector: 'app-site-shell',
-  imports: [RouterOutlet, SiteHeader, SiteFooter, MobileHeader, MobileNav],
-  templateUrl: './site-shell.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [SiteHeader, SiteFooter],
+  templateUrl: './site-shell.html',
 })
 export class SiteShell {
-  readonly menuOpen = signal(false);
+  readonly showChrome = input(true);
 }

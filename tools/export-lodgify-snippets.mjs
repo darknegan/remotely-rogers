@@ -26,10 +26,9 @@ const PASTE_BANNER =
 
 /** @type {{ route: string; file: string; host: string }[]} */
 const PAGES = [
-  { route: 'preview/activities', file: 'activities.html', host: 'app-activities' },
-  { route: 'preview/recommendations', file: 'recommendations.html', host: 'app-recommendations' },
-  { route: 'preview/work-stays', file: 'work-stays.html', host: 'app-work-stays' },
-  { route: 'preview/multi-cabin-stays', file: 'multi-cabin-stays.html', host: 'app-multi-cabin-stays' },
+  { route: 'activities', file: 'activities.html', host: 'app-activities' },
+  { route: 'recommendations', file: 'recommendations.html', host: 'app-recommendations' },
+  { route: 'work-stays', file: 'work-stays.html', host: 'app-work-stays' },
   { route: 'preview/reviews', file: 'reviews-home.html', host: 'app-reviews' },
 ];
 
@@ -124,15 +123,13 @@ function assertCompiledHtml(html, label) {
     { re: /<p-tag[\s>]/, name: 'p-tag' },
     { re: /<p-selectbutton[\s>]/, name: 'p-selectbutton' },
     { re: /\{\{/, name: '{{' },
-    { re: /<script[\s>]/, name: 'script (only allowed in activities, multi-cabin, reviews exports)' },
+    { re: /<script[\s>]/, name: 'script (only allowed in activities, reviews exports)' },
   ];
   const found = patterns.filter(({ re }) => re.test(html)).map(({ name }) => name);
   const scriptOnly =
     found.length === 1 && found[0].includes('script') && /script/i.test(found[0]);
   const allowsScript =
-    (label === 'activities.html' ||
-      label === 'multi-cabin-stays.html' ||
-      label === 'reviews-home.html') &&
+    (label === 'activities.html' || label === 'reviews-home.html') &&
     scriptOnly;
   if (found.length > 0 && !allowsScript) {
     throw new Error(
@@ -183,7 +180,6 @@ function exportSnippets() {
     const flatBody = inlineReviewAvatars(rewritePreviewLinks(flattenForLodgify(rawBody)));
     const html = wrapSnippet(flatBody, lodgifyCss, {
       withActivitiesFilter: entry.file === 'activities.html',
-      withBookingEmbedResize: entry.file === 'multi-cabin-stays.html',
       withReviewsCarousel: entry.file === 'reviews-home.html',
       homeContained: entry.file === 'reviews-home.html',
     });
@@ -202,6 +198,7 @@ function exportSnippets() {
   }
 
   const staleReviewFiles = [
+    'multi-cabin-stays.html',
     'cabin-reviews.html',
     'reviews-black-gum.html',
     'reviews-dogwood.html',
@@ -227,7 +224,6 @@ function exportSnippets() {
       '  dist/lodgify-snippets/activities.html',
       '  dist/lodgify-snippets/recommendations.html',
       '  dist/lodgify-snippets/work-stays.html',
-      '  dist/lodgify-snippets/multi-cabin-stays.html',
       '',
       'Guest reviews — paste onto the Home page Raw HTML widget:',
       '  dist/lodgify-snippets/reviews-home.html',
@@ -248,14 +244,7 @@ function exportSnippets() {
       '  Activities        → activities.html',
       '  Recommendations   → recommendations.html',
       '  Work Stays        → work-stays.html',
-      '  Multi-Cabin Stays → multi-cabin-stays.html',
       '  Home              → reviews-home.html',
-      '',
-      'Multi-Cabin Stays calendar:',
-      '  The snippet embeds the interactive calendar via iframe.',
-      '  Deploy this Angular app first (ng build), then host dist/remotely-rogers/browser',
-      '  at a public URL and set GROUP_BOOKING_EMBED_URL before export, e.g.:',
-      '    GROUP_BOOKING_EMBED_URL=https://booking.remotelyrogers.com/group-booking npm run export:lodgify-snippets',
       '',
     ].join('\n'),
     'utf8',

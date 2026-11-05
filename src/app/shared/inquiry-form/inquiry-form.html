@@ -1,0 +1,63 @@
+@if (sent()) {
+  <p-message severity="success" text="Message received. Jeff will write back shortly." />
+} @else {
+  <form class="rr-form" [formGroup]="form" (ngSubmit)="submit()">
+    <label>
+      Email
+      <input pInputText type="email" formControlName="email" autocomplete="email" />
+    </label>
+    @if (form.controls.email.touched && form.controls.email.invalid) {
+      <p class="rr-error">Enter a valid email.</p>
+    }
+    <label>
+      First name
+      <input pInputText formControlName="firstName" autocomplete="given-name" />
+    </label>
+    @if (form.controls.firstName.touched && form.controls.firstName.invalid) {
+      <p class="rr-error">First name is required.</p>
+    }
+    <label>
+      Last name
+      <input pInputText formControlName="lastName" autocomplete="family-name" />
+    </label>
+    @if (form.controls.lastName.touched && form.controls.lastName.invalid) {
+      <p class="rr-error">Last name is required.</p>
+    }
+    <label>
+      Phone
+      <input pInputText type="tel" formControlName="phone" autocomplete="tel" />
+    </label>
+    @if (variant() === 'work') {
+      <label>
+        Guests
+        <input pInputText type="number" formControlName="guests" min="1" max="4" />
+      </label>
+      <label>
+        Check-in
+        <p-datepicker formControlName="checkIn" dateFormat="M d, yy" appendTo="body" />
+      </label>
+      <label>
+        Check-out
+        <p-datepicker formControlName="checkOut" dateFormat="M d, yy" appendTo="body" />
+      </label>
+    } @else {
+      <label>
+        Date
+        <p-datepicker formControlName="date" dateFormat="M d, yy" appendTo="body" />
+      </label>
+      <label>
+        Time
+        <p-select [options]="times" formControlName="time" optionLabel="label" optionValue="value" placeholder="Time window" appendTo="body" />
+      </label>
+    }
+    <label>
+      Which rental
+      <p-select [options]="cabins" formControlName="rental" optionLabel="label" optionValue="value" placeholder="Choose a cabin" appendTo="body" />
+    </label>
+    <label>
+      {{ variant() === 'work' ? 'Comment' : 'Notes' }}
+      <textarea pTextarea rows="4" formControlName="notes"></textarea>
+    </label>
+    <p-button type="submit" label="Send" />
+  </form>
+}

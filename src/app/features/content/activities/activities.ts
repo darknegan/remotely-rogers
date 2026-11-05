@@ -1,103 +1,78 @@
-import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
-import { Title } from '@angular/platform-browser';
+import { ChangeDetectionStrategy, Component, computed, signal } from '@angular/core';
+import { FormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
+import { SelectButton } from 'primeng/selectbutton';
 
-import { scrollPageToTop } from '../../../core/scroll/viewport-scroll';
 import {
-  ACTIVITY_CULTURE_IMAGE,
-  ACTIVITY_EMPTY_IMAGE,
-  ACTIVITY_HERO_IMAGE,
   ADVENTURE_DAY,
-  CATEGORY_OPTIONS,
   CULTURE_SPOTS,
   DINING_SPOTS,
   FEATURED_ACTIVITIES,
   OUTDOOR_SPOTS,
-  TRAIL_SPOTS,
-  ActivityCategory,
-  FeaturedActivity,
-  filterCulture,
-  filterFeatured,
-  filterSummary,
-  hasVisibleContent,
-  isBikingFilter,
-  showCultureSection,
-  showDiningSection,
-  showFeaturedGrid,
-  showOutdoorSection,
-  showTrailsBand,
-  showTrailsCards,
+  TRAILS,
 } from './activities.data';
 
 @Component({
   selector: 'app-activities',
-  imports: [RouterLink],
-  templateUrl: './activities.html',
-  styleUrl: './activities.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [FormsModule, RouterLink, SelectButton],
+  templateUrl: './activities.html',
 })
 export class Activities {
-  private readonly title = inject(Title);
+  readonly categoryOptions = [
+    { label: 'All', value: 'All' },
+    { label: 'Outdoor', value: 'Outdoor' },
+    { label: 'Biking', value: 'Biking' },
+    { label: 'History', value: 'History' },
+    { label: 'Dining', value: 'Dining' },
+    { label: 'Nightlife', value: 'Nightlife' },
+    { label: 'Weekend', value: 'Weekend trips' },
+  ];
 
-  protected readonly categoryOptions = CATEGORY_OPTIONS;
-  protected readonly featured = FEATURED_ACTIVITIES;
-  protected readonly outdoorSpots = OUTDOOR_SPOTS;
-  protected readonly trails = TRAIL_SPOTS;
-  protected readonly cultureSpots = CULTURE_SPOTS;
-  protected readonly diningSpots = DINING_SPOTS;
-  protected readonly adventureDay = ADVENTURE_DAY;
-  protected readonly heroImage = ACTIVITY_HERO_IMAGE;
-  protected readonly cultureImage = ACTIVITY_CULTURE_IMAGE;
-  protected readonly emptyImage = ACTIVITY_EMPTY_IMAGE;
+  readonly selectedCategory = signal('All');
 
-  protected readonly selectedCategory = signal<ActivityCategory>('All');
+  readonly featured = FEATURED_ACTIVITIES;
+  readonly outdoorSpots = OUTDOOR_SPOTS;
+  readonly adventureDay = ADVENTURE_DAY;
+  readonly trails = TRAILS;
+  readonly cultureSpots = CULTURE_SPOTS;
+  readonly diningSpots = DINING_SPOTS;
 
-  protected readonly filteredFeatured = computed(() =>
-    filterFeatured(this.selectedCategory()),
-  );
-
-  protected readonly filteredCulture = computed(() =>
-    filterCulture(this.selectedCategory()),
-  );
-
-  protected readonly isAllView = computed(() => this.selectedCategory() === 'All');
-  protected readonly isEmptyFilter = computed(
-    () => !hasVisibleContent(this.selectedCategory()) && !this.isAllView(),
-  );
-  protected readonly filterSummaryLabel = computed(() =>
-    filterSummary(this.selectedCategory()),
-  );
-  protected readonly showOutdoor = computed(() => showOutdoorSection(this.selectedCategory()));
-  protected readonly showTrailsBandSection = computed(() =>
-    showTrailsBand(this.selectedCategory()),
-  );
-  protected readonly showTrailsCardGrid = computed(() =>
-    showTrailsCards(this.selectedCategory()),
-  );
-  protected readonly showCulture = computed(() =>
-    showCultureSection(this.selectedCategory()),
-  );
-  protected readonly showDining = computed(() => showDiningSection(this.selectedCategory()));
-  protected readonly showFeaturedLayout = computed(() =>
-    showFeaturedGrid(this.selectedCategory()),
-  );
-  protected readonly bikingFilter = computed(() => isBikingFilter(this.selectedCategory()));
-
-  constructor() {
-    this.title.setTitle('Remotely Rogers — Activities');
+  private matchesCategory(categories: string[]): boolean {
+    const selected = this.selectedCategory();
+    if (selected === 'All') {
+      return true;
+    }
+    if (selected === 'Weekend trips') {
+      return false;
+    }
+    return categories.includes(selected);
   }
 
-  protected selectCategory(category: ActivityCategory): void {
-    this.selectedCategory.set(category);
-    scrollPageToTop();
-  }
+  readonly filteredFeatured = computed(() =>
+    this.featured.filter((item) => this.matchesCategory(item.categories)),
+  );
 
-  protected showAll(): void {
+  readonly showOutdoorSection = computed(() => this.matchesCategory(['Outdoor']));
+
+  readonly showBikingSection = computed(() => this.matchesCategory(['Biking']));
+
+  readonly filteredCultureSpots = computed(() =>
+    this.cultureSpots.filter((spot) => this.matchesCategory(spot.categories)),
+  );
+
+  readonly showDiningSection = computed(() => this.matchesCategory(['Dining']));
+
+  readonly hasVisibleContent = computed(
+    () =>
+      this.filteredFeatured().length > 0 ||
+      this.showOutdoorSection() ||
+      this.showBikingSection() ||
+      this.filteredCultureSpots().length > 0 ||
+      this.showDiningSection(),
+  );
+
+  showAll(): void {
     this.selectedCategory.set('All');
-    scrollPageToTop();
-  }
-
-  protected isFeaturedLarge(item: FeaturedActivity): boolean {
-    return !!item.large && this.showFeaturedLayout();
   }
 }
