@@ -205,7 +205,7 @@
   @if (showBookedStrip()) {
     <aside class="rr-cabins-v2__booked" aria-label="Cabins booked for these nights">
       <span class="rr-cabins-v2__booked-label">Booked these nights</span>
-      <div class="rr-cabins-v2__booked-list">
+      <div class="rr-cabins-v2__booked-list" tabindex="0" aria-label="Booked cabins — scroll horizontally for more">
         @for (row of bookedRows(); track row.cabin.id) {
           <a class="rr-cabins-v2__booked-item" [routerLink]="['/cabins', row.cabin.slug]">
             <img [src]="row.cabin.imageUrl" [alt]="row.cabin.name" width="52" height="40" />
