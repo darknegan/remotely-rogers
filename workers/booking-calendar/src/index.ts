@@ -18,12 +18,20 @@ interface Env {
 const FRAME_ANCESTORS =
   "frame-ancestors 'self' https://remotelyrogers.com https://*.remotelyrogers.com http://localhost:*";
 
-function corsHeaders(request: Request): Record<string, string> {
-  const origin = request.headers.get('Origin') ?? '';
-  const allowed =
+const SITE_WORKER_ORIGIN = 'https://remotely-rogers-web.drakedavisdev.workers.dev';
+
+function isAllowedBrowserOrigin(origin: string): boolean {
+  return (
     origin === 'https://remotelyrogers.com' ||
     origin === 'https://www.remotelyrogers.com' ||
-    /^http:\/\/localhost:\d+$/.test(origin);
+    origin === SITE_WORKER_ORIGIN ||
+    /^http:\/\/localhost:\d+$/.test(origin)
+  );
+}
+
+function corsHeaders(request: Request): Record<string, string> {
+  const origin = request.headers.get('Origin') ?? '';
+  const allowed = isAllowedBrowserOrigin(origin);
 
   return {
     'Access-Control-Allow-Origin': allowed ? origin : 'https://remotelyrogers.com',
@@ -55,7 +63,7 @@ function json(request: Request, body: unknown, status = 200): Response {
 
 function requestOrigin(request: Request): string {
   const origin = request.headers.get('Origin');
-  if (origin && /^https:\/\/(www\.)?remotelyrogers\.com$|^http:\/\/localhost:\d+$/.test(origin)) {
+  if (origin && isAllowedBrowserOrigin(origin)) {
     return origin;
   }
 
