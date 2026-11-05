@@ -624,6 +624,9 @@ a {
 
 .rr-cabins-v2 {
   background: var(--rr-limestone);
+  min-width: 0;
+  max-width: 100%;
+  overflow-x: clip;
 }
 
 .rr-cabins-v2__hero {
@@ -1027,6 +1030,7 @@ a {
   scrollbar-width: thin;
   scrollbar-color: rgba(62, 44, 34, 0.45) rgba(62, 44, 34, 0.08);
   padding-bottom: 6px;
+  touch-action: pan-x;
 }
 
 .rr-cabins-v2__booked-list::-webkit-scrollbar {
@@ -1106,6 +1110,11 @@ a {
 .rr-cabins-v2__booked-jump {
   grid-column: 3;
   justify-self: end;
+  flex-shrink: 0;
+  position: relative;
+  z-index: 1;
+  padding-left: 8px;
+  background: linear-gradient(90deg, rgba(233, 226, 214, 0) 0%, #e9e2d6 28%);
   font-size: 11.5px;
   font-weight: 600;
   letter-spacing: 0.14em;
@@ -1211,6 +1220,16 @@ a {
 
 .rr-cabins-v2__group-calendar-slot {
   min-height: 1px;
+  min-width: 0;
+  max-width: 100%;
+  overflow-x: clip;
+}
+
+.rr-cabins-v2__group-calendar-slot app-cabin-grid,
+.rr-cabins-v2__group-calendar-slot app-cart-summary {
+  display: block;
+  min-width: 0;
+  max-width: 100%;
 }
 
 .rr-cabins-v2__location {

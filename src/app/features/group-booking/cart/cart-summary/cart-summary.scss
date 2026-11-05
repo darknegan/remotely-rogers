@@ -1,5 +1,7 @@
 :host {
   display: block;
+  max-width: 100%;
+  min-width: 0;
 }
 
 .rr-cart {
@@ -8,6 +10,9 @@
   border-radius: var(--rr-radius);
   background: var(--rr-white);
   box-shadow: var(--rr-shadow);
+  max-width: 100%;
+  box-sizing: border-box;
+  overflow-wrap: anywhere;
 }
 
 .rr-cart h3 {
@@ -24,6 +29,7 @@
   font-size: 0.9375rem;
   line-height: 1.55;
   color: var(--rr-sage);
+  overflow-wrap: anywhere;
 }
 
 .rr-cart__list {
@@ -96,7 +102,9 @@
 
 .rr-cart__checkout {
   width: 100%;
+  max-width: 100%;
   margin-top: 1rem;
+  box-sizing: border-box;
 }
 
 .rr-cart__note {
