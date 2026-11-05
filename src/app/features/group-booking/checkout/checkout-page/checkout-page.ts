@@ -23,7 +23,7 @@ export class CheckoutPage {
 
   constructor() {
     afterNextRender(() => {
-      if (this.state.cartItems().length === 0) {
+      if (!this.state.canCheckout()) {
         void this.router.navigate(['/group-booking'], { queryParamsHandling: 'preserve' });
       }
     });
