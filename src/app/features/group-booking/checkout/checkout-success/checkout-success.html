@@ -1,20 +1,42 @@
 <div class="rr-checkout-success" [class.rr-checkout-success--embed]="embedMode()">
   <header class="rr-checkout-success__header">
-    <h2>Booking started</h2>
+    <h2>Checkout submitted</h2>
     <p>
-      Complete payment on Bookingmood if prompted. Your confirmation reference is saved below — we
-      do not treat redirect alone as payment success.
+      A booking reference alone does not mean payment succeeded or the stay is confirmed. Status
+      below comes from webhook-verified state when available.
     </p>
   </header>
 
-  @if (bookingState.checkoutError(); as checkoutError) {
-    <p-message severity="error" [text]="checkoutError" styleClass="rr-checkout-success__message" />
+  @if (bookingState.checkoutLoading()) {
+    <p>Loading booking status…</p>
+  } @else if (bookingState.checkoutError(); as checkoutError) {
+    <p-message severity="warn" [text]="checkoutError" styleClass="rr-checkout-success__message" />
   }
 
   @if (bookingState.checkoutReference(); as reference) {
     <p class="rr-checkout-success__reference">Reference <strong>{{ reference }}</strong></p>
-    <div class="rr-checkout-success__widget">
-      <app-cart-summary mode="result" />
-    </div>
+
+    @if (bookingState.bookingStatus(); as status) {
+      <ul class="rr-checkout-success__status">
+        <li>
+          Payment recorded (webhook):
+          {{ status.paymentRecorded ? 'Yes' : 'Not yet' }}
+        </li>
+        <li>
+          Booking confirmed (calendar):
+          {{ status.bookingConfirmed ? 'Yes' : 'Not yet' }}
+        </li>
+        @if (status.cancelled) {
+          <li>This booking was cancelled.</li>
+        }
+        @if (!status.verified) {
+          <li>Status is unverified — wait for Bookingmood webhooks or contact the host.</li>
+        }
+      </ul>
+    }
   }
+
+  <div class="rr-checkout-success__widget">
+    <app-cart-summary mode="result" />
+  </div>
 </div>

@@ -8,6 +8,8 @@ export interface BookingWorkerEnv {
   BOOKINGMOOD_CAPACITY_GROUP_ID?: string;
   BOOKINGMOOD_FORM_SERVICES?: string;
   BOOKINGMOOD_BOOKING_ENABLED?: string;
+  BOOKING_STATE?: KVNamespace;
+  BOOKING_COORDINATOR?: DurableObjectNamespace;
 }
 
 export interface ResolvedCabinProduct {
@@ -86,12 +88,20 @@ export function hasBookingmoodApiKey(env: BookingWorkerEnv): boolean {
   return !!env.BOOKINGMOOD_API_KEY?.trim();
 }
 
+export function hasDurableBookingStorage(env: BookingWorkerEnv): boolean {
+  return !!env.BOOKING_STATE && !!env.BOOKING_COORDINATOR;
+}
+
 export function isBookingWriteEnabled(env: BookingWorkerEnv): boolean {
   if (env.BOOKINGMOOD_BOOKING_ENABLED?.trim().toLowerCase() === 'false') {
     return false;
   }
 
   if (!hasBookingmoodApiKey(env)) {
+    return false;
+  }
+
+  if (!hasDurableBookingStorage(env)) {
     return false;
   }
 

@@ -9,6 +9,7 @@ import {
   CabinConfig,
   CabinSelection,
   DateRange,
+  BookingStatusResponse,
   GuestDetails,
 } from '../../core/models/booking.models';
 import {
@@ -60,6 +61,7 @@ export class BookingStateService {
   readonly checkoutLoading = signal(false);
   readonly checkoutError = signal<string | null>(null);
   readonly checkoutReference = signal<string | null>(null);
+  readonly bookingStatus = signal<BookingStatusResponse | null>(null);
   readonly nextOpenLabels = signal<Record<number, string>>({});
   /** Stay dates from the cabins listing bar (checkout-exclusive). */
   readonly listingStayRange = signal<DateRange | null>(null);
@@ -490,9 +492,22 @@ export class BookingStateService {
     }
 
     this.checkoutReference.set(reference);
-    for (const item of this.cartItems()) {
-      this.clearCabinSelection(item.cabin.id);
-    }
+    this.bookingStatus.set(null);
+    this.checkoutLoading.set(true);
+    this.checkoutError.set(null);
+
+    this.api.getBookingStatus(reference).subscribe({
+      next: (status) => {
+        this.bookingStatus.set(status);
+        this.checkoutLoading.set(false);
+      },
+      error: () => {
+        this.checkoutLoading.set(false);
+        this.checkoutError.set(
+          'We could not verify this booking yet. Payment and confirmation are only shown after webhook-verified status is available.',
+        );
+      },
+    });
   }
 
   startNewBooking(): void {

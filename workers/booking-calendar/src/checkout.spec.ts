@@ -1,23 +1,22 @@
-import { beforeAll, describe, expect, it, vi } from 'vitest';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { createBookingCheckout } from './checkout';
 import { BookingmoodClient } from './bookingmood-client';
 
-const cacheStore = new Map<string, Response>();
+vi.mock('./booking-coordinator', () => ({
+  claimCheckoutIdempotency: vi.fn(),
+  completeCheckoutIdempotency: vi.fn(),
+  indeterminateCheckoutIdempotency: vi.fn(),
+}));
 
-beforeAll(() => {
-  const cache = {
-    match: (request: Request) => Promise.resolve(cacheStore.get(request.url)),
-    put: (request: Request, response: Response) => {
-      cacheStore.set(request.url, response);
-      return Promise.resolve();
-    },
-  };
+vi.mock('./booking-state-store', () => ({
+  seedCheckoutReferenceStatus: vi.fn(),
+}));
 
-  (globalThis as typeof globalThis & { caches: CacheStorage }).caches = {
-    default: cache as unknown as Cache,
-  } as CacheStorage;
-});
+import {
+  claimCheckoutIdempotency,
+  completeCheckoutIdempotency,
+} from './booking-coordinator';
 
 const PRODUCT = '11111111-1111-4111-8111-111111111111';
 const CAPACITY = '22222222-2222-4222-8222-222222222222';
@@ -25,6 +24,8 @@ const SERVICE = '33333333-3333-4333-8333-333333333333';
 
 const env = {
   ASSETS: {} as Fetcher,
+  BOOKING_STATE: {} as KVNamespace,
+  BOOKING_COORDINATOR: {} as DurableObjectNamespace,
   BOOKINGMOOD_API_KEY: 'test',
   BOOKINGMOOD_PRODUCT_MAP: JSON.stringify({ 1: PRODUCT }),
   BOOKINGMOOD_CAPACITY_GROUP_ID: CAPACITY,
@@ -37,6 +38,11 @@ const env = {
 };
 
 describe('createBookingCheckout', () => {
+  beforeEach(() => {
+    vi.mocked(claimCheckoutIdempotency).mockResolvedValue({ status: 'claimed', fingerprint: 'fp' });
+    vi.mocked(completeCheckoutIdempotency).mockResolvedValue(true);
+  });
+
   it('rejects invalid cart after validate', async () => {
     const client = {
       getAvailability: vi.fn().mockResolvedValue([
@@ -72,7 +78,7 @@ describe('createBookingCheckout', () => {
     ).rejects.toMatchObject({ status: 409 });
   });
 
-  it('returns payment url from cart-checkout', async () => {
+  it('returns allowlisted https payment url from cart-checkout', async () => {
     const client = {
       getAvailability: vi.fn().mockResolvedValue([
         {
@@ -94,7 +100,7 @@ describe('createBookingCheckout', () => {
       cartCheckout: vi.fn().mockResolvedValue({
         booking_id: 'booking-1',
         reference: 'REF123',
-        payment_url: 'https://pay.example/abc',
+        payment_url: 'https://www.bookingmood.com/pay/abc',
       }),
     } as unknown as BookingmoodClient;
 
@@ -109,7 +115,7 @@ describe('createBookingCheckout', () => {
       'https://example.com',
     );
 
-    expect(result.paymentUrl).toBe('https://pay.example/abc');
+    expect(result.paymentUrl).toBe('https://www.bookingmood.com/pay/abc');
     expect(result.reference).toBe('REF123');
   });
 });

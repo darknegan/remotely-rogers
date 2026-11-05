@@ -86,4 +86,4 @@ In Cursor chat, ask: *"List PrimeNG form components"* — the agent should call 
 ## Related docs
 
 - [ANGULAR-21-IMPLEMENTATION-PLAN.md](ANGULAR-21-IMPLEMENTATION-PLAN.md) — app architecture
-- [lodgify-mcp-setup.md](lodgify-mcp-setup.md) — optional Lodgify API MCP
+- [legacy hosted builder-mcp-setup.md](legacy hosted builder-mcp-setup.md) — optional legacy hosted builder API MCP

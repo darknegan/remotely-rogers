@@ -16,6 +16,7 @@ import {
   isStayAvailable,
   mapAvailabilityRowsToDays,
 } from './bookingmood-interval-map';
+import { mapPublicProducts } from './public-product-dto';
 
 export interface AvailabilityRequest {
   arrival: string;
@@ -163,16 +164,18 @@ export async function isCabinRangeAvailable(
   return isStayAvailable(days, arrival, departure);
 }
 
+
 export async function listPublicProducts(
   client: BookingmoodClient,
   env: BookingWorkerEnv,
-): Promise<unknown[]> {
+) {
   const ids = allowlistedProductIds(env);
   if (ids.length === 0) {
     return [];
   }
 
-  return client.listProducts(PRODUCT_SELECT, ids);
+  const rows = await client.listProducts(PRODUCT_SELECT, ids);
+  return mapPublicProducts(rows);
 }
 
 export function cabinCatalogMeta(): typeof CABIN_CONFIG {

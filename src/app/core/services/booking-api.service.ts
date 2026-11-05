@@ -3,11 +3,11 @@ import { Injectable, inject } from '@angular/core';
 import { Observable, delay, of } from 'rxjs';
 
 import {
-  AvailabilityApiResponse,
   AvailabilityRequest,
   AvailabilityResponse,
   BookingCheckoutResponse,
   BookingConfig,
+  BookingStatusResponse,
   CabinAvailability,
   DayRate,
   DayStatus,
@@ -30,10 +30,16 @@ export class BookingApiService {
       return of(this.buildMockAvailability(request)).pipe(delay(450));
     }
 
-    return this.http.post<AvailabilityApiResponse>(
+    return this.http.post<AvailabilityResponse>(
       `${environment.apiBaseUrl}/api/availability`,
       request,
     );
+  }
+
+  getBookingStatus(reference: string): Observable<BookingStatusResponse> {
+    return this.http.get<BookingStatusResponse>(`${environment.apiBaseUrl}/api/booking/status`, {
+      params: { reference },
+    });
   }
 
   createCheckout(request: GroupCheckoutRequest): Observable<BookingCheckoutResponse> {

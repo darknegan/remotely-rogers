@@ -1,31 +1,59 @@
 import { HttpError } from './bookingmood-client';
+import {
+  BookingStateKvEnv,
+  isWebhookEventProcessed,
+  markWebhookEventProcessed,
+  mergePublicBookingStatus,
+} from './booking-state-store';
 
 const WEBHOOK_MAX_AGE_MS = 5 * 60 * 1000;
+const WEBHOOK_MAX_BODY_BYTES = 256 * 1024;
+
+export interface BookingmoodWebhookEvent {
+  id: string;
+  date: number;
+  event_type: string;
+  payload: {
+    new?: Record<string, unknown>;
+    old?: Record<string, unknown>;
+  };
+}
 
 export interface WebhookHandleResult {
   ok: boolean;
   duplicate?: boolean;
   ignored?: boolean;
+  eventType?: string;
 }
 
 export async function handleBookingmoodWebhook(
   request: Request,
   signingSecret: string | undefined,
+  env: BookingStateKvEnv,
 ): Promise<WebhookHandleResult> {
   const secret = signingSecret?.trim();
   if (!secret) {
     throw new HttpError(503, 'BOOKINGMOOD_WEBHOOK_SIGNING_SECRET is not configured.');
   }
 
-  if (request.headers.get('X-Signature')) {
-    throw new HttpError(400, 'Legacy X-Signature webhooks are not supported.');
+  if (!env.BOOKING_STATE) {
+    throw new HttpError(503, 'BOOKING_STATE KV binding is not configured for webhook processing.');
   }
 
   const webhookId = request.headers.get('webhook-id') ?? '';
   const timestamp = request.headers.get('webhook-timestamp') ?? '';
   const signatureHeader = request.headers.get('webhook-signature') ?? '';
+  const legacySignature = request.headers.get('X-Signature');
 
-  if (!webhookId || !timestamp || !signatureHeader) {
+  const hasStandard = !!(webhookId && timestamp && signatureHeader);
+
+  if (!hasStandard) {
+    if (legacySignature) {
+      throw new HttpError(
+        400,
+        'Legacy X-Signature alone is not supported. Configure Standard Webhooks headers.',
+      );
+    }
     throw new HttpError(400, 'Missing Standard Webhooks headers.');
   }
 
@@ -35,6 +63,10 @@ export async function handleBookingmoodWebhook(
   }
 
   const rawBody = await request.text();
+  if (rawBody.length > WEBHOOK_MAX_BODY_BYTES) {
+    throw new HttpError(413, 'Webhook payload is too large.');
+  }
+
   const valid = await verifyStandardWebhookSignature({
     secret,
     webhookId,
@@ -47,24 +79,68 @@ export async function handleBookingmoodWebhook(
     throw new HttpError(400, 'Invalid webhook signature.');
   }
 
-  if (await isDuplicateWebhook(webhookId)) {
-    return { ok: true, duplicate: true };
-  }
-
-  let payload: { type?: string };
+  let event: BookingmoodWebhookEvent;
   try {
-    payload = JSON.parse(rawBody) as { type?: string };
+    event = JSON.parse(rawBody) as BookingmoodWebhookEvent;
   } catch {
     throw new HttpError(400, 'Webhook body must be JSON.');
   }
 
-  const type = payload.type ?? '';
-  if (!type.startsWith('payments.') && !type.startsWith('bookings.')) {
-    return { ok: true, ignored: true };
+  if (!event.id || !event.event_type) {
+    throw new HttpError(400, 'Webhook event is missing id or event_type.');
   }
 
-  await rememberWebhook(webhookId);
-  return { ok: true };
+  const dedupeId = event.id || webhookId;
+  if (await isWebhookEventProcessed(env, dedupeId)) {
+    return { ok: true, duplicate: true, eventType: event.event_type };
+  }
+
+  const handled = await dispatchWebhookEvent(env, event);
+  await markWebhookEventProcessed(env, dedupeId);
+
+  return handled;
+}
+
+async function dispatchWebhookEvent(
+  env: BookingStateKvEnv,
+  event: BookingmoodWebhookEvent,
+): Promise<WebhookHandleResult> {
+  const reference = extractReference(event.payload?.new);
+  switch (event.event_type) {
+    case 'payments.paid':
+      if (reference) {
+        await mergePublicBookingStatus(env, reference, { paymentRecorded: true });
+      }
+      return { ok: true, eventType: event.event_type };
+
+    case 'calendar_events.confirmed':
+      if (reference) {
+        await mergePublicBookingStatus(env, reference, { bookingConfirmed: true });
+      }
+      return { ok: true, eventType: event.event_type };
+
+    case 'calendar_events.cancelled':
+      if (reference) {
+        await mergePublicBookingStatus(env, reference, { cancelled: true });
+      }
+      return { ok: true, eventType: event.event_type };
+
+    default:
+      return { ok: true, ignored: true, eventType: event.event_type };
+  }
+}
+
+function extractReference(payload: Record<string, unknown> | undefined): string | null {
+  if (!payload) {
+    return null;
+  }
+
+  const reference = payload['reference'];
+  if (typeof reference === 'string' && reference.trim()) {
+    return reference.trim();
+  }
+
+  return null;
 }
 
 async function verifyStandardWebhookSignature(input: {
@@ -118,24 +194,4 @@ function timingSafeEqual(a: string, b: string): boolean {
     result |= a.charCodeAt(i) ^ b.charCodeAt(i);
   }
   return result === 0;
-}
-
-async function isDuplicateWebhook(webhookId: string): Promise<boolean> {
-  const cache = caches.default;
-  const hit = await cache.match(webhookCacheRequest(webhookId));
-  return !!hit;
-}
-
-async function rememberWebhook(webhookId: string): Promise<void> {
-  const cache = caches.default;
-  await cache.put(
-    webhookCacheRequest(webhookId),
-    new Response('1', { headers: { 'Cache-Control': 'max-age=2592000' } }),
-  );
-}
-
-function webhookCacheRequest(webhookId: string): Request {
-  return new Request(`https://bookingmood-webhook.internal/${encodeURIComponent(webhookId)}`, {
-    method: 'GET',
-  });
 }

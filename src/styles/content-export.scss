@@ -1,6 +1,6 @@
-/* Self-contained styles for Lodgify Raw HTML widgets — plain div markup only */
+/* Self-contained styles for Hosted HTML Raw HTML widgets — plain div markup only */
 
-.rr-lodgify-root {
+.rr-content-export-root {
   font-family: Georgia, 'Times New Roman', serif;
   color: #3d3d3d;
   background: #f7f4ef;
@@ -16,7 +16,7 @@
   overflow-x: clip;
 }
 
-.rr-lodgify-root--home {
+.rr-content-export-root--home {
   width: 100%;
   max-width: none;
   margin-left: 0;
@@ -24,9 +24,9 @@
   padding: 0;
 }
 
-.rr-lodgify-root *,
-.rr-lodgify-root *::before,
-.rr-lodgify-root *::after {
+.rr-content-export-root *,
+.rr-content-export-root *::before,
+.rr-content-export-root *::after {
   box-sizing: border-box;
 }
 
@@ -895,57 +895,57 @@ button.rr-chip {
 }
 
 #rr-cabin-reviews .rr-content-section__head,
-.rr-lodgify-root #rr-cabin-reviews .rr-content-section__head {
+.rr-content-export-root #rr-cabin-reviews .rr-content-section__head {
   margin-bottom: 0 !important;
 }
 
 #rr-cabin-reviews .rr-content-section__head p,
-.rr-lodgify-root #rr-cabin-reviews .rr-content-section__head p {
+.rr-content-export-root #rr-cabin-reviews .rr-content-section__head p {
   margin: 0 !important;
 }
 
 #rr-cabin-reviews .rr-content-wrap,
-.rr-lodgify-root #rr-cabin-reviews .rr-content-wrap {
+.rr-content-export-root #rr-cabin-reviews .rr-content-wrap {
   padding-top: 0 !important;
   padding-bottom: 1.5rem !important;
 }
 
 #rr-cabin-reviews .rr-reviews-head,
-.rr-lodgify-root #rr-cabin-reviews .rr-reviews-head {
+.rr-content-export-root #rr-cabin-reviews .rr-reviews-head {
   margin: 0 !important;
   padding: 0 0 2.5rem !important;
 }
 
 #rr-cabin-reviews .rr-reviews-title,
-.rr-lodgify-root #rr-cabin-reviews .rr-reviews-title {
+.rr-content-export-root #rr-cabin-reviews .rr-reviews-title {
   margin: 0 !important;
 }
 
 #rr-cabin-reviews .rr-reviews-title::after,
-.rr-lodgify-root #rr-cabin-reviews .rr-reviews-title::after {
+.rr-content-export-root #rr-cabin-reviews .rr-reviews-title::after {
   margin-top: 0.85rem !important;
 }
 
 #rr-cabin-reviews .rr-reviews-lede,
-.rr-lodgify-root #rr-cabin-reviews .rr-reviews-lede {
+.rr-content-export-root #rr-cabin-reviews .rr-reviews-lede {
   margin: 0 !important;
   padding: 1.75rem 0 0 !important;
 }
 
 #rr-cabin-reviews .rr-review-gallery,
-.rr-lodgify-root #rr-cabin-reviews .rr-review-gallery {
+.rr-content-export-root #rr-cabin-reviews .rr-review-gallery {
   display: block !important;
   margin: 0 !important;
   padding: 0 !important;
 }
 
 #rr-cabin-reviews .rr-review-band,
-.rr-lodgify-root #rr-cabin-reviews .rr-review-band {
+.rr-content-export-root #rr-cabin-reviews .rr-review-band {
   margin: 0 0 2.5rem !important;
 }
 
 #rr-cabin-reviews .rr-review-band:last-child,
-.rr-lodgify-root #rr-cabin-reviews .rr-review-band:last-child {
+.rr-content-export-root #rr-cabin-reviews .rr-review-band:last-child {
   margin-bottom: 0 !important;
 }
 

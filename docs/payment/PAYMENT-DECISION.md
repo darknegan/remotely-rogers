@@ -4,12 +4,12 @@
 
 **Unified group cart in Angular** → **booking Worker BFF** → **Bookingmood `cart-validate` + `cart-checkout`**.
 
-Guests pay through Bookingmood when `payment_url` is returned. The Worker does not run a parallel Stripe charge or create legacy Lodgify reservations.
+Guests pay through Bookingmood when `payment_url` is returned. The Worker does not run a parallel Stripe charge or create legacy legacy hosted builder reservations.
 
 ## Retired paths
 
-- Stripe Checkout session + Lodgify `createBookedBooking` fulfillment (`410` on `/api/checkout/session` and `/api/stripe/webhook`).
-- Sequential per-cabin Lodgify property checkout links.
+- Stripe Checkout session + legacy hosted builder `createBookedBooking` fulfillment (`410` on `/api/checkout/session` and `/api/stripe/webhook`).
+- Sequential per-cabin legacy hosted builder property checkout links.
 
 ## Configuration
 

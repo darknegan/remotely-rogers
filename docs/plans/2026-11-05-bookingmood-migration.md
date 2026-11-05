@@ -2,15 +2,15 @@
 
 ## Goal
 
-Replace Lodgify as the reservation upstream with [Bookingmood REST API](https://www.bookingmood.com/en-US/api-reference) while keeping the existing Angular group calendar UI and Cloudflare booking Worker BFF.
+Replace legacy hosted builder as the reservation upstream with [Bookingmood REST API](https://www.bookingmood.com/en-US/api-reference) while keeping the existing Angular group calendar UI and Cloudflare booking Worker BFF.
 
 ## Architecture
 
 - **Browser → booking Worker** (`/api/*`): CORS-restricted JSON API; no API keys in Angular.
 - **Worker → Bookingmood** (`https://api.bookingmood.com/v1`): `Authorization: Bearer BOOKINGMOOD_API_KEY` (Wrangler secret only).
 - **Site cabin → product UUID**: allowlisted mapping via `BOOKINGMOOD_PRODUCT_MAP` (JSON) merged with optional per-cabin fields in `cabin-config.ts`. Unknown caller product IDs are rejected.
-- **Checkout**: `POST /cart-validate` then `POST /cart-checkout` (group cart). Single-cabin flows use the same BFF checkout or onsite `/cabins/:slug` + group calendar — not legacy Lodgify URLs.
-- **Payments**: Bookingmood-managed `payment_url` from `BookingConfirmation`. Retire Stripe→Lodgify fulfillment in this repo.
+- **Checkout**: `POST /cart-validate` then `POST /cart-checkout` (group cart). Single-cabin flows use the same BFF checkout or onsite `/cabins/:slug` + group calendar — not legacy legacy hosted builder URLs.
+- **Payments**: Bookingmood-managed `payment_url` from `BookingConfirmation`. Retire Stripe→legacy hosted builder fulfillment in this repo.
 - **Webhooks**: `POST /api/bookingmood/webhook` with Standard Webhooks HMAC (`webhook-id`, `webhook-timestamp`, `webhook-signature`). Handler implemented + tested; live endpoint registration is an account step.
 
 ## Availability semantics

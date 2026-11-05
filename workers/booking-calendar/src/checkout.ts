@@ -1,23 +1,36 @@
 import { GroupCheckoutRequest } from '../../../src/app/core/models/booking.models';
 import { CABIN_CONFIG } from '../../../src/environments/cabin-config';
 import {
+  claimCheckoutIdempotency,
+  completeCheckoutIdempotency,
+  indeterminateCheckoutIdempotency,
+} from './booking-coordinator';
+import {
   buildGuestFormValues,
+  BookingWorkerEnv,
+  hasDurableBookingStorage,
   isBookingWriteEnabled,
   occupancyForAdults,
   parseGuestFormServices,
   productIdForCabin,
-  BookingWorkerEnv,
 } from './booking-config';
+import { seedCheckoutReferenceStatus } from './booking-state-store';
+import { assertCartItemsValid, assertCartValidateResponse } from './cart-validate';
+import { checkoutRequestFingerprint, idempotencyScopeKey } from './checkout-fingerprint';
 import { BookingmoodClient, HttpError } from './bookingmood-client';
 import { isCabinRangeAvailable } from './availability';
+import { sanitizePaymentUrl } from './payment-url';
 import { shortCabinName } from './checkout-format';
 
 const DATE_KEY = /^\d{4}-\d{2}-\d{2}$/;
+const UPSTREAM_TIMEOUT_MS = 25_000;
 
 export interface BookingCheckoutResponse {
   paymentUrl: string | null;
   reference: string;
   bookingId: string;
+  /** True when upstream outcome is unknown — do not retry automatically. */
+  indeterminate?: boolean;
 }
 
 export async function createBookingCheckout(
@@ -30,15 +43,38 @@ export async function createBookingCheckout(
   if (!isBookingWriteEnabled(env)) {
     throw new HttpError(
       503,
-      'Booking checkout is disabled until BOOKINGMOOD_API_KEY, product map, capacity group, and form services are configured.',
+      'Booking checkout is disabled until Bookingmood API, product map, form services, BOOKING_STATE KV, and BOOKING_COORDINATOR are configured.',
     );
   }
 
-  if (idempotencyKey) {
-    const cached = await readIdempotentCheckout(idempotencyKey);
-    if (cached) {
-      return cached;
-    }
+  if (!hasDurableBookingStorage(env)) {
+    throw new HttpError(
+      503,
+      'Booking checkout requires BOOKING_STATE KV and BOOKING_COORDINATOR durable object bindings.',
+    );
+  }
+
+  const fingerprint = await checkoutRequestFingerprint(request);
+  const scopeKey = idempotencyScopeKey(idempotencyKey, fingerprint);
+  const claim = await claimCheckoutIdempotency(env, scopeKey, fingerprint);
+
+  if (claim.status === 'completed' && claim.result) {
+    return { ...claim.result, indeterminate: false };
+  }
+
+  if (claim.status === 'conflict') {
+    throw new HttpError(409, 'Idempotency key does not match this checkout payload.');
+  }
+
+  if (claim.status === 'in_progress') {
+    throw new HttpError(409, 'Checkout is already in progress for this idempotency scope.');
+  }
+
+  if (claim.status === 'indeterminate') {
+    throw new HttpError(
+      503,
+      'A previous checkout attempt has an indeterminate outcome. Contact the host before retrying.',
+    );
   }
 
   const guest = request.guest;
@@ -115,65 +151,72 @@ export async function createBookingCheckout(
     );
   }
 
-  const validated = await client.cartValidate({ items });
-  const invalid = validated.filter((item) => !item.valid || !item.availabilityMatch || !item.occupancyMatch);
-  if (invalid.length > 0) {
-    throw new HttpError(409, 'Your cart is no longer valid. Refresh availability and try again.');
-  }
-
-  const confirmation = await client.cartCheckout({ items });
-  const result: BookingCheckoutResponse = {
-    paymentUrl: confirmation.payment_url?.trim() || null,
-    reference: confirmation.reference,
-    bookingId: confirmation.booking_id,
-  };
-
-  if (idempotencyKey) {
-    await storeIdempotentCheckout(idempotencyKey, result);
-  }
-
-  if (!result.paymentUrl) {
-    // Bookingmood may return an empty payment_url for zero-balance or provider-managed flows.
-    console.info('bookingmood_checkout_no_payment_url', {
-      reference: result.reference,
-      origin,
-    });
-  }
-
-  return result;
-}
-
-async function readIdempotentCheckout(key: string): Promise<BookingCheckoutResponse | null> {
-  const cache = caches.default;
-  const hit = await cache.match(idempotencyCacheRequest(key));
-  if (!hit) {
-    return null;
-  }
+  const submittedIds = items.map((item) => item.id);
 
   try {
-    return (await hit.json()) as BookingCheckoutResponse;
-  } catch {
-    return null;
+    const validatedRaw = await client.cartValidate({ items });
+    const validated = assertCartValidateResponse(submittedIds, validatedRaw);
+    assertCartItemsValid(validated);
+
+    const confirmation = await withTimeout(
+      client.cartCheckout({ items }),
+      UPSTREAM_TIMEOUT_MS,
+      'Bookingmood cart-checkout timed out.',
+    );
+
+    const result: BookingCheckoutResponse = {
+      paymentUrl: sanitizePaymentUrl(confirmation.payment_url),
+      reference: confirmation.reference,
+      bookingId: confirmation.booking_id,
+      indeterminate: false,
+    };
+
+    await seedCheckoutReferenceStatus(env, result.reference);
+    await completeCheckoutIdempotency(env, scopeKey, fingerprint, result);
+
+    if (!result.paymentUrl) {
+      console.info('bookingmood_checkout_no_payment_url', {
+        reference: result.reference,
+        origin,
+      });
+    }
+
+    return result;
+  } catch (error) {
+    if (error instanceof HttpError && error.status >= 500) {
+      await indeterminateCheckoutIdempotency(env, scopeKey, fingerprint);
+      throw new HttpError(
+        503,
+        'Checkout outcome is indeterminate after an upstream error. Do not retry automatically.',
+      );
+    }
+
+    if (error instanceof Error && error.message.includes('timed out')) {
+      await indeterminateCheckoutIdempotency(env, scopeKey, fingerprint);
+      throw new HttpError(
+        504,
+        'Checkout outcome is indeterminate after a timeout. Do not retry automatically.',
+      );
+    }
+
+    throw error;
   }
 }
 
-async function storeIdempotentCheckout(key: string, value: BookingCheckoutResponse): Promise<void> {
-  const cache = caches.default;
-  await cache.put(
-    idempotencyCacheRequest(key),
-    new Response(JSON.stringify(value), {
-      headers: {
-        'Cache-Control': 'max-age=86400',
-        'Content-Type': 'application/json',
-      },
-    }),
-  );
-}
-
-function idempotencyCacheRequest(key: string): Request {
-  return new Request(`https://checkout-idempotency.internal/${encodeURIComponent(key)}`, {
-    method: 'GET',
-  });
+async function withTimeout<T>(promise: Promise<T>, ms: number, message: string): Promise<T> {
+  let timer: ReturnType<typeof setTimeout> | undefined;
+  try {
+    return await Promise.race([
+      promise,
+      new Promise<T>((_, reject) => {
+        timer = setTimeout(() => reject(new Error(message)), ms);
+      }),
+    ]);
+  } finally {
+    if (timer) {
+      clearTimeout(timer);
+    }
+  }
 }
 
 export { HttpError };

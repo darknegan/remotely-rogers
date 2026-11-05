@@ -1,9 +1,12 @@
-import { GroupCheckoutRequest } from '../../../src/app/core/models/booking.models';
+import { GroupCheckoutRequest, PublicBookingStatus } from '../../../src/app/core/models/booking.models';
 import { BookingWorkerEnv } from './booking-config';
 import { buildAvailabilityResponse, listPublicProducts } from './availability';
 import { createBookingCheckout } from './checkout';
 import { handleBookingmoodWebhook } from './bookingmood-webhook';
+import { getPublicBookingStatus } from './booking-state-store';
 import { BookingmoodClient, HttpError, requireBookingmoodClient } from './bookingmood-client';
+
+export { BookingCoordinator } from './booking-coordinator';
 
 const FRAME_ANCESTORS =
   "frame-ancestors 'self' https://remotelyrogers.com https://*.remotelyrogers.com http://localhost:*";
@@ -89,6 +92,35 @@ export default {
         return json(request, { products });
       }
 
+      if (url.pathname === '/api/booking/status' && request.method === 'GET') {
+        const reference = url.searchParams.get('reference')?.trim() ?? '';
+        if (!reference) {
+          throw new HttpError(400, 'reference query parameter is required.');
+        }
+
+        if (!env.BOOKING_STATE) {
+          throw new HttpError(
+            503,
+            'Booking status lookup requires BOOKING_STATE KV binding (webhook-verified state).',
+          );
+        }
+
+        const status = await getPublicBookingStatus(env, reference);
+        const payload: PublicBookingStatus = status ?? {
+          reference,
+          paymentRecorded: false,
+          bookingConfirmed: false,
+          cancelled: false,
+          updatedAt: new Date(0).toISOString(),
+          verified: false,
+        };
+
+        return json(request, {
+          ...payload,
+          verified: !!status,
+        });
+      }
+
       if (url.pathname === '/api/checkout' && request.method === 'POST') {
         const body = (await request.json()) as GroupCheckoutRequest;
         const client = requireBookingmoodClient(env.BOOKINGMOOD_API_KEY);
@@ -106,26 +138,25 @@ export default {
           paymentUrl: result.paymentUrl,
           reference: result.reference,
           bookingId: result.bookingId,
+          indeterminate: result.indeterminate ?? false,
         });
       }
 
       if (url.pathname === '/api/bookingmood/webhook' && request.method === 'POST') {
-        const result = await handleBookingmoodWebhook(request, env.BOOKINGMOOD_WEBHOOK_SIGNING_SECRET);
+        const result = await handleBookingmoodWebhook(
+          request,
+          env.BOOKINGMOOD_WEBHOOK_SIGNING_SECRET,
+          env,
+        );
         return json(request, result);
       }
 
       if (url.pathname === '/api/stripe/webhook' && request.method === 'POST') {
-        throw new HttpError(
-          410,
-          'Stripe→Lodgify checkout was retired. Configure Bookingmood checkout instead.',
-        );
+        throw new HttpError(410, 'Legacy payment webhook route is retired.');
       }
 
       if (url.pathname === '/api/checkout/session' && request.method === 'GET') {
-        throw new HttpError(
-          410,
-          'Stripe session polling was retired. Booking status is confirmed via Bookingmood payment redirect and webhooks.',
-        );
+        throw new HttpError(410, 'Legacy checkout session route is retired.');
       }
     } catch (error) {
       const status = error instanceof HttpError ? error.status : 500;

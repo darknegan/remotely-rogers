@@ -1,6 +1,6 @@
 # Cabin photos for Claude Design mocks
 
-Pulled from the live Lodgify site (1600px). `01` in each cabin folder is the listing-card photo.
+Pulled from the live Bookingmood site (1600px). `01` in each cabin folder is the listing-card photo.
 
 | Folder | Source | Count |
 |---|---|---|

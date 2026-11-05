@@ -92,6 +92,19 @@ export interface BookingCheckoutResponse {
   paymentUrl?: string | null;
   reference: string;
   bookingId: string;
+  indeterminate?: boolean;
+}
+
+export interface PublicBookingStatus {
+  reference: string;
+  paymentRecorded: boolean;
+  bookingConfirmed: boolean;
+  cancelled: boolean;
+  updatedAt: string;
+}
+
+export interface BookingStatusResponse extends PublicBookingStatus {
+  verified: boolean;
 }
 
 export interface CabinCheckoutResult {
@@ -105,9 +118,4 @@ export interface CabinCheckoutResult {
 export interface GroupCheckoutResponse {
   reference: string;
   results: CabinCheckoutResult[];
-}
-
-export interface AvailabilityApiResponse {
-  cabins: CabinAvailability[];
-  bookingEnabled?: boolean;
 }

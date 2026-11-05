@@ -1,8 +1,8 @@
 /**
- * Converts prerendered PrimeNG markup into plain HTML for Lodgify Raw HTML widgets.
+ * Converts prerendered PrimeNG markup into plain HTML for Hosted HTML Raw HTML widgets.
  */
 import { JSDOM } from 'jsdom';
-import { createBookingEmbed } from './lodgify-booking-embed.mjs';
+import { createBookingEmbed } from './content-booking-embed.mjs';
 
 const PRIME_TAG_MAP = {
   'p-tag-success': 'rr-badge--success',
@@ -302,7 +302,7 @@ function flattenTree(doc, root) {
   for (const comment of comments) comment.remove();
 }
 
-export function flattenForLodgify(html) {
+export function flattenForContentExport(html) {
   const dom = new JSDOM(`<div id="root">${html}</div>`);
   const root = dom.window.document.getElementById('root');
   flattenTree(dom.window.document, root);
