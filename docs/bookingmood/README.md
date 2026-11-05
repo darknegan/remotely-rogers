@@ -72,3 +72,16 @@ Bookingmood sync is **iCal import/export**, not full listing import. See [iCal s
 4. Rollback: redeploy previous Worker; reconcile in-flight payments in Bookingmood dashboard (pre-cutover gate).
 
 Content snippet export for third-party HTML widgets: `npm run export:content-snippets` → `dist/content-snippets/` (neutral pipeline, separate from booking API).
+
+## Pre-production release gates (not live-ready)
+
+These are **review / cutover gates** — not automated in this migration PR:
+
+| Gate | Notes |
+|------|--------|
+| **Concurrency / ordering** | Status merges are atomic per reference in `BookingCoordinator` DO; **KV webhook dedupe** is not cross-isolate atomic. Extreme parallel delivery may need operational monitoring. |
+| **Checkout timeout E2E** | Coordinator marks stale pending **indeterminate**; full **cart-checkout timeout → guest outcome** path is not covered by Vitest E2E. |
+| **Webhook before seed** | `calendar_events.*` needs `booking:id:{uuid}` from checkout; early webhook → **422** (retry). No live Bookingmood booking lookup in Worker yet. |
+| **Cloudflare plan** | **Classic** Durable Object (`BookingCoordinator`, `state.storage`, `migrations.new_classes`). Confirm account Workers plan supports classic DOs; replace placeholder KV ids before deploy. |
+
+Keep **`BOOKINGMOOD_BOOKING_ENABLED`** off until secrets, product map, bindings, and webhook registration are done. PR remains unmerged until review sign-off — not production approval.
