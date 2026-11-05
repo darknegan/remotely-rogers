@@ -1,4 +1,13 @@
 import { BookingmoodClient } from './bookingmood-client';
+import { RUNTIME_SIX_PRODUCT_IDS } from './bookingmood-runtime-fixtures';
+
+function productId(row: unknown): string | null {
+  if (!row || typeof row !== 'object') {
+    return null;
+  }
+  const id = (row as Record<string, unknown>)['id'];
+  return typeof id === 'string' ? id : null;
+}
 
 export default {
   async fetch(request: Request): Promise<Response> {
@@ -21,11 +30,26 @@ export default {
       }
     }
 
-    if (path === '/probe-default-client') {
+    if (path === '/probe-default-client-six') {
       const client = new BookingmoodClient('fake-test-key');
+      const requestedIds = [...RUNTIME_SIX_PRODUCT_IDS];
+
       try {
-        const rows = await client.listProducts('id', ['69d91e09-bcf5-4644-bc01-8b9dc0994312']);
-        return new Response(`ok:${rows.length}`, { status: 200 });
+        const rows = await client.listProducts('id', requestedIds);
+        const returnedIds = rows.map(productId).filter((id): id is string => id != null).sort();
+        const expectedIds = [...requestedIds].sort();
+
+        if (returnedIds.length !== 6) {
+          return new Response(`bad-count:${returnedIds.length}`, { status: 598 });
+        }
+
+        for (let i = 0; i < expectedIds.length; i += 1) {
+          if (returnedIds[i] !== expectedIds[i]) {
+            return new Response(`bad-ids:${returnedIds.join(',')}`, { status: 598 });
+          }
+        }
+
+        return Response.json({ tag: 'ok:6', ids: returnedIds });
       } catch (error) {
         const message = error instanceof Error ? error.message : String(error);
         return new Response(message, { status: 599 });
