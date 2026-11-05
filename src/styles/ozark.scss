@@ -1008,6 +1008,7 @@ a {
 }
 
 .rr-cabins-v2__booked-label {
+  grid-column: 1;
   font-size: 10.5px;
   letter-spacing: 0.22em;
   text-transform: uppercase;
@@ -1016,28 +1017,51 @@ a {
 }
 
 .rr-cabins-v2__booked-list {
-  display: flex;
-  flex-wrap: nowrap;
-  align-items: stretch;
-  gap: 22px;
+  grid-column: 2;
   min-width: 0;
-  max-width: 100%;
+  width: 100%;
   overflow-x: auto;
   overflow-y: hidden;
   overscroll-behavior-x: contain;
   -webkit-overflow-scrolling: touch;
   scrollbar-width: thin;
-  scrollbar-color: rgba(62, 44, 34, 0.35) transparent;
-  padding-bottom: 4px;
+  scrollbar-color: rgba(62, 44, 34, 0.45) rgba(62, 44, 34, 0.08);
+  padding-bottom: 6px;
+}
+
+.rr-cabins-v2__booked-list::-webkit-scrollbar {
+  height: 6px;
+}
+
+.rr-cabins-v2__booked-list::-webkit-scrollbar-thumb {
+  background: rgba(62, 44, 34, 0.35);
+  border-radius: 999px;
+}
+
+.rr-cabins-v2__booked-list::-webkit-scrollbar-track {
+  background: rgba(62, 44, 34, 0.08);
+  border-radius: 999px;
+}
+
+.rr-cabins-v2__booked-track {
+  display: inline-flex;
+  flex-wrap: nowrap;
+  align-items: flex-start;
+  gap: 22px;
+  width: max-content;
+  max-width: none;
+  padding-right: 4px;
 }
 
 .rr-cabins-v2__booked-item {
-  display: flex;
+  display: inline-flex;
   flex: 0 0 auto;
   flex-shrink: 0;
   align-items: center;
   gap: 12px;
-  min-width: max-content;
+  width: auto;
+  max-width: none;
+  overflow: visible;
   color: var(--rr-ink);
 }
 
@@ -1058,6 +1082,8 @@ a {
   gap: 2px;
   flex: 0 0 auto;
   min-width: max-content;
+  max-width: none;
+  overflow: visible;
 }
 
 .rr-cabins-v2__booked-name {
@@ -1065,15 +1091,21 @@ a {
   font-size: 16px;
   line-height: 1.2;
   white-space: nowrap;
+  overflow: visible;
+  text-overflow: clip;
 }
 
 .rr-cabins-v2__booked-next {
   font-size: 12px;
   color: var(--rr-muted);
   white-space: nowrap;
+  overflow: visible;
+  text-overflow: clip;
 }
 
 .rr-cabins-v2__booked-jump {
+  grid-column: 3;
+  justify-self: end;
   font-size: 11.5px;
   font-weight: 600;
   letter-spacing: 0.14em;
@@ -1314,16 +1346,19 @@ a {
   }
 
   .rr-cabins-v2__booked-label {
+    grid-column: 1;
     white-space: normal;
   }
 
   .rr-cabins-v2__booked-list {
+    grid-column: 1;
     width: 100%;
     margin: 0 -4px;
-    padding: 0 4px 4px;
+    padding: 0 4px 6px;
   }
 
   .rr-cabins-v2__booked-jump {
+    grid-column: 1;
     justify-self: start;
   }
 
