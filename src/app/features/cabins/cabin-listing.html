@@ -202,6 +202,24 @@
     </section>
   }
 
+  @if (showBookedStrip()) {
+    <aside class="rr-cabins-v2__booked" aria-label="Cabins booked for these nights">
+      <span class="rr-cabins-v2__booked-label">Booked these nights</span>
+      <div class="rr-cabins-v2__booked-list">
+        @for (row of bookedRows(); track row.cabin.id) {
+          <a class="rr-cabins-v2__booked-item" [routerLink]="['/cabins', row.cabin.slug]">
+            <img [src]="row.cabin.imageUrl" [alt]="row.cabin.name" width="52" height="40" />
+            <span class="rr-cabins-v2__booked-copy">
+              <span class="rr-cabins-v2__booked-name">{{ row.cabin.name }}</span>
+              <span class="rr-cabins-v2__booked-next">{{ nextOpenLabel(row.cabin.id) }}</span>
+            </span>
+          </a>
+        }
+      </div>
+      <a class="rr-cabins-v2__booked-jump" href="#group">See open nights ↓</a>
+    </aside>
+  }
+
   <section id="group" class="rr-cabins-v2__group" aria-label="Multi-cabin booking">
     <div class="rr-cabins-v2__group-intro">
       <div class="rr-cabins-v2__group-copy">
@@ -224,7 +242,7 @@
       </ol>
     </div>
     <div class="rr-cabins-v2__group-calendar-slot" aria-label="Multi-cabin calendar">
-      <!-- PR2: booked strip + app-group-booking-shell -->
+      <app-group-booking-shell [embeddedInCabins]="true" />
     </div>
   </section>
 
