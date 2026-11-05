@@ -158,8 +158,12 @@ export class CabinListing {
         this.booking.syncFromListingSearch(arrival, departure, this.search.partySize());
       }
 
-      const booked = this.bookedRows();
       const map = this.store.availabilityMap();
+      if (Object.keys(map).length > 0) {
+        this.booking.mergeListingAvailability(map);
+      }
+
+      const booked = this.bookedRows();
       const nextOpenKey = `${syncKey}|${booked.map((row) => row.cabin.id).join(',')}|${Object.keys(map).length}`;
       if (nextOpenKey === this.lastNextOpenKey) {
         return;

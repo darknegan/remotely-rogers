@@ -61,6 +61,9 @@ export class BookingStateService {
   readonly checkoutError = signal<string | null>(null);
   readonly checkoutResult = signal<GroupCheckoutResponse | null>(null);
   readonly nextOpenLabels = signal<Record<number, string>>({});
+  /** Stay dates from the cabins listing bar (checkout-exclusive). */
+  readonly listingStayRange = signal<DateRange | null>(null);
+  private readonly listingQuotes = signal<Record<number, CabinAvailability>>({});
 
   readonly viewRange = computed((): DateRange | null => {
     const start = this.viewStartDate();
@@ -146,6 +149,7 @@ export class BookingStateService {
 
   /** Align embedded calendar with the cabins listing date bar. */
   syncFromListingSearch(arrival: Date, departure: Date, adults: number): void {
+    this.listingStayRange.set({ arrival, departure });
     this.setGuestCount(adults);
     this.setViewStartDate(arrival);
     if (this.dateError()) {
@@ -153,6 +157,26 @@ export class BookingStateService {
     }
 
     this.searchAvailability();
+  }
+
+  /** Merge day-level quotes from the listing search into the calendar map (same API payload). */
+  mergeListingAvailability(quotes: Record<number, CabinAvailability>): void {
+    if (Object.keys(quotes).length === 0) {
+      return;
+    }
+
+    this.listingQuotes.set(quotes);
+    this.applyListingQuoteMerge();
+  }
+
+  isInListingStay(date: Date): boolean {
+    const range = this.listingStayRange();
+    if (!range) {
+      return false;
+    }
+
+    const key = toDateKey(date);
+    return key >= toDateKey(range.arrival) && key < toDateKey(range.departure);
   }
 
   refreshNextOpenLabels(
@@ -289,6 +313,7 @@ export class BookingStateService {
             map[cabin.cabinId] = cabin;
           }
           this.availabilityMap.set(map);
+          this.applyListingQuoteMerge();
         },
         error: () => {
           this.error.set('Unable to load availability. Please try again.');
@@ -553,6 +578,32 @@ export class BookingStateService {
     return eachNight(arrival, departure).every(
       (night) => quote.days[toDateKey(night)] === 'available',
     );
+  }
+
+  private applyListingQuoteMerge(): void {
+    const quotes = this.listingQuotes();
+    if (Object.keys(quotes).length === 0) {
+      return;
+    }
+
+    this.availabilityMap.update((current) => {
+      const next = { ...current };
+      for (const [id, quote] of Object.entries(quotes)) {
+        const cabinId = Number(id);
+        const existing = next[cabinId];
+        if (!existing) {
+          next[cabinId] = quote;
+          continue;
+        }
+
+        next[cabinId] = {
+          ...existing,
+          days: { ...existing.days, ...quote.days },
+          dayRates: { ...existing.dayRates, ...quote.dayRates },
+        };
+      }
+      return next;
+    });
   }
 
   private hydrateCart(): void {
