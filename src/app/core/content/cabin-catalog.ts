@@ -22,15 +22,15 @@ export interface CabinListing {
 }
 
 const PHOTO: Record<string, string> = {
-  'black-gum': '/cabins/black-gum.jpg',
-  dogwood: '/cabins/dogwood.jpg',
-  'running-spring': '/cabins/running-spring.jpg',
-  'black-walnut': '/cabins/black-walnut.jpg',
-  'white-oak': '/cabins/white-oak.jpg',
-  'post-oak': '/cabins/post-oak.jpg',
+  'black-gum': '/media/cabins/black-gum.jpg',
+  dogwood: '/media/cabins/dogwood.jpg',
+  'running-spring': '/media/cabins/running-spring.jpg',
+  'black-walnut': '/media/cabins/black-walnut.jpg',
+  'white-oak': '/media/cabins/white-oak.jpg',
+  'post-oak': '/media/cabins/post-oak.jpg',
 };
 
-const SHARED_GALLERY = ['/cabins/hero.jpg', '/cabins/03.jpg', '/cabins/10.jpg'];
+const SHARED_GALLERY = ['/media/cabins/hero.jpg', '/media/cabins/03.jpg', '/media/cabins/10.jpg'];
 
 function photoKey(slug: string): string {
   if (slug.startsWith('black-gum')) return 'black-gum';
