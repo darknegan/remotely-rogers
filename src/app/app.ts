@@ -22,7 +22,7 @@ export class App {
     { initialValue: this.chromeVisible(this.router.url) },
   );
 
-  /** Marketing chrome stays off the full-screen group calendar and Lodgify embeds. */
+  /** Marketing chrome stays off the full-screen group calendar and booking embeds. */
   private chromeVisible(url: string): boolean {
     const tree = this.router.parseUrl(url);
     if (tree.queryParams['embed'] === '1') {

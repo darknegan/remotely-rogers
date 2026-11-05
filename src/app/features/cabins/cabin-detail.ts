@@ -17,6 +17,7 @@ import { SearchState } from '../../core/search/search-state.service';
 import { nightCount, toDateKey } from '../../core/utils/date-utils';
 import { averageRating } from '../../core/utils/reviews';
 import { reviewsForCabin } from '../content/reviews/reviews.data';
+import { environment } from '../../../environments/environment';
 import { BookingBar } from '../../layout/booking-bar/booking-bar';
 import { MapEmbed } from '../../layout/map-embed/map-embed';
 import { ReviewBand } from '../../shared/review-band/review-band';
@@ -65,15 +66,15 @@ export class CabinDetail {
     if (!cabin) {
       return '/cabins';
     }
-    const url = new URL(cabin.lodgifyUrl);
+    const url = new URL(cabin.bookUrl, environment.siteBaseUrl);
     const arrival = this.search.checkIn();
     const departure = this.search.checkOut();
     if (arrival && departure && !this.search.dateError()) {
-      url.searchParams.set('from', toDateKey(arrival));
-      url.searchParams.set('to', toDateKey(departure));
+      url.searchParams.set('checkIn', toDateKey(arrival));
+      url.searchParams.set('checkOut', toDateKey(departure));
       url.searchParams.set('adults', String(this.search.adults()));
     }
-    return url.toString();
+    return url.pathname + url.search;
   });
 
   constructor() {

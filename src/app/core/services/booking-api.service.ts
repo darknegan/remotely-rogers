@@ -3,15 +3,15 @@ import { Injectable, inject } from '@angular/core';
 import { Observable, delay, of } from 'rxjs';
 
 import {
+  AvailabilityApiResponse,
   AvailabilityRequest,
   AvailabilityResponse,
+  BookingCheckoutResponse,
   BookingConfig,
   CabinAvailability,
   DayRate,
   DayStatus,
-  CheckoutSessionResponse,
   GroupCheckoutRequest,
-  StripeCheckoutResponse,
 } from '../models/booking.models';
 import { eachNight, startOfDay, toDateKey } from '../utils/date-utils';
 import { CABIN_CONFIG } from '../../../environments/cabin-config';
@@ -30,23 +30,17 @@ export class BookingApiService {
       return of(this.buildMockAvailability(request)).pipe(delay(450));
     }
 
-    return this.http.post<AvailabilityResponse>(
+    return this.http.post<AvailabilityApiResponse>(
       `${environment.apiBaseUrl}/api/availability`,
       request,
     );
   }
 
-  createStripeCheckout(request: GroupCheckoutRequest): Observable<StripeCheckoutResponse> {
-    return this.http.post<StripeCheckoutResponse>(`${environment.apiBaseUrl}/api/checkout`, request);
+  createCheckout(request: GroupCheckoutRequest): Observable<BookingCheckoutResponse> {
+    return this.http.post<BookingCheckoutResponse>(`${environment.apiBaseUrl}/api/checkout`, request);
   }
 
-  getCheckoutSession(sessionId: string): Observable<CheckoutSessionResponse> {
-    return this.http.get<CheckoutSessionResponse>(`${environment.apiBaseUrl}/api/checkout/session`, {
-      params: { session_id: sessionId },
-    });
-  }
-
-  /** Deterministic mock blocks until the BFF + Lodgify quotes are wired. */
+  /** Local-only deterministic calendar blocks for UI development. */
   private buildMockAvailability(request: AvailabilityRequest): AvailabilityResponse {
     const arrival = startOfDay(new Date(request.arrival));
     const departure = startOfDay(new Date(request.departure));
@@ -85,11 +79,12 @@ export class BookingApiService {
         days,
         dayRates,
         cleaningFee,
-        bookingUrl: `${environment.siteBaseUrl}/en/${cabin.slug}/`,
+        availabilityState: 'ok',
+        bookingUrl: `${environment.siteBaseUrl}/cabins/${cabin.slug}`,
       } satisfies CabinAvailability;
     });
 
-    return { cabins };
+    return { cabins, bookingEnabled: false };
   }
 }
 

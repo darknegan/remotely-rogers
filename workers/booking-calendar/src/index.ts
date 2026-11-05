@@ -1,19 +1,9 @@
 import { GroupCheckoutRequest } from '../../../src/app/core/models/booking.models';
-import { buildAvailabilityResponse } from './availability';
-import {
-  createStripeCheckoutSession,
-  getCheckoutSessionStatus,
-  HttpError,
-} from './checkout';
-import { LodgifyClient } from './lodgify';
-import { StripeClient, StripeWebhookEvent, verifyStripeSignature } from './stripe';
-
-interface Env {
-  ASSETS: Fetcher;
-  LODGIFY_API_KEY: string;
-  STRIPE_SECRET_KEY?: string;
-  STRIPE_WEBHOOK_SECRET?: string;
-}
+import { BookingWorkerEnv } from './booking-config';
+import { buildAvailabilityResponse, listPublicProducts } from './availability';
+import { createBookingCheckout } from './checkout';
+import { handleBookingmoodWebhook } from './bookingmood-webhook';
+import { BookingmoodClient, HttpError, requireBookingmoodClient } from './bookingmood-client';
 
 const FRAME_ANCESTORS =
   "frame-ancestors 'self' https://remotelyrogers.com https://*.remotelyrogers.com http://localhost:*";
@@ -36,7 +26,7 @@ function corsHeaders(request: Request): Record<string, string> {
   return {
     'Access-Control-Allow-Origin': allowed ? origin : 'https://remotelyrogers.com',
     'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
-    'Access-Control-Allow-Headers': 'Content-Type',
+    'Access-Control-Allow-Headers': 'Content-Type, Idempotency-Key',
   };
 }
 
@@ -70,27 +60,8 @@ function requestOrigin(request: Request): string {
   return new URL(request.url).origin;
 }
 
-function requireLodgifyClient(env: Env): LodgifyClient {
-  const apiKey = env.LODGIFY_API_KEY?.trim();
-  if (!apiKey) {
-    throw new HttpError(503, 'LODGIFY_API_KEY is not configured on the booking worker.');
-  }
-
-  console.log('lodgify_key_meta', { length: apiKey.length });
-  return new LodgifyClient(apiKey);
-}
-
-function requireStripeClient(env: Env): StripeClient {
-  const secret = env.STRIPE_SECRET_KEY?.trim();
-  if (!secret) {
-    throw new HttpError(503, 'STRIPE_SECRET_KEY is not configured on the booking worker.');
-  }
-
-  return new StripeClient(secret);
-}
-
 export default {
-  async fetch(request: Request, env: Env): Promise<Response> {
+  async fetch(request: Request, env: BookingWorkerEnv): Promise<Response> {
     const url = new URL(request.url);
 
     if (request.method === 'OPTIONS' && url.pathname.startsWith('/api/')) {
@@ -105,54 +76,56 @@ export default {
           adults: number;
         };
 
-        const cabins = await buildAvailabilityResponse(body, requireLodgifyClient(env));
-        return json(request, cabins);
+        const client = env.BOOKINGMOOD_API_KEY?.trim()
+          ? requireBookingmoodClient(env.BOOKINGMOOD_API_KEY)
+          : new BookingmoodClient('offline');
+        const result = await buildAvailabilityResponse(body, client, env, requestOrigin(request));
+        return json(request, result);
+      }
+
+      if (url.pathname === '/api/products' && request.method === 'GET') {
+        const client = requireBookingmoodClient(env.BOOKINGMOOD_API_KEY);
+        const products = await listPublicProducts(client, env);
+        return json(request, { products });
       }
 
       if (url.pathname === '/api/checkout' && request.method === 'POST') {
         const body = (await request.json()) as GroupCheckoutRequest;
-        const result = await createStripeCheckoutSession(
+        const client = requireBookingmoodClient(env.BOOKINGMOOD_API_KEY);
+        const idempotencyKey = request.headers.get('Idempotency-Key') ?? undefined;
+        const result = await createBookingCheckout(
           body,
-          requireLodgifyClient(env),
-          requireStripeClient(env),
+          client,
+          env,
           requestOrigin(request),
+          idempotencyKey,
         );
-        return json(request, result);
+
+        return json(request, {
+          url: result.paymentUrl,
+          paymentUrl: result.paymentUrl,
+          reference: result.reference,
+          bookingId: result.bookingId,
+        });
       }
 
-      if (url.pathname === '/api/checkout/session' && request.method === 'GET') {
-        const sessionId = url.searchParams.get('session_id') ?? '';
-        const result = await getCheckoutSessionStatus(
-          sessionId,
-          requireLodgifyClient(env),
-          requireStripeClient(env),
-        );
+      if (url.pathname === '/api/bookingmood/webhook' && request.method === 'POST') {
+        const result = await handleBookingmoodWebhook(request, env.BOOKINGMOOD_WEBHOOK_SIGNING_SECRET);
         return json(request, result);
       }
 
       if (url.pathname === '/api/stripe/webhook' && request.method === 'POST') {
-        const payload = await request.text();
-        const secret = env.STRIPE_WEBHOOK_SECRET?.trim();
-        if (!secret) {
-          throw new HttpError(503, 'STRIPE_WEBHOOK_SECRET is not configured on the booking worker.');
-        }
+        throw new HttpError(
+          410,
+          'Stripe→Lodgify checkout was retired. Configure Bookingmood checkout instead.',
+        );
+      }
 
-        const signature = request.headers.get('Stripe-Signature') ?? '';
-        const valid = await verifyStripeSignature(payload, signature, secret);
-        if (!valid) {
-          throw new HttpError(400, 'Invalid Stripe signature.');
-        }
-
-        const event = JSON.parse(payload) as StripeWebhookEvent;
-        if (event.type === 'checkout.session.completed' && event.data.object.id) {
-          await getCheckoutSessionStatus(
-            event.data.object.id,
-            requireLodgifyClient(env),
-            requireStripeClient(env),
-          );
-        }
-
-        return json(request, { received: true });
+      if (url.pathname === '/api/checkout/session' && request.method === 'GET') {
+        throw new HttpError(
+          410,
+          'Stripe session polling was retired. Booking status is confirmed via Bookingmood payment redirect and webhooks.',
+        );
       }
     } catch (error) {
       const status = error instanceof HttpError ? error.status : 500;
@@ -164,4 +137,4 @@ export default {
     const assetResponse = await env.ASSETS.fetch(request);
     return withEmbedHeaders(assetResponse);
   },
-} satisfies ExportedHandler<Env>;
+} satisfies ExportedHandler<BookingWorkerEnv>;

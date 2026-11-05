@@ -1,19 +1,18 @@
 <div class="rr-checkout-success" [class.rr-checkout-success--embed]="embedMode()">
   <header class="rr-checkout-success__header">
-    <h2>Payment received</h2>
-    <p>We’re confirming each cabin reservation in Lodgify.</p>
+    <h2>Booking started</h2>
+    <p>
+      Complete payment on Bookingmood if prompted. Your confirmation reference is saved below — we
+      do not treat redirect alone as payment success.
+    </p>
   </header>
 
-  @if (bookingState.checkoutLoading()) {
-    <div class="rr-checkout-success__loading">
-      <p-progressspinner ariaLabel="Confirming payment" strokeWidth="4" />
-      <p>Confirming your payment and creating reservations…</p>
-    </div>
-  } @else if (bookingState.checkoutError(); as checkoutError) {
+  @if (bookingState.checkoutError(); as checkoutError) {
     <p-message severity="error" [text]="checkoutError" styleClass="rr-checkout-success__message" />
   }
 
-  @if (bookingState.checkoutResult()) {
+  @if (bookingState.checkoutReference(); as reference) {
+    <p class="rr-checkout-success__reference">Reference <strong>{{ reference }}</strong></p>
     <div class="rr-checkout-success__widget">
       <app-cart-summary mode="result" />
     </div>

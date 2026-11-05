@@ -1,25 +1,13 @@
 <aside class="rr-cart" aria-label="Booking summary">
   @if (mode() === 'result') {
-    <h3>Reservation result</h3>
+    <h3>Booking reference</h3>
     <p class="rr-cart__empty">
-      Payment was collected in Stripe. One Lodgify reservation was created for each cabin that
-      succeeded.
+      Your Bookingmood checkout was submitted. Keep your reference — payment may still be processing
+      until Bookingmood confirms it.
     </p>
 
-    @if (state.checkoutResult(); as checkout) {
-      <ul class="rr-cart__results">
-        @for (result of checkout.results; track result.cabinId) {
-          <li [class.rr-cart__result--ok]="result.ok" [class.rr-cart__result--fail]="!result.ok">
-            <span class="rr-cart__item-name">{{ cabinName(result.cabinId) }}</span>
-            @if (result.ok) {
-              <span class="rr-cart__item-dates">Booked · #{{ result.bookingId }}</span>
-            } @else {
-              <span class="rr-cart__item-dates">{{ result.error }}</span>
-            }
-          </li>
-        }
-      </ul>
-      <p class="rr-cart__group">Group {{ checkout.groupId }}</p>
+    @if (state.checkoutReference(); as reference) {
+      <p class="rr-cart__group">Reference {{ reference }}</p>
     }
 
     <p-button
@@ -93,7 +81,7 @@
       />
 
       <p class="rr-cart__note">
-        You'll pay for every selected cabin in one Stripe checkout.
+        You'll complete one Bookingmood checkout for all selected cabins.
       </p>
     }
   }
