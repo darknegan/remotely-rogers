@@ -1,0 +1,20 @@
+{
+  "$schema": "./node_modules/wrangler/config-schema.json",
+  "name": "remotely-rogers-booking-test",
+  "main": "workers/booking-calendar/src/index.ts",
+  "compatibility_date": "2026-08-07",
+  // Nonproduction read-only profile: no routes, KV, DO, migrations, or webhook secrets.
+  // Checkout/status/webhook writes stay disabled via BOOKINGMOOD_BOOKING_ENABLED=false.
+  "vars": {
+    "BOOKINGMOOD_BOOKING_ENABLED": "false"
+  },
+  "assets": {
+    "directory": "./dist/remotely-rogers/browser",
+    "not_found_handling": "single-page-application",
+    "binding": "ASSETS",
+    "run_worker_first": ["/api/*"]
+  },
+  "observability": {
+    "enabled": true
+  }
+}

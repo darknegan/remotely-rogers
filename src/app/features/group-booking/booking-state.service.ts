@@ -61,6 +61,7 @@ export class BookingStateService {
   readonly checkoutLoading = signal(false);
   readonly checkoutError = signal<string | null>(null);
   readonly checkoutReference = signal<string | null>(null);
+  readonly bookingEnabled = signal(false);
   readonly bookingStatus = signal<BookingStatusResponse | null>(null);
   readonly nextOpenLabels = signal<Record<number, string>>({});
   /** Stay dates from the cabins listing bar (checkout-exclusive). */
@@ -131,7 +132,11 @@ export class BookingStateService {
   );
 
   readonly canCheckout = computed(
-    () => this.cartItems().length > 0 && !this.loading() && !this.dateError(),
+    () =>
+      this.bookingEnabled() &&
+      this.cartItems().length > 0 &&
+      !this.loading() &&
+      !this.dateError(),
   );
 
   constructor() {
@@ -310,6 +315,7 @@ export class BookingStateService {
       .pipe(finalize(() => this.loading.set(false)))
       .subscribe({
         next: (response) => {
+          this.bookingEnabled.set(response.bookingEnabled === true);
           const map: Record<number, CabinAvailability> = {};
           for (const cabin of response.cabins) {
             map[cabin.cabinId] = cabin;
@@ -319,6 +325,7 @@ export class BookingStateService {
         },
         error: () => {
           this.error.set('Availability unavailable. Please try again later.');
+          this.bookingEnabled.set(false);
           this.availabilityMap.set({});
         },
       });
@@ -436,7 +443,7 @@ export class BookingStateService {
   }
 
   submitCheckout(guest: GuestDetails): void {
-    if (this.cartItems().length === 0 || this.checkoutLoading()) {
+    if (!this.bookingEnabled() || this.cartItems().length === 0 || this.checkoutLoading()) {
       return;
     }
 

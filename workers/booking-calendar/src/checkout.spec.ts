@@ -47,6 +47,29 @@ describe('createBookingCheckout', () => {
     vi.mocked(completeCheckoutIdempotency).mockResolvedValue(true);
   });
 
+  it('rejects before validate when booking writes are disabled', async () => {
+    const client = {
+      cartValidate: vi.fn(),
+      cartCheckout: vi.fn(),
+    } as unknown as BookingmoodClient;
+
+    await expect(
+      createBookingCheckout(
+        {
+          guest: { firstName: 'A', lastName: 'B', email: 'a@example.com' },
+          adults: 2,
+          cabins: [{ cabinId: 1, arrival: '2026-07-01', departure: '2026-07-03' }],
+        },
+        client,
+        { ...env, BOOKINGMOOD_BOOKING_ENABLED: 'false' },
+        'https://example.com',
+      ),
+    ).rejects.toMatchObject({ status: 503 });
+
+    expect(client.cartValidate).not.toHaveBeenCalled();
+    expect(client.cartCheckout).not.toHaveBeenCalled();
+  });
+
   it('rejects invalid cart after validate', async () => {
     const client = {
       getAvailability: vi.fn().mockResolvedValue([

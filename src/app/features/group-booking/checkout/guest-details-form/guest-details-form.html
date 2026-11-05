@@ -88,7 +88,7 @@
       label="Pay now"
       styleClass="rr-cabins-btn rr-cabins-btn--primary"
       [loading]="state.checkoutLoading()"
-      [disabled]="state.cartItems().length === 0"
+      [disabled]="!state.canCheckout()"
     />
   </div>
 </form>

@@ -92,8 +92,17 @@ export function hasDurableBookingStorage(env: BookingWorkerEnv): boolean {
   return !!env.BOOKING_STATE && !!env.BOOKING_COORDINATOR;
 }
 
+export function isExplicitBookingWriteFlagEnabled(env: BookingWorkerEnv): boolean {
+  const raw = env.BOOKINGMOOD_BOOKING_ENABLED?.trim();
+  if (!raw) {
+    return false;
+  }
+
+  return raw.toLowerCase() === 'true';
+}
+
 export function isBookingWriteEnabled(env: BookingWorkerEnv): boolean {
-  if (env.BOOKINGMOOD_BOOKING_ENABLED?.trim().toLowerCase() === 'false') {
+  if (!isExplicitBookingWriteFlagEnabled(env)) {
     return false;
   }
 

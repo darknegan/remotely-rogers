@@ -1,0 +1,7 @@
+{
+  "extends": "./tsconfig.spec.json",
+  "exclude": [
+    "src/app/features/content/work-stays/work-stays.spec.ts",
+    "src/app/features/content/activities/activities.spec.ts"
+  ]
+}
