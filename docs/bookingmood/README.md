@@ -13,7 +13,7 @@ Set on the **booking Worker** with Wrangler — never in Angular or git:
 | `BOOKINGMOOD_PRODUCT_MAP` | Optional JSON `{"1":"<product-uuid>",…}` cabin id → product |
 | `BOOKINGMOOD_CAPACITY_GROUP_ID` | Occupancy map key for cart/book |
 | `BOOKINGMOOD_FORM_SERVICES` | JSON map `{ "firstName": "<service-uuid>", … }` |
-| `BOOKINGMOOD_BOOKING_ENABLED` | Set `true` when ready for checkout writes |
+| `BOOKINGMOOD_BOOKING_ENABLED` | Must be **`true`** (explicit) to allow checkout writes; unset/`false`/other values keep writes off |
 
 Copy `.env.example` → `.dev.vars` for local Worker dev.
 
@@ -27,6 +27,8 @@ Copy `.env.example` → `.dev.vars` for local Worker dev.
 Checkout writes are **disabled** until both bindings exist (see `isBookingWriteEnabled`). This does not provide provider exactly-once booking — only best-effort duplicate protection and webhook-verified status.
 
 Replace placeholder KV ids in `wrangler.jsonc` with namespace ids from your Cloudflare account before deploy.
+
+For an isolated nonproduction packaging profile (no bindings, writes off by default), see [NONPRODUCTION-TEST-WORKER.md](./NONPRODUCTION-TEST-WORKER.md).
 
 ## Product mapping
 

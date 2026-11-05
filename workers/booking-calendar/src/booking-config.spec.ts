@@ -37,6 +37,11 @@ describe('isBookingWriteEnabled', () => {
     expect(isBookingWriteEnabled({ ASSETS: {} as Fetcher })).toBe(false);
   });
 
+  it('is false when explicit enable flag is missing', () => {
+    const { BOOKINGMOOD_BOOKING_ENABLED: _removed, ...withoutFlag } = durableEnv;
+    expect(isBookingWriteEnabled(withoutFlag)).toBe(false);
+  });
+
   it('is true when required config and bindings present', () => {
     expect(isBookingWriteEnabled(durableEnv)).toBe(true);
   });

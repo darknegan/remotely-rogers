@@ -8,6 +8,7 @@ import {
   allowlistedProductIds,
   BookingWorkerEnv,
   hasBookingmoodApiKey,
+  isBookingWriteEnabled,
   occupancyForAdults,
   resolveCabinProducts,
 } from './booking-config';
@@ -116,7 +117,7 @@ export async function buildAvailabilityResponse(
 
   return {
     cabins,
-    bookingEnabled: allowlisted.length > 0 && hasBookingmoodApiKey(env),
+    bookingEnabled: isBookingWriteEnabled(env),
   };
 }
 

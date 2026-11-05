@@ -10,6 +10,8 @@
     "export:content-snippets": "node tools/export-content-snippets.mjs",
     "build:booking-worker": "ng build --configuration=booking-worker && node tools/prepare-booking-worker-assets.mjs",
     "deploy:booking-worker": "npm run build:booking-worker && wrangler deploy",
+    "build:booking-worker-test": "ng build --configuration=booking-worker && node tools/prepare-booking-worker-assets.mjs",
+    "dry-run:booking-worker-test": "npm run build:booking-worker-test && wrangler deploy --dry-run -c wrangler.booking-test.jsonc",
     "build:site-worker": "ng build --configuration=site-worker && node tools/prepare-booking-worker-assets.mjs",
     "deploy:site-worker": "npm run build:site-worker && wrangler deploy -c wrangler.site.jsonc",
     "sync-bookingmood-products": "node tools/sync-bookingmood-products.mjs",
