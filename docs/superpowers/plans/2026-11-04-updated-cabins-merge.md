@@ -10,7 +10,7 @@
 
 **Mock source:** branch `cursor/claude-design-brief-photos` @ `dd2d65d` (pushed Nov 4, 8:09 PM CT) — `docs/design/assets/mocks/Updated Cabins.html`. Mock has a **1440 frame only** (no mobile frame yet). That branch also carries the full Ozark Maison rebuild (~362 files vs `main`) — paths below are **branch paths**, not `main`.
 
-**Base-branch call (need Drake):** Implement on the Ozark branch (merge rebuild first), or port the redesign onto `main`? **Recommend:** build on Ozark branch in 3 small PRs.
+**Implementation base (locked — Drake):** Build on Ozark branch `cursor/claude-design-brief-photos` first, in 3 small PRs (Task 1 → Task 3), then QA. Do not port to `main` before that sequence.
 
 ## Global Constraints
 
@@ -41,7 +41,9 @@
 
 **Empty dates:** no list/map tabs unless 0 results — empty state “Try different dates” + jump to `#group`.
 
-**Still open (need Drake / product):** Ozark branch vs `main` (recommend Ozark); pets field; “Book this cabin” → detail vs checkout.
+**Base (locked — Drake):** Implement on `cursor/claude-design-brief-photos` (Ozark rebuild) first; merge sequence on that branch before any port to `main`.
+
+**Still open (need Drake / product):** pets field; “Book this cabin” → detail vs checkout; home Multi-Cabin tile → `/cabins#group` or remove.
 
 ## File map (Ozark branch)
 
@@ -68,6 +70,8 @@
 ---
 
 ### Task 1: Rebuild listing to F-02 v2
+
+**Status:** PR1 (listing) cloud agent run is underway separately — do not duplicate that work; reconcile with this plan when it lands.
 
 **Files:** `cabin-listing.{html,ts}`, `styles/ozark.scss`, wire `cabin-search.store.ts`
 
@@ -99,10 +103,9 @@
 
 ## Open product calls (need Drake)
 
-1. **Base:** Ozark branch first, or port to `main`? (Recommend Ozark.)
-2. **Pets field:** real booking field or mock-only?
-3. **“Book this cabin”:** cabin detail page vs straight checkout?
-4. **Home Multi-Cabin tile:** retarget to `/cabins#group` or remove?
+1. **Pets field:** real booking field or mock-only?
+2. **“Book this cabin”:** cabin detail page vs straight checkout?
+3. **Home Multi-Cabin tile:** retarget to `/cabins#group` or remove?
 
 ## Out of scope
 
