@@ -53,10 +53,23 @@ export type BookingmoodFetch = (
 
 const BASE = 'https://api.bookingmood.com/v1';
 
+/** Bound global fetch — required in workerd when fetch is stored and invoked as a method. */
+export function defaultBookingmoodFetch(
+  input: RequestInfo | URL,
+  init?: RequestInit,
+): Promise<Response> {
+  return globalThis.fetch(input, init);
+}
+
+/** PostgREST `in.(id1,id2,…)` filter for a single `id` query param (OR semantics). */
+export function buildProductIdsInFilter(productIds: string[]): string {
+  return `in.(${productIds.join(',')})`;
+}
+
 export class BookingmoodClient {
   constructor(
     private readonly apiKey: string,
-    private readonly fetchImpl: BookingmoodFetch = fetch,
+    private readonly fetchImpl: BookingmoodFetch = defaultBookingmoodFetch,
   ) {}
 
   private async request(path: string, init: RequestInit = {}): Promise<Response> {
@@ -178,9 +191,7 @@ export class BookingmoodClient {
     const search = new URLSearchParams();
     search.set('select', select);
     if (productIds?.length) {
-      for (const id of productIds) {
-        search.append('id', `eq.${id}`);
-      }
+      search.set('id', buildProductIdsInFilter(productIds));
     }
 
     const response = await this.request(`/products?${search}`);
