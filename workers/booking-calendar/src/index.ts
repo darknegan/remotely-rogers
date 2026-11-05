@@ -3,7 +3,7 @@ import { BookingWorkerEnv } from './booking-config';
 import { buildAvailabilityResponse, listPublicProducts } from './availability';
 import { createBookingCheckout } from './checkout';
 import { handleBookingmoodWebhook } from './bookingmood-webhook';
-import { getPublicBookingStatus } from './booking-state-store';
+import { getPublicBookingStatusFromCoordinator } from './booking-status-coordinator';
 import { BookingmoodClient, HttpError, requireBookingmoodClient } from './bookingmood-client';
 
 export { BookingCoordinator } from './booking-coordinator';
@@ -98,14 +98,14 @@ export default {
           throw new HttpError(400, 'reference query parameter is required.');
         }
 
-        if (!env.BOOKING_STATE) {
+        if (!env.BOOKING_COORDINATOR) {
           throw new HttpError(
             503,
-            'Booking status lookup requires BOOKING_STATE KV binding (webhook-verified state).',
+            'Booking status lookup requires BOOKING_COORDINATOR durable object binding.',
           );
         }
 
-        const status = await getPublicBookingStatus(env, reference);
+        const status = await getPublicBookingStatusFromCoordinator(env, reference);
         const payload: PublicBookingStatus = status ?? {
           reference,
           paymentRecorded: false,

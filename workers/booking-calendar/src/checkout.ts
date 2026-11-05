@@ -14,7 +14,8 @@ import {
   parseGuestFormServices,
   productIdForCabin,
 } from './booking-config';
-import { seedCheckoutReferenceStatus } from './booking-state-store';
+import { seedBookingIdReferenceMapping } from './booking-reference-map';
+import { seedPublicBookingStatus } from './booking-status-coordinator';
 import { assertCartItemsValid, assertCartValidateResponse } from './cart-validate';
 import { checkoutRequestFingerprint, idempotencyScopeKey } from './checkout-fingerprint';
 import { BookingmoodClient, HttpError } from './bookingmood-client';
@@ -171,7 +172,8 @@ export async function createBookingCheckout(
       indeterminate: false,
     };
 
-    await seedCheckoutReferenceStatus(env, result.reference);
+    await seedPublicBookingStatus(env, result.reference);
+    await seedBookingIdReferenceMapping(env, result.bookingId, result.reference);
     await completeCheckoutIdempotency(env, scopeKey, fingerprint, result);
 
     if (!result.paymentUrl) {

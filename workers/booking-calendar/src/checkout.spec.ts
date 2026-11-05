@@ -9,8 +9,12 @@ vi.mock('./booking-coordinator', () => ({
   indeterminateCheckoutIdempotency: vi.fn(),
 }));
 
-vi.mock('./booking-state-store', () => ({
-  seedCheckoutReferenceStatus: vi.fn(),
+vi.mock('./booking-status-coordinator', () => ({
+  seedPublicBookingStatus: vi.fn(),
+}));
+
+vi.mock('./booking-reference-map', () => ({
+  seedBookingIdReferenceMapping: vi.fn(),
 }));
 
 import {

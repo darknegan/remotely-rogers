@@ -1,10 +1,15 @@
 import { HttpError } from './bookingmood-client';
+import { resolveWebhookBookingReference } from './booking-reference-map';
+import {
+  applyPublicBookingStatusPatch,
+  type StatusPatch,
+} from './booking-status-coordinator';
 import {
   BookingStateKvEnv,
   isWebhookEventProcessed,
   markWebhookEventProcessed,
-  mergePublicBookingStatus,
 } from './booking-state-store';
+import { readRequestBodyUtf8 } from './webhook-body';
 
 const WEBHOOK_MAX_AGE_MS = 5 * 60 * 1000;
 const WEBHOOK_MAX_BODY_BYTES = 256 * 1024;
@@ -26,10 +31,20 @@ export interface WebhookHandleResult {
   eventType?: string;
 }
 
+export type BookingmoodWebhookEnv = BookingStateKvEnv & {
+  BOOKING_COORDINATOR?: DurableObjectNamespace;
+};
+
+const STATUS_EVENT_TYPES = new Set([
+  'payments.paid',
+  'calendar_events.confirmed',
+  'calendar_events.cancelled',
+]);
+
 export async function handleBookingmoodWebhook(
   request: Request,
   signingSecret: string | undefined,
-  env: BookingStateKvEnv,
+  env: BookingmoodWebhookEnv,
 ): Promise<WebhookHandleResult> {
   const secret = signingSecret?.trim();
   if (!secret) {
@@ -62,10 +77,7 @@ export async function handleBookingmoodWebhook(
     throw new HttpError(400, 'Webhook timestamp is outside the allowed window.');
   }
 
-  const rawBody = await request.text();
-  if (rawBody.length > WEBHOOK_MAX_BODY_BYTES) {
-    throw new HttpError(413, 'Webhook payload is too large.');
-  }
+  const rawBody = await readRequestBodyUtf8(request, WEBHOOK_MAX_BODY_BYTES);
 
   const valid = await verifyStandardWebhookSignature({
     secret,
@@ -102,45 +114,47 @@ export async function handleBookingmoodWebhook(
 }
 
 async function dispatchWebhookEvent(
-  env: BookingStateKvEnv,
+  env: BookingmoodWebhookEnv,
   event: BookingmoodWebhookEvent,
 ): Promise<WebhookHandleResult> {
-  const reference = extractReference(event.payload?.new);
-  switch (event.event_type) {
-    case 'payments.paid':
-      if (reference) {
-        await mergePublicBookingStatus(env, reference, { paymentRecorded: true });
-      }
-      return { ok: true, eventType: event.event_type };
-
-    case 'calendar_events.confirmed':
-      if (reference) {
-        await mergePublicBookingStatus(env, reference, { bookingConfirmed: true });
-      }
-      return { ok: true, eventType: event.event_type };
-
-    case 'calendar_events.cancelled':
-      if (reference) {
-        await mergePublicBookingStatus(env, reference, { cancelled: true });
-      }
-      return { ok: true, eventType: event.event_type };
-
-    default:
-      return { ok: true, ignored: true, eventType: event.event_type };
+  if (!STATUS_EVENT_TYPES.has(event.event_type)) {
+    return { ok: true, ignored: true, eventType: event.event_type };
   }
+
+  if (!env.BOOKING_COORDINATOR) {
+    throw new HttpError(
+      503,
+      'BOOKING_COORDINATOR durable object is required for webhook booking status updates.',
+    );
+  }
+
+  const reference = await resolveWebhookBookingReference(
+    env,
+    event.event_type,
+    event.payload?.new,
+  );
+
+  if (!reference) {
+    throw new HttpError(422, 'Unable to correlate webhook event to a booking reference.');
+  }
+
+  const patch = statusPatchForEventType(event.event_type);
+  await applyPublicBookingStatusPatch(env, reference, patch);
+
+  return { ok: true, eventType: event.event_type };
 }
 
-function extractReference(payload: Record<string, unknown> | undefined): string | null {
-  if (!payload) {
-    return null;
+function statusPatchForEventType(eventType: string): StatusPatch {
+  switch (eventType) {
+    case 'payments.paid':
+      return { paymentRecorded: true };
+    case 'calendar_events.confirmed':
+      return { bookingConfirmed: true };
+    case 'calendar_events.cancelled':
+      return { cancelled: true };
+    default:
+      return {};
   }
-
-  const reference = payload['reference'];
-  if (typeof reference === 'string' && reference.trim()) {
-    return reference.trim();
-  }
-
-  return null;
 }
 
 async function verifyStandardWebhookSignature(input: {
@@ -161,18 +175,22 @@ async function verifyStandardWebhookSignature(input: {
   const digest = await crypto.subtle.sign('HMAC', key, new TextEncoder().encode(signedContent));
   const expected = bufferToBase64(digest);
 
-  const signatures = input.signatureHeader
+  const parts = input.signatureHeader
     .split(' ')
     .map((part) => part.trim())
-    .filter(Boolean)
-    .flatMap((part) => {
-      if (part.startsWith('v1,')) {
-        return [part.slice(3)];
-      }
-      return [part.replace(/^v1,/, '')];
-    });
+    .filter(Boolean);
 
-  return signatures.some((candidate) => timingSafeEqual(candidate, expected));
+  if (parts.length === 0) {
+    return false;
+  }
+
+  for (const part of parts) {
+    if (!part.startsWith('v1,')) {
+      return false;
+    }
+  }
+
+  return parts.some((part) => timingSafeEqual(part.slice(3), expected));
 }
 
 function bufferToBase64(buffer: ArrayBuffer): string {
