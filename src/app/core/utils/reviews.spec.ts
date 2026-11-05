@@ -22,13 +22,13 @@ import {
 import { reviewsForCabin } from '../../features/content/reviews/reviews.data';
 
 describe('airbnbListingToCabinSlug', () => {
-  it('maps Black Gum listings to the Lodgify slug', () => {
+  it('maps Black Gum listings to the site slug', () => {
     expect(airbnbListingToCabinSlug('Black Gum- Forest Views-A-Frame-Near Bentonville')).toBe(
       'black-gum-getaway-cozy-forest-a-frame-near-bentonville',
     );
   });
 
-  it('maps Dogwood Den listings to the Lodgify slug', () => {
+  it('maps Dogwood Den listings to the site slug', () => {
     expect(airbnbListingToCabinSlug('Dogwood Den-Forest Views-A frame-Near Bentonville')).toBe(
       'dogwood-den--cozy-forest-a-frame-near-bentonville',
     );
@@ -46,13 +46,13 @@ describe('airbnbListingToCabinSlug', () => {
     );
   });
 
-  it('maps White Oak listings to the Lodgify slug', () => {
+  it('maps White Oak listings to the site slug', () => {
     expect(airbnbListingToCabinSlug('White Oak- Forest Views- A-Frame-Near Bentonville')).toBe(
       'white-oak-haven-cozy-forest-a-frame-near-bentonville',
     );
   });
 
-  it('maps Post Oak listings to the Lodgify slug', () => {
+  it('maps Post Oak listings to the site slug', () => {
     expect(airbnbListingToCabinSlug('Post Oak- Forest Views - A-Frame- Near Bentonville')).toBe(
       'post-oak-perch-cozy-forest-a-frame-near-bentonville',
     );
@@ -104,7 +104,7 @@ describe('visibleReviews', () => {
 });
 
 describe('cabinSlugFromPathname', () => {
-  it('reads a Lodgify rental path', () => {
+  it('reads a site rental path', () => {
     expect(
       cabinSlugFromPathname('/en/black-gum-getaway-cozy-forest-a-frame-near-bentonville/'),
     ).toBe(CABIN_SLUGS.blackGum);

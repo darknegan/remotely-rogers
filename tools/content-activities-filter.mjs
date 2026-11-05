@@ -1,9 +1,9 @@
-/** Inline script for Lodgify Activities category filter (vanilla JS). */
+/** Inline script for Hosted HTML Activities category filter (vanilla JS). */
 export const ACTIVITIES_FILTER_SCRIPT = `<script>
 (function () {
   var root = document.currentScript && document.currentScript.previousElementSibling;
-  if (!root || !root.classList.contains('rr-lodgify-root')) {
-    root = document.querySelector('.rr-lodgify-root');
+  if (!root || !root.classList.contains('rr-content-export-root')) {
+    root = document.querySelector('.rr-content-export-root');
   }
   if (!root) return;
 

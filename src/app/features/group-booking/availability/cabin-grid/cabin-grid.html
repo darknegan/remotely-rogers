@@ -51,7 +51,7 @@
       <div class="rr-cabin-grid__legend" aria-hidden="true">
         <span><i class="rr-legend-swatch rr-legend-swatch--available"></i> Available</span>
         <span><i class="rr-legend-swatch rr-legend-swatch--booked"></i> Reserved</span>
-        <span><i class="rr-legend-swatch rr-legend-swatch--blocked"></i> Closed</span>
+        <span><i class="rr-legend-swatch rr-legend-swatch--blocked"></i> Unavailable</span>
         <span><i class="rr-legend-swatch rr-legend-swatch--selected"></i> Selected</span>
       </div>
     </header>
@@ -96,7 +96,7 @@
                   }
                   <div class="rr-cabin-grid__cabin-copy">
                     <strong [attr.title]="cabin.name">{{ displayCabinName(cabin.name) }}</strong>
-                    <span class="rr-cabin-grid__cabin-id">{{ cabin.lodgifyPropertyId }}</span>
+                    <span class="rr-cabin-grid__cabin-id">#{{ cabin.id }}</span>
                     @if (selection) {
                       <span class="rr-cabin-grid__rate">
                         {{ formatDateRangeLabel(selection.arrival, selection.departure) }}
@@ -153,7 +153,12 @@
                     class="rr-cabin-grid__cell rr-cabin-grid__cell--bar"
                     [attr.colspan]="segment.colspan"
                     [class.rr-cabin-grid__cell--booked]="segment.status === 'booked'"
-                    [class.rr-cabin-grid__cell--blocked]="segment.status === 'blocked'"
+                    [class.rr-cabin-grid__cell--blocked]="
+                      segment.status === 'blocked' ||
+                      segment.status === 'closed' ||
+                      segment.status === 'pending' ||
+                      segment.status === 'unknown'
+                    "
                   >
                     <div
                       class="rr-cabin-grid__bar"

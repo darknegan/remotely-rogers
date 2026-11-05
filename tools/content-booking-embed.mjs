@@ -1,5 +1,5 @@
 /**
- * Lodgify cannot run Angular — the group booking calendar is embedded as an iframe
+ * Hosted HTML cannot run Angular — the group booking calendar is embedded as an iframe
  * pointing at the deployed Angular app (/group-booking route).
  *
  * Override at export time: GROUP_BOOKING_EMBED_URL=https://your-host/group-booking

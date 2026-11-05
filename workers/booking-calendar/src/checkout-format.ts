@@ -46,15 +46,17 @@ export function parseCabinCsv(value: string): CheckoutCabinLine[] {
     .filter((line) => Number.isFinite(line.cabinId) && line.arrival && line.departure);
 }
 
-export function formatLodgifyResults(results: CabinCheckoutResult[]): string {
+export function formatCheckoutResults(results: CabinCheckoutResult[]): string {
   return results
     .map((result) =>
-      result.ok ? `${result.cabinId}:ok:${result.bookingId ?? ''}` : `${result.cabinId}:fail`,
+      result.ok
+        ? `${result.cabinId}:ok:${result.bookingId ?? ''}:${result.reference ?? ''}`
+        : `${result.cabinId}:fail`,
     )
     .join(',');
 }
 
-export function parseLodgifyResults(value: string): CabinCheckoutResult[] {
+export function parseCheckoutResults(value: string): CabinCheckoutResult[] {
   if (!value) {
     return [];
   }
@@ -64,14 +66,14 @@ export function parseLodgifyResults(value: string): CabinCheckoutResult[] {
     .map((part) => part.trim())
     .filter(Boolean)
     .map((part) => {
-      const [cabinId, status, bookingId] = part.split(':');
+      const [cabinId, status, bookingId, reference] = part.split(':');
       const id = Number(cabinId);
       if (status === 'ok') {
-        const parsedId = Number(bookingId);
         return {
           cabinId: id,
           ok: true,
-          bookingId: Number.isFinite(parsedId) ? parsedId : undefined,
+          bookingId: bookingId || undefined,
+          reference: reference || undefined,
         };
       }
 

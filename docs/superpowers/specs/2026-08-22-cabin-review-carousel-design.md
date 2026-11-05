@@ -9,13 +9,13 @@ Cabin profile pages need guest reviews at the bottom without a full reviews page
 
 ## Decision
 
-Build one Angular `ReviewCarousel` component. Export **six** self-contained HTML snippets (one per cabin). Paste each file into that cabin’s Lodgify Raw HTML widget.
+Build one Angular `ReviewCarousel` component. Export **six** self-contained HTML snippets (one per cabin). Paste each file into that cabin’s legacy hosted builder Raw HTML widget.
 
 Do **not** use Footer Custom HTML injection or an iframe embed.
 
 ## Assumptions
 
-- Each Lodgify rental page can take a Raw HTML widget. If a template still blocks it, this paste path will fail and we revisit Footer injection.
+- Each legacy hosted builder rental page can take a Raw HTML widget. If a template still blocks it, this paste path will fail and we revisit Footer injection.
 - Existing `GUEST_REVIEWS` data and `public/reviews/avatars/{id}.jpg` stay the source of truth.
 - Airbnb screenshots are never shown on the site — only transcribed cards and cropped avatars.
 
@@ -31,7 +31,7 @@ ReviewCarousel (slug) → reviewsForCabin(slug)
 ### Angular
 
 - New standalone component: `src/app/features/content/reviews/review-carousel/`
-- Input: cabin `slug` (Lodgify rental slug)
+- Input: cabin `slug` (legacy hosted builder rental slug)
 - Renders: heading, average, count, one card, dots, prev/next, “Show all reviews”
 - `/preview/reviews` becomes a sandbox host: cabin chips + the six carousels in the DOM (one visible). No hero, no site-wide stats, no “Book Your Stay” CTA. Each carousel root has a unique export host hook (`data-rr-host="app-reviews-black-gum"`, etc.) so the existing flatten/export pipeline can cut six files from one prerendered page.
 
@@ -64,7 +64,7 @@ Card content (unchanged): circular avatar, guest name, star rating, stay dates, 
 
 ## Export
 
-`npm run export:lodgify-snippets` writes six files instead of `cabin-reviews.html`:
+`npm run export:legacy hosted builder-snippets` writes six files instead of `cabin-reviews.html`:
 
 | File | Cabin | Slug |
 |---|---|---|
@@ -80,16 +80,16 @@ Each file must:
 - Contain only that cabin’s reviews
 - Inline avatars as `data:image/jpeg;base64,...` (no `/reviews/avatars/` URLs)
 - Include widget CSS plus a small vanilla script for rotate + modal
-- Be valid Lodgify Raw HTML (no Angular / PrimeNG tags, no `{{ }}`)
+- Be valid legacy hosted builder Raw HTML (no Angular / PrimeNG tags, no `{{ }}`)
 
-Remove `cabin-reviews.html` and the site-wide reviews injector (`tools/lodgify-reviews-inject.mjs`). Update `docs/lodgify/BUILDER-GUIDE.md` and `docs/lodgify/STYLES.md` to the six-file paste path.
+Remove `cabin-reviews.html` and the site-wide reviews injector (`tools/legacy hosted builder-reviews-inject.mjs`). Update `docs/legacy hosted builder/BUILDER-GUIDE.md` and `docs/legacy hosted builder/STYLES.md` to the six-file paste path.
 
 ### Paste
 
-1. Run `npm run export:lodgify-snippets`
+1. Run `npm run export:legacy hosted builder-snippets`
 2. Open the matching `reviews-*.html`
 3. Select all, copy
-4. Lodgify → that cabin’s rental page → Add widget → Raw HTML
+4. legacy hosted builder → that cabin’s rental page → Add widget → Raw HTML
 5. Paste → Save → Publish
 6. Check the **live** cabin URL (builder preview is often wrong for Raw HTML)
 
@@ -123,6 +123,6 @@ Manual:
 
 - Changing transcribed review text
 - Recropping avatars
-- Native Lodgify review sync
+- Native legacy hosted builder review sync
 - Footer fallback (unless Raw HTML on rental pages is confirmed impossible after trying)
 - A public all-reviews marketing page

@@ -1,5 +1,5 @@
 import { Injectable, computed, effect, inject, signal } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { finalize } from 'rxjs';
 
 import { BookingApiService } from '../../core/services/booking-api.service';
@@ -9,7 +9,7 @@ import {
   CabinConfig,
   CabinSelection,
   DateRange,
-  GroupCheckoutResponse,
+  BookingStatusResponse,
   GuestDetails,
 } from '../../core/models/booking.models';
 import {
@@ -42,6 +42,7 @@ interface PersistedCart {
 @Injectable()
 export class BookingStateService {
   private readonly api = inject(BookingApiService);
+  private readonly router = inject(Router);
   private readonly route = inject(ActivatedRoute, { optional: true });
 
   readonly config = this.api.getConfig();
@@ -59,7 +60,8 @@ export class BookingStateService {
   readonly hasSearched = signal(false);
   readonly checkoutLoading = signal(false);
   readonly checkoutError = signal<string | null>(null);
-  readonly checkoutResult = signal<GroupCheckoutResponse | null>(null);
+  readonly checkoutReference = signal<string | null>(null);
+  readonly bookingStatus = signal<BookingStatusResponse | null>(null);
   readonly nextOpenLabels = signal<Record<number, string>>({});
   /** Stay dates from the cabins listing bar (checkout-exclusive). */
   readonly listingStayRange = signal<DateRange | null>(null);
@@ -296,7 +298,7 @@ export class BookingStateService {
     this.loading.set(true);
     this.error.set(null);
     this.hasSearched.set(true);
-    this.checkoutResult.set(null);
+    this.checkoutReference.set(null);
     this.checkoutError.set(null);
 
     this.api
@@ -316,7 +318,7 @@ export class BookingStateService {
           this.applyListingQuoteMerge();
         },
         error: () => {
-          this.error.set('Unable to load availability. Please try again.');
+          this.error.set('Availability unavailable. Please try again later.');
           this.availabilityMap.set({});
         },
       });
@@ -389,7 +391,8 @@ export class BookingStateService {
     }
 
     const quote = this.availabilityMap()[cabinId];
-    return quote?.days?.[toDateKey(date)] === 'available';
+    const status = quote?.days?.[toDateKey(date)];
+    return status === 'available';
   }
 
   isCabinSelected(cabinId: number): boolean {
@@ -441,7 +444,7 @@ export class BookingStateService {
     this.checkoutError.set(null);
 
     this.api
-      .createStripeCheckout({
+      .createCheckout({
         guest,
         adults: this.guestCount(),
         embed: this.route?.snapshot.queryParamMap.get('embed') === '1',
@@ -453,13 +456,26 @@ export class BookingStateService {
       })
       .subscribe({
         next: (response) => {
-          if (typeof window !== 'undefined' && response.url) {
-            window.location.assign(response.url);
+          if (response.reference) {
+            this.checkoutReference.set(response.reference);
+          }
+
+          const paymentUrl = response.paymentUrl ?? response.url;
+          if (typeof window !== 'undefined' && paymentUrl) {
+            window.location.assign(paymentUrl);
+            return;
+          }
+
+          if (typeof window !== 'undefined' && response.reference) {
+            void this.router.navigate(['/group-booking/checkout/success'], {
+              queryParams: { reference: response.reference },
+              queryParamsHandling: 'merge',
+            });
             return;
           }
 
           this.checkoutLoading.set(false);
-          this.checkoutError.set('Stripe did not return a checkout URL.');
+          this.checkoutError.set('Bookingmood did not return a payment link.');
         },
         error: (error: { error?: { error?: string } }) => {
           this.checkoutLoading.set(false);
@@ -470,43 +486,32 @@ export class BookingStateService {
       });
   }
 
-  loadCheckoutSession(sessionId: string): void {
-    if (!sessionId || this.checkoutLoading()) {
+  loadCheckoutReference(reference: string): void {
+    if (!reference) {
       return;
     }
 
+    this.checkoutReference.set(reference);
+    this.bookingStatus.set(null);
     this.checkoutLoading.set(true);
     this.checkoutError.set(null);
 
-    this.api
-      .getCheckoutSession(sessionId)
-      .pipe(finalize(() => this.checkoutLoading.set(false)))
-      .subscribe({
-        next: (response) => {
-          if (!response.paid) {
-            this.checkoutError.set('Payment is still processing. Refresh this page in a moment.');
-            return;
-          }
-
-          if (response.groupId && response.results) {
-            this.checkoutResult.set({ groupId: response.groupId, results: response.results });
-            for (const result of response.results) {
-              if (result.ok) {
-                this.clearCabinSelection(result.cabinId);
-              }
-            }
-          }
-        },
-        error: (error: { error?: { error?: string } }) => {
-          this.checkoutError.set(
-            error?.error?.error ?? 'Unable to confirm this payment. Please contact the host.',
-          );
-        },
-      });
+    this.api.getBookingStatus(reference).subscribe({
+      next: (status) => {
+        this.bookingStatus.set(status);
+        this.checkoutLoading.set(false);
+      },
+      error: () => {
+        this.checkoutLoading.set(false);
+        this.checkoutError.set(
+          'We could not verify this booking yet. Payment and confirmation are only shown after webhook-verified status is available.',
+        );
+      },
+    });
   }
 
   startNewBooking(): void {
-    this.checkoutResult.set(null);
+    this.checkoutReference.set(null);
     this.checkoutError.set(null);
   }
 

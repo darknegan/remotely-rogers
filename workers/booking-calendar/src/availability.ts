@@ -1,10 +1,22 @@
 import { CABIN_CONFIG } from '../../../src/environments/cabin-config';
-import { CabinAvailability } from '../../../src/app/core/models/booking.models';
+import {
+  AvailabilityState,
+  CabinAvailability,
+} from '../../../src/app/core/models/booking.models';
 import { addDays, eachNight, parseDateKey, toDateKey } from '../../../src/app/core/utils/date-utils';
-import { mapPeriodsToDays, normalizeAvailabilityPeriods } from './availability-map';
-import { LodgifyClient } from './lodgify';
-
-const SITE_BASE_URL = 'https://remotelyrogers.com';
+import {
+  allowlistedProductIds,
+  BookingWorkerEnv,
+  hasBookingmoodApiKey,
+  occupancyForAdults,
+  resolveCabinProducts,
+} from './booking-config';
+import { BookingmoodClient } from './bookingmood-client';
+import {
+  isStayAvailable,
+  mapAvailabilityRowsToDays,
+} from './bookingmood-interval-map';
+import { mapPublicProducts } from './public-product-dto';
 
 export interface AvailabilityRequest {
   arrival: string;
@@ -12,10 +24,15 @@ export interface AvailabilityRequest {
   adults: number;
 }
 
+const PRODUCT_SELECT =
+  'id,name,description,timezone,currency,images,rent_pricing_definition,deposit,fee';
+
 export async function buildAvailabilityResponse(
   request: AvailabilityRequest,
-  client: LodgifyClient,
-): Promise<{ cabins: CabinAvailability[] }> {
+  client: BookingmoodClient,
+  env: BookingWorkerEnv,
+  origin: string,
+): Promise<{ cabins: CabinAvailability[]; bookingEnabled: boolean }> {
   const arrival = parseDateKey(request.arrival);
   const departure = parseDateKey(request.departure);
   const nights = eachNight(arrival, departure);
@@ -23,100 +40,144 @@ export async function buildAvailabilityResponse(
   const windowEnd = addDays(departure, 2);
   const windowNights = eachNight(windowStart, windowEnd);
 
-  const cabins = await Promise.all(
-    CABIN_CONFIG.cabins.map(async (cabin) => {
-      let days: CabinAvailability['days'] = {};
-      for (const night of windowNights) {
-        days[toDateKey(night)] = 'blocked';
-      }
+  const products = resolveCabinProducts(env);
+  const allowlisted = allowlistedProductIds(env);
 
-      try {
-        const payload = await client.getAvailability(
-          cabin.lodgifyPropertyId,
-          toDateKey(windowStart),
-          toDateKey(windowEnd),
-        );
-        days = mapPeriodsToDays(normalizeAvailabilityPeriods(payload), windowNights);
-      } catch (error) {
-        // Keep blocked defaults when Lodgify availability fails for one cabin.
-        console.error('lodgify_availability_failed', {
-          propertyId: cabin.lodgifyPropertyId,
-          message: error instanceof Error ? error.message : String(error),
-        });
-      }
+  if (!hasBookingmoodApiKey(env) || allowlisted.length === 0) {
+    return {
+      bookingEnabled: false,
+      cabins: products.map((cabin) =>
+        unavailableCabin(cabin.cabinId, windowNights, origin, cabin.slug, 'unconfigured'),
+      ),
+    };
+  }
 
-      const stayAvailable =
-        nights.length > 0 && nights.every((night) => days[toDateKey(night)] === 'available');
+  let rows: Awaited<ReturnType<BookingmoodClient['getAvailability']>> = [];
+  let availabilityError = false;
 
-      let dayRates: CabinAvailability['dayRates'] = {};
-      let cleaningFee = 0;
-      let nightlyRate = 0;
-      let totalPrice = 0;
-      let currency = 'USD';
+  try {
+    rows = await client.getAvailability({ productIds: allowlisted, performSync: false });
+  } catch (error) {
+    availabilityError = true;
+    console.error('bookingmood_availability_failed', {
+      message: error instanceof Error ? error.message : String(error),
+    });
+  }
 
-      try {
-        const rates = await client.getRatesCalendar(
-          cabin.lodgifyPropertyId,
-          cabin.lodgifyRoomTypeId,
-          toDateKey(windowStart),
-          toDateKey(windowEnd),
-        );
-        if (rates) {
-          dayRates = rates.dayRates;
-          cleaningFee = rates.cleaningFee;
-          currency = rates.currency;
+  let searchResults: Awaited<ReturnType<BookingmoodClient['search']>> = [];
+  if (nights.length > 0 && !availabilityError) {
+    try {
+      searchResults = await client.search({
+        interval: { start: toDateKey(arrival), end: toDateKey(departure) },
+        productIds: allowlisted,
+        occupancy: occupancyForAdults(env, request.adults),
+      });
+    } catch (error) {
+      console.error('bookingmood_search_failed', {
+        message: error instanceof Error ? error.message : String(error),
+      });
+    }
+  }
 
-          const windowPrices = windowNights
-            .map((night) => dayRates[toDateKey(night)]?.price)
-            .filter((price): price is number => price != null);
-          nightlyRate =
-            windowPrices.length > 0
-              ? windowPrices.reduce((sum, price) => sum + price, 0) / windowPrices.length
-              : 0;
+  const cabins = products.map((cabin) => {
+    if (!cabin.productId) {
+      return unavailableCabin(cabin.cabinId, windowNights, origin, cabin.slug, 'unconfigured');
+    }
 
-          const stayPrices = nights
-            .map((night) => dayRates[toDateKey(night)]?.price)
-            .filter((price): price is number => price != null);
-          totalPrice =
-            stayPrices.reduce((sum, price) => sum + price, 0) + cleaningFee;
-        }
-      } catch (error) {
-        // Price is optional; day statuses still render.
-        console.error('lodgify_rates_failed', {
-          propertyId: cabin.lodgifyPropertyId,
-          message: error instanceof Error ? error.message : String(error),
-        });
-      }
+    if (availabilityError) {
+      return unavailableCabin(cabin.cabinId, windowNights, origin, cabin.slug, 'error');
+    }
 
-      return {
-        cabinId: cabin.id,
-        nightlyRate,
-        totalPrice,
-        currency,
-        available: stayAvailable,
-        days,
-        dayRates,
-        cleaningFee,
-        bookingUrl: `${SITE_BASE_URL}/en/${cabin.slug}/`,
-      } satisfies CabinAvailability;
-    }),
-  );
+    const days = mapAvailabilityRowsToDays(rows, cabin.productId, windowNights);
+    const stayAvailable = isStayAvailable(days, request.arrival, request.departure);
+    const search = searchResults.find((item) => item.productId === cabin.productId);
+    const currency = 'USD';
+    let totalPrice = 0;
+    let nightlyRate = 0;
 
-  return { cabins };
+    if (search?.price && nights.length > 0) {
+      totalPrice = (search.price.min + search.price.max) / 2 / 100;
+      nightlyRate = totalPrice / nights.length;
+    }
+
+    return {
+      cabinId: cabin.cabinId,
+      nightlyRate,
+      totalPrice,
+      currency,
+      available: stayAvailable,
+      days,
+      dayRates: {},
+      cleaningFee: 0,
+      availabilityState: 'ok' satisfies AvailabilityState,
+      bookingUrl: `${origin}/cabins/${cabin.slug}`,
+    } satisfies CabinAvailability;
+  });
+
+  return {
+    cabins,
+    bookingEnabled: allowlisted.length > 0 && hasBookingmoodApiKey(env),
+  };
+}
+
+function unavailableCabin(
+  cabinId: number,
+  windowNights: Date[],
+  origin: string,
+  slug: string,
+  state: AvailabilityState,
+): CabinAvailability {
+  const days: CabinAvailability['days'] = {};
+  for (const night of windowNights) {
+    days[toDateKey(night)] = 'unknown';
+  }
+
+  return {
+    cabinId,
+    nightlyRate: 0,
+    totalPrice: 0,
+    currency: 'USD',
+    available: false,
+    days,
+    dayRates: {},
+    cleaningFee: 0,
+    availabilityState: state,
+    bookingUrl: `${origin}/cabins/${slug}`,
+  };
 }
 
 export async function isCabinRangeAvailable(
-  client: LodgifyClient,
-  propertyId: number,
+  client: BookingmoodClient,
+  env: BookingWorkerEnv,
+  cabinId: number,
   arrival: string,
   departure: string,
 ): Promise<boolean> {
-  const nights = eachNight(parseDateKey(arrival), parseDateKey(departure));
-  if (nights.length === 0) {
+  const productId = resolveCabinProducts(env).find((c) => c.cabinId === cabinId)?.productId;
+  if (!productId) {
     return false;
   }
 
-  const payload = await client.getAvailability(propertyId, arrival, departure);
-  const days = mapPeriodsToDays(normalizeAvailabilityPeriods(payload), nights);
-  return nights.every((night) => days[toDateKey(night)] === 'available');
+  const rows = await client.getAvailability({ productIds: [productId], performSync: false });
+  const nights = eachNight(parseDateKey(arrival), parseDateKey(departure));
+  const days = mapAvailabilityRowsToDays(rows, productId, nights);
+  return isStayAvailable(days, arrival, departure);
+}
+
+
+export async function listPublicProducts(
+  client: BookingmoodClient,
+  env: BookingWorkerEnv,
+) {
+  const ids = allowlistedProductIds(env);
+  if (ids.length === 0) {
+    return [];
+  }
+
+  const rows = await client.listProducts(PRODUCT_SELECT, ids);
+  return mapPublicProducts(rows);
+}
+
+export function cabinCatalogMeta(): typeof CABIN_CONFIG {
+  return CABIN_CONFIG;
 }

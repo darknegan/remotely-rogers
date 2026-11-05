@@ -1,12 +1,12 @@
 # Remotely Rogers — Claude Design brief
 
-Paste the **First prompt** below into a new Claude Design project. Do not import this repo as a design system (that would lock in the old Lodgify look).
+Paste the **First prompt** below into a new Claude Design project. Do not import this repo as a design system (that would lock in the old Bookingmood look).
 
 ## Context (facts, not style)
 
 - **Business:** Remotely Rogers — six private A-frame cabins on 70 acres in Rogers, Arkansas, near Bentonville, Beaver Lake, and world-class bike trails.
 - **Audience:** couples, families, groups, remote workers, corporate retreats.
-- **Booking:** guests book one cabin or several together. Primary CTA is **Check availability**. Booking still goes through Lodgify (or similar) later — do not invent a fake checkout.
+- **Booking:** guests book one cabin or several together. Primary CTA is **Check availability**. Booking still goes through Bookingmood (or similar) later — do not invent a fake checkout.
 - **Cabins (4 guests each, 2-night minimum):** Black Gum Getaway, Dogwood Den, Running Spring Retreat, Black Walnut Bungalow, White Oak Haven, Post Oak Perch.
 - **Later pages:** Home, cabin listing, cabin detail, Activities, Recommendations, Work Stays, Multi-Cabin, FAQ / guest info, Maps & getting here, Our story, Contact.
 
@@ -154,7 +154,7 @@ Do not reuse round 1’s cream/ink/oxblood magazine, pale-oak card grid, or bold
 
 Clients picked **F — Ozark maison**. Expand that style across every public flow that exists on [remotelyrogers.com](https://remotelyrogers.com) today, plus the multi-cabin booking calendar already built in this repo. Do not drop pages. Do not invent a new product.
 
-Live nav today: **Home · All properties · Activities · Recommendations · Work Stays · Multi-Cabin Stays · Contact us**. Cabin URLs are `/en/{slug}/` for all six rentals. Reviews live on Home (per-cabin carousels + “Show all” modal), not a separate page. Work Stays has a Lodgify **booking inquiry** form. Contact is a full inquiry form + map. Do not add FAQ / Our story / Maps as standalone pages — they are not on the live site.
+Live nav today: **Home · All properties · Activities · Recommendations · Work Stays · Multi-Cabin Stays · Contact us**. Cabin URLs are `/en/{slug}/` for all six rentals. Reviews live on Home (per-cabin carousels + “Show all” modal), not a separate page. Work Stays has a Bookingmood **booking inquiry** form. Contact is a full inquiry form + map. Do not add FAQ / Our story / Maps as standalone pages — they are not on the live site.
 
 ### Style lock (every screen)
 
@@ -163,9 +163,9 @@ Live nav today: **Home · All properties · Activities · Recommendations · Wor
 - Layout: magazine rhythm, bento and gallery grids, pull quotes on photos — not six identical cards
 - Photography: only attached Remotely Rogers cabin photos
 - Chrome: sticky nav (logo, Home, Cabins, Activities, Recommendations, Work Stays, Multi-Cabin, Contact, Check availability), multi-column footer (phone **479-440-5011**, email **Jeff@remotelyrogers.com**, **11611–11601 Lindy Lane, Rogers, AR 72756**, Instagram **@remotely.rogers**, Map/Directions)
-- Currency **USD**. Never show EUR. Never show “Powered by Lodgify”
+- Currency **USD**. Never show EUR. Never show “Powered by Bookingmood”
 - Desktop 1440 for every page. Mobile 375 for Home, Cabins listing, Cabin detail, Group calendar, Contact, plus open mobile nav
-- Hover/pressed on buttons. Real copy. No lorem ipsum. No forest-green Lodgify look. No Fancy Hill visuals
+- Hover/pressed on buttons. Real copy. No lorem ipsum. No forest-green Bookingmood look. No Fancy Hill visuals
 
 ### Cabin display names (no SEO suffixes)
 
@@ -203,7 +203,7 @@ Remotely Rogers — six private A-frame cabins on 70 acres of Ozark woodland in 
 Cabins (display names only — never the long SEO titles): Black Gum Getaway, Dogwood Den, Running Spring Retreat, Black Walnut Bungalow, White Oak Haven, Post Oak Perch.
 Public contact: 479-440-5011 · Jeff@remotelyrogers.com · 11611–11601 Lindy Lane, Rogers, AR 72756 · Instagram @remotely.rogers
 Host: Jeff Wolfe.
-Currency: USD. Listing cards show from $132 per night (rates vary by date). Never EUR. Never “Powered by Lodgify”. Never “undefined Results”.
+Currency: USD. Listing cards show from $132 per night (rates vary by date). Never EUR. Never “Powered by Bookingmood”. Never “undefined Results”.
 
 Primary CTA language: Check availability / Search / Book now / Pay now. Booking still happens through the calendar/widget — you are designing those widgets, not a new checkout product.
 
@@ -212,14 +212,14 @@ STYLE LOCK (every artboard, no exceptions):
 - Big editorial serif + thin sans. Name the fonts (not Inter, not system UI, not Vollkorn-on-forest-green). Same pairing everywhere.
 - Magazine rhythm: full-bleed photography, gallery / bento grids, pull quotes on photos, varied section weight. NEVER six identical equal cards in a row.
 - Sticky nav on every page: wordmark, Home, Cabins, Activities, Recommendations, Work Stays, Multi-Cabin, Contact, Check availability.
-- Footer on every page: phone, email, address, Instagram, Map/Directions. No Lodgify badge.
+- Footer on every page: phone, email, address, Instagram, Map/Directions. No Bookingmood badge.
 - ONLY the attached real Remotely Rogers cabin photos. No Unsplash, no stock cabins, no ChatGPT-generated interiors.
 - Hover and pressed states on buttons and links. Real copy, no lorem ipsum.
 - Desktop 1440 for pages. 375 for the mobile set listed below.
 
 BUILD ORDER:
 1) Artboard F-00 Foundations — palette swatches with hex, type scale, Default/Hover/Active buttons, text inputs, selects, date fields, cards, nav, footer, review card, cabin card, map chrome.
-2) Then each labeled artboard below on its own canvas page. Keep Option F’s richness. Do not flatten into a Lodgify rental template.
+2) Then each labeled artboard below on its own canvas page. Keep Option F’s richness. Do not flatten into a Bookingmood rental template.
 
 ARTBOARDS — mock ALL of these, labeled exactly:
 
@@ -315,7 +315,7 @@ Inquiry form (this is on the live Work Stays page — keep it): Email, First nam
 F-07 Multi-Cabin 1440
 Hero: Multi-Cabin Stays. Stats: 6 private cabins · 70 shared acres · 1 combined checkout.
 How it works: (1) Pick dates (2) Select cabins (3) One combined checkout.
-Then the group booking calendar (this is real product UI, design it in Option F materials — not a spreadsheet, not Lodgify admin):
+Then the group booking calendar (this is real product UI, design it in Option F materials — not a spreadsheet, not Bookingmood admin):
   - Start date, Guests (1–4 per cabin), Update
   - Hint: click available nights on a cabin row; click a second night 2–5 days away to fill between; click again to clear that cabin. Cabins may have different check-in/out.
   - Toolbar: month label, prev / next / Today
@@ -358,7 +358,7 @@ Lorna: “Such a beautiful place and Jeff was amazing — great directions, reco
 Also use other real Airbnb quotes already in the brief/home (Cody, Dianna, Alex, Kathryn, etc.) for cabin-grouped reviews.
 
 HARD NO:
-- Forest green + terracotta Lodgify look, Vollkorn default, EUR currency, Powered by Lodgify
+- Forest green + terracotta Bookingmood look, Vollkorn default, EUR currency, Powered by Bookingmood
 - Fancy Hill campground / RV / tent / waterfall / “book direct and save” banners
 - Fake card-checkout chrome, Stripe Elements drawing, order-confirmation emails
 - Stock photography

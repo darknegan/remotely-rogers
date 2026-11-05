@@ -1,39 +1,83 @@
+import { GroupCheckoutRequest } from '../../../src/app/core/models/booking.models';
 import { CABIN_CONFIG } from '../../../src/environments/cabin-config';
 import {
-  CabinCheckoutResult,
-  CheckoutSessionResponse,
-  GroupCheckoutRequest,
-  GroupCheckoutResponse,
-  StripeCheckoutResponse,
-} from '../../../src/app/core/models/booking.models';
+  claimCheckoutIdempotency,
+  completeCheckoutIdempotency,
+  indeterminateCheckoutIdempotency,
+} from './booking-coordinator';
+import {
+  buildGuestFormValues,
+  BookingWorkerEnv,
+  hasDurableBookingStorage,
+  isBookingWriteEnabled,
+  occupancyForAdults,
+  parseGuestFormServices,
+  productIdForCabin,
+} from './booking-config';
+import { seedBookingIdReferenceMapping } from './booking-reference-map';
+import { seedPublicBookingStatus } from './booking-status-coordinator';
+import { assertCartItemsValid, assertCartValidateResponse } from './cart-validate';
+import { checkoutRequestFingerprint, idempotencyScopeKey } from './checkout-fingerprint';
+import { BookingmoodClient, HttpError } from './bookingmood-client';
 import { isCabinRangeAvailable } from './availability';
-import {
-  formatCabinCsv,
-  formatLodgifyResults,
-  formatStayLabel,
-  parseCabinCsv,
-  parseLodgifyResults,
-  quoteStayCents,
-  shortCabinName,
-  truncateMeta,
-} from './checkout-format';
-import { LodgifyClient } from './lodgify';
-import {
-  paymentIntentId,
-  paymentIntentMetadata,
-  StripeClient,
-  StripeCheckoutSession,
-} from './stripe';
+import { sanitizePaymentUrl } from './payment-url';
+import { shortCabinName } from './checkout-format';
 
 const DATE_KEY = /^\d{4}-\d{2}-\d{2}$/;
-const SESSION_ID = /^cs_(test|live)_/;
+const UPSTREAM_TIMEOUT_MS = 25_000;
 
-export async function createStripeCheckoutSession(
+export interface BookingCheckoutResponse {
+  paymentUrl: string | null;
+  reference: string;
+  bookingId: string;
+  /** True when upstream outcome is unknown — do not retry automatically. */
+  indeterminate?: boolean;
+}
+
+export async function createBookingCheckout(
   request: GroupCheckoutRequest,
-  client: LodgifyClient,
-  stripe: StripeClient,
+  client: BookingmoodClient,
+  env: BookingWorkerEnv,
   origin: string,
-): Promise<StripeCheckoutResponse> {
+  idempotencyKey?: string,
+): Promise<BookingCheckoutResponse> {
+  if (!isBookingWriteEnabled(env)) {
+    throw new HttpError(
+      503,
+      'Booking checkout is disabled until Bookingmood API, product map, form services, BOOKING_STATE KV, and BOOKING_COORDINATOR are configured.',
+    );
+  }
+
+  if (!hasDurableBookingStorage(env)) {
+    throw new HttpError(
+      503,
+      'Booking checkout requires BOOKING_STATE KV and BOOKING_COORDINATOR durable object bindings.',
+    );
+  }
+
+  const fingerprint = await checkoutRequestFingerprint(request);
+  const scopeKey = idempotencyScopeKey(idempotencyKey, fingerprint);
+  const claim = await claimCheckoutIdempotency(env, scopeKey, fingerprint);
+
+  if (claim.status === 'completed' && claim.result) {
+    return { ...claim.result, indeterminate: false };
+  }
+
+  if (claim.status === 'conflict') {
+    throw new HttpError(409, 'Idempotency key does not match this checkout payload.');
+  }
+
+  if (claim.status === 'in_progress') {
+    throw new HttpError(409, 'Checkout is already in progress for this idempotency scope.');
+  }
+
+  if (claim.status === 'indeterminate') {
+    throw new HttpError(
+      503,
+      'A previous checkout attempt has an indeterminate outcome. Contact the host before retrying.',
+    );
+  }
+
   const guest = request.guest;
   const firstName = guest?.firstName?.trim() ?? '';
   const lastName = guest?.lastName?.trim() ?? '';
@@ -51,13 +95,24 @@ export async function createStripeCheckoutSession(
     throw new HttpError(400, 'Select at least one cabin.');
   }
 
-  const priced: Array<{
-    cabinId: number;
-    name: string;
-    arrival: string;
-    departure: string;
-    amountCents: number;
+  const services = parseGuestFormServices(env.BOOKINGMOOD_FORM_SERVICES);
+  const formTemplate = buildGuestFormValues(services, {
+    firstName,
+    lastName,
+    email,
+    phone,
+    notes,
+  });
+  const occupancy = occupancyForAdults(env, adults);
+
+  const items: Array<{
+    id: string;
+    product_id: string;
+    interval: { start: string; end: string };
+    occupancy: Record<string, number>;
+    form_values: Record<string, string>;
   }> = [];
+
   const unavailable: string[] = [];
 
   for (const line of cabins) {
@@ -70,36 +125,23 @@ export async function createStripeCheckoutSession(
       throw new HttpError(400, 'Arrival and departure must be YYYY-MM-DD.');
     }
 
-    const open = await isCabinRangeAvailable(
-      client,
-      cabin.lodgifyPropertyId,
-      line.arrival,
-      line.departure,
-    );
+    const productId = productIdForCabin(env, line.cabinId);
+    if (!productId) {
+      throw new HttpError(400, `${shortCabinName(cabin.name)} is not mapped to a Bookingmood product.`);
+    }
+
+    const open = await isCabinRangeAvailable(client, env, line.cabinId, line.arrival, line.departure);
     if (!open) {
       unavailable.push(shortCabinName(cabin.name));
       continue;
     }
 
-    const rates = await client.getRatesCalendar(
-      cabin.lodgifyPropertyId,
-      cabin.lodgifyRoomTypeId,
-      line.arrival,
-      line.departure,
-    );
-    const amountCents = rates
-      ? quoteStayCents(rates.dayRates, rates.cleaningFee, line.arrival, line.departure)
-      : null;
-    if (amountCents == null || amountCents < 50) {
-      throw new HttpError(400, `Unable to price ${shortCabinName(cabin.name)}.`);
-    }
-
-    priced.push({
-      cabinId: cabin.id,
-      name: shortCabinName(cabin.name),
-      arrival: line.arrival,
-      departure: line.departure,
-      amountCents,
+    items.push({
+      id: `cabin-${line.cabinId}`,
+      product_id: productId,
+      interval: { start: line.arrival, end: line.departure },
+      occupancy,
+      form_values: { ...formTemplate },
     });
   }
 
@@ -110,218 +152,73 @@ export async function createStripeCheckoutSession(
     );
   }
 
-  if (priced.length === 0) {
-    throw new HttpError(409, 'None of the selected cabins are available.');
-  }
+  const submittedIds = items.map((item) => item.id);
 
-  const groupId = crypto.randomUUID();
-  const embedQuery = request.embed ? '&embed=1' : '';
-  const cancelEmbed = request.embed ? '?embed=1' : '';
-  const params = new URLSearchParams();
-  params.set('mode', 'payment');
-  params.set('customer_email', email);
-  params.set(
-    'success_url',
-    `${origin}/group-booking/checkout/success?session_id={CHECKOUT_SESSION_ID}${embedQuery}`,
-  );
-  params.set('cancel_url', `${origin}/group-booking/checkout${cancelEmbed}`);
-  params.set('metadata[groupId]', groupId);
-  params.set('metadata[adults]', String(adults));
-  params.set('metadata[firstName]', truncateMeta(firstName, 200));
-  params.set('metadata[lastName]', truncateMeta(lastName, 200));
-  params.set('metadata[email]', truncateMeta(email, 200));
-  if (phone) {
-    params.set('metadata[phone]', truncateMeta(phone, 200));
-  }
-  if (notes) {
-    params.set('metadata[notes]', truncateMeta(notes, 200));
-  }
-  params.set(
-    'metadata[cabins]',
-    truncateMeta(
-      formatCabinCsv(
-        priced.map((item) => ({
-          cabinId: item.cabinId,
-          arrival: item.arrival,
-          departure: item.departure,
-        })),
-      ),
-    ),
-  );
+  try {
+    const validatedRaw = await client.cartValidate({ items });
+    const validated = assertCartValidateResponse(submittedIds, validatedRaw);
+    assertCartItemsValid(validated);
 
-  priced.forEach((item, index) => {
-    params.set(`line_items[${index}][quantity]`, '1');
-    params.set(`line_items[${index}][price_data][currency]`, 'usd');
-    params.set(`line_items[${index}][price_data][unit_amount]`, String(item.amountCents));
-    params.set(
-      `line_items[${index}][price_data][product_data][name]`,
-      `${item.name} — ${formatStayLabel(item.arrival, item.departure)}`,
+    const confirmation = await withTimeout(
+      client.cartCheckout({ items }),
+      UPSTREAM_TIMEOUT_MS,
+      'Bookingmood cart-checkout timed out.',
     );
-  });
 
-  const session = await stripe.createCheckoutSession(params);
-  if (!session.url) {
-    throw new HttpError(502, 'Stripe did not return a checkout URL.');
-  }
-
-  return { url: session.url };
-}
-
-export async function getCheckoutSessionStatus(
-  sessionId: string,
-  client: LodgifyClient,
-  stripe: StripeClient,
-): Promise<CheckoutSessionResponse> {
-  if (!SESSION_ID.test(sessionId)) {
-    throw new HttpError(400, 'Invalid Stripe session.');
-  }
-
-  const session = await stripe.retrieveSession(sessionId);
-  if (session.payment_status !== 'paid' && session.payment_status !== 'no_payment_required') {
-    return { paid: false, fulfilled: false };
-  }
-
-  const fulfilled = await fulfillPaidSession(session, client, stripe);
-  return {
-    paid: true,
-    fulfilled: true,
-    groupId: fulfilled.groupId,
-    results: fulfilled.results,
-  };
-}
-
-export async function fulfillPaidSession(
-  session: StripeCheckoutSession,
-  client: LodgifyClient,
-  stripe: StripeClient,
-): Promise<GroupCheckoutResponse> {
-  const metadata = session.metadata ?? {};
-  const existing = paymentIntentMetadata(session);
-  if (existing['lodgify_fulfilled'] === '1' && existing['lodgify_results']) {
-    return {
-      groupId: existing['lodgify_group'] || metadata['groupId'] || '',
-      results: parseLodgifyResults(existing['lodgify_results']),
+    const result: BookingCheckoutResponse = {
+      paymentUrl: sanitizePaymentUrl(confirmation.payment_url),
+      reference: confirmation.reference,
+      bookingId: confirmation.booking_id,
+      indeterminate: false,
     };
-  }
 
-  if (existing['lodgify_fulfilled'] === 'pending') {
-    const refreshed = await stripe.retrieveSession(session.id);
-    const refreshedMeta = paymentIntentMetadata(refreshed);
-    if (refreshedMeta['lodgify_fulfilled'] === '1' && refreshedMeta['lodgify_results']) {
-      return {
-        groupId: refreshedMeta['lodgify_group'] || metadata['groupId'] || '',
-        results: parseLodgifyResults(refreshedMeta['lodgify_results']),
-      };
-    }
-  }
+    await seedPublicBookingStatus(env, result.reference);
+    await seedBookingIdReferenceMapping(env, result.bookingId, result.reference);
+    await completeCheckoutIdempotency(env, scopeKey, fingerprint, result);
 
-  const groupId = metadata['groupId'] || crypto.randomUUID();
-  const intentId = paymentIntentId(session);
-  if (intentId) {
-    await stripe.updatePaymentIntentMetadata(intentId, {
-      lodgify_fulfilled: 'pending',
-      lodgify_group: groupId,
-    });
-  }
-
-  const results = await createBookedGroupReservations(
-    {
-      groupId,
-      sessionId: session.id,
-      firstName: metadata['firstName'] ?? '',
-      lastName: metadata['lastName'] ?? '',
-      email: metadata['email'] ?? '',
-      phone: metadata['phone'] || null,
-      notes: metadata['notes'] ?? '',
-      adults: Math.max(1, Number(metadata['adults']) || 1),
-      cabins: parseCabinCsv(metadata['cabins'] ?? ''),
-    },
-    client,
-  );
-
-  if (intentId) {
-    await stripe.updatePaymentIntentMetadata(intentId, {
-      lodgify_fulfilled: '1',
-      lodgify_group: groupId,
-      lodgify_results: truncateMeta(formatLodgifyResults(results)),
-    });
-  }
-
-  return { groupId, results };
-}
-
-async function createBookedGroupReservations(
-  input: {
-    groupId: string;
-    sessionId: string;
-    firstName: string;
-    lastName: string;
-    email: string;
-    phone: string | null;
-    notes: string;
-    adults: number;
-    cabins: Array<{ cabinId: number; arrival: string; departure: string }>;
-  },
-  client: LodgifyClient,
-): Promise<CabinCheckoutResult[]> {
-  const results: CabinCheckoutResult[] = [];
-
-  for (const line of input.cabins) {
-    const cabin = CABIN_CONFIG.cabins.find((item) => item.id === line.cabinId);
-    if (!cabin) {
-      results.push({ cabinId: line.cabinId, ok: false, error: 'Unknown cabin.' });
-      continue;
-    }
-
-    try {
-      const groupNote = [`Group ${input.groupId}`, `Stripe ${input.sessionId}`, input.notes]
-        .filter(Boolean)
-        .join('; ');
-      const bookingId = await client.createBookedBooking({
-        property_id: cabin.lodgifyPropertyId,
-        arrival: line.arrival,
-        departure: line.departure,
-        status: 'Booked',
-        source_text: `Remotely Rogers group booking ${input.groupId}`,
-        notes: groupNote,
-        guest: {
-          guest_name: {
-            first_name: input.firstName,
-            last_name: input.lastName,
-          },
-          email: input.email,
-          phone: input.phone,
-        },
-        rooms: [
-          {
-            room_type_id: cabin.lodgifyRoomTypeId,
-            guest_breakdown: {
-              adults: input.adults,
-              children: 0,
-              infants: 0,
-            },
-          },
-        ],
-      });
-
-      results.push({ cabinId: cabin.id, ok: true, bookingId });
-    } catch (error) {
-      results.push({
-        cabinId: cabin.id,
-        ok: false,
-        error: error instanceof Error ? error.message : 'Unable to create this reservation.',
+    if (!result.paymentUrl) {
+      console.info('bookingmood_checkout_no_payment_url', {
+        reference: result.reference,
+        origin,
       });
     }
-  }
 
-  return results;
+    return result;
+  } catch (error) {
+    if (error instanceof HttpError && error.status >= 500) {
+      await indeterminateCheckoutIdempotency(env, scopeKey, fingerprint);
+      throw new HttpError(
+        503,
+        'Checkout outcome is indeterminate after an upstream error. Do not retry automatically.',
+      );
+    }
+
+    if (error instanceof Error && error.message.includes('timed out')) {
+      await indeterminateCheckoutIdempotency(env, scopeKey, fingerprint);
+      throw new HttpError(
+        504,
+        'Checkout outcome is indeterminate after a timeout. Do not retry automatically.',
+      );
+    }
+
+    throw error;
+  }
 }
 
-export class HttpError extends Error {
-  constructor(
-    readonly status: number,
-    message: string,
-  ) {
-    super(message);
+async function withTimeout<T>(promise: Promise<T>, ms: number, message: string): Promise<T> {
+  let timer: ReturnType<typeof setTimeout> | undefined;
+  try {
+    return await Promise.race([
+      promise,
+      new Promise<T>((_, reject) => {
+        timer = setTimeout(() => reject(new Error(message)), ms);
+      }),
+    ]);
+  } finally {
+    if (timer) {
+      clearTimeout(timer);
+    }
   }
 }
+
+export { HttpError };

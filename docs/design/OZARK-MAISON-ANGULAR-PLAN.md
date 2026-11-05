@@ -12,7 +12,7 @@ todos:
     content: "Step 3: Cabins listing, filters, empty state, map"
     status: pending
   - id: cabin-detail
-    content: "Step 4: Cabin detail template, gallery, Lodgify book widget"
+    content: "Step 4: Cabin detail template, gallery, Bookingmood book widget"
     status: pending
   - id: activities
     content: "Step 5: Activities filter states"
@@ -46,7 +46,7 @@ isProject: false
 
 - Fonts: Young Serif (display), Spectral (body), Archivo (UI). Ground `#F5F0E6`, walnut `#3E2C22`, oxblood `#6C2029` (hover `#882A34`, active `#561920`), brass `#B08A4A`, ink footer `#2B1F17`.
 - USD, real copy, six cabin display names, 4 guests, 2-night minimum, host Jeff Wolfe, `479-440-5011`, `Jeff@remotelyrogers.com`.
-- No fake card fields. Single-cabin Book now keeps the existing Lodgify property URL. Group Pay now stays the current Stripe handoff.
+- No fake card fields. Single-cabin Book now keeps the existing Bookingmood property URL. Group Pay now stays the current Stripe handoff.
 - PrimeNG for controls (`Button`, `DatePicker`, `Popover`, `Dialog`, `Drawer`, `InputNumber`, `Select`, `SelectButton`, `InputText`, `Textarea`, `Message`, `ProgressSpinner`). Editorial layout is custom HTML, not `p-card` / `p-panel` stacks.
 - Production style budget is 12 kB per component. Shared shell SCSS, not copied page CSS.
 - Do not ship `public/mocks/export/*.html` (~25 MB each) as site assets. Move the design export out of Angular `public/` in step 1.
@@ -103,7 +103,7 @@ Route `/cabins/:slug`. One component, six slugs.
 
 - Content file for facts that are not in `CABIN_CONFIG`: 2 bedrooms, 3 beds, 1 bath, amenity groups, rules, payment, cancellation, $250 hold, dog note, from $132.
 - F-03: gallery, highlights, amenities, rules, map, rates, host, review carousel, sticky book widget.
-- Gallery is `Dialog` (F-03b). Widget with dates (F-03c) shows nights × rate as a `computed`. Book now links to the existing Lodgify cabin URL with `from`/`to` query params.
+- Gallery is `Dialog` (F-03b). Widget with dates (F-03c) shows nights × rate as a `computed`. Book now links to the existing Bookingmood cabin URL with `from`/`to` query params.
 - F-M02: sticky bottom bar; expanded widget is a `Drawer`.
 
 ## Step 5 — Activities
@@ -143,6 +143,6 @@ No mock files. Follow F-00 components.
 - [`app.routes.ts`](src/app/routes.ts): `/` is Home. Public paths: `/cabins`, `/cabins/:slug`, `/activities`, `/recommendations`, `/work-stays`, `/multi-cabin`, `/contact`, `/group-booking`, `/group-booking/checkout`, `/group-booking/checkout/success`.
 - Redirect old `/preview/*` to the new paths.
 - Update [`tools/prerender-routes.txt`](tools/prerender-routes.txt) and the document title.
-- Leave Lodgify snippet export scripts in place until the live site actually moves off Lodgify. Do not restyle them back to forest green.
+- Leave Bookingmood snippet export scripts in place until the live site actually moves off Bookingmood. Do not restyle them back to forest green.
 
 Each step is done when `ng test` passes for the new store/form specs and the route renders at 1440 and 375 against the matching `F-*` artboard (hero, type, oxblood CTA, and the interactive state named in that step).

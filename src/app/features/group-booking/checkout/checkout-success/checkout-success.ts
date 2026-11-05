@@ -3,14 +3,13 @@ import { toSignal } from '@angular/core/rxjs-interop';
 import { ActivatedRoute } from '@angular/router';
 import { map } from 'rxjs';
 import { Message } from 'primeng/message';
-import { ProgressSpinner } from 'primeng/progressspinner';
 
 import { BookingStateService } from '../../booking-state.service';
 import { CartSummary } from '../../cart/cart-summary/cart-summary';
 
 @Component({
   selector: 'app-checkout-success',
-  imports: [CartSummary, Message, ProgressSpinner],
+  imports: [CartSummary, Message],
   templateUrl: './checkout-success.html',
   styleUrl: './checkout-success.scss',
 })
@@ -23,11 +22,13 @@ export class CheckoutSuccessPage {
   );
 
   constructor() {
-    const sessionId = inject(ActivatedRoute).snapshot.queryParamMap.get('session_id');
-    if (sessionId) {
-      this.state.loadCheckoutSession(sessionId);
+    const reference =
+      inject(ActivatedRoute).snapshot.queryParamMap.get('reference') ??
+      inject(ActivatedRoute).snapshot.queryParamMap.get('booking_reference');
+    if (reference) {
+      this.state.loadCheckoutReference(reference);
     } else {
-      this.state.checkoutError.set('Missing Stripe session. Return to checkout and try again.');
+      this.state.checkoutError.set('Missing booking reference. Return to checkout and try again.');
     }
   }
 }

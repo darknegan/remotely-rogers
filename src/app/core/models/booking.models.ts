@@ -19,15 +19,17 @@ export interface CabinCartItem {
 
 export interface CabinConfig {
   id: number;
-  lodgifyPropertyId: number;
-  lodgifyRoomTypeId: number;
+  /** Bookingmood product UUID — prefer BOOKINGMOOD_PRODUCT_MAP in Worker env for production. */
+  bookingmoodProductId?: string | null;
   name: string;
   slug: string;
   maxGuests: number;
   imageUrl?: string;
 }
 
-export type DayStatus = 'available' | 'booked' | 'blocked';
+export type DayStatus = 'available' | 'booked' | 'blocked' | 'closed' | 'pending' | 'unknown';
+
+export type AvailabilityState = 'ok' | 'error' | 'unconfigured';
 
 export interface DayRate {
   price: number;
@@ -44,6 +46,7 @@ export interface CabinAvailability {
   dayRates: Record<string, DayRate>;
   cleaningFee: number;
   bookingUrl?: string;
+  availabilityState?: AvailabilityState;
 }
 
 export interface BookingConfig {
@@ -60,6 +63,7 @@ export interface AvailabilityRequest {
 
 export interface AvailabilityResponse {
   cabins: CabinAvailability[];
+  bookingEnabled?: boolean;
 }
 
 export interface GuestDetails {
@@ -83,25 +87,35 @@ export interface GroupCheckoutRequest {
   embed?: boolean;
 }
 
-export interface StripeCheckoutResponse {
-  url: string;
+export interface BookingCheckoutResponse {
+  url: string | null;
+  paymentUrl?: string | null;
+  reference: string;
+  bookingId: string;
+  indeterminate?: boolean;
 }
 
-export interface CheckoutSessionResponse {
-  paid: boolean;
-  fulfilled: boolean;
-  groupId?: string;
-  results?: CabinCheckoutResult[];
+export interface PublicBookingStatus {
+  reference: string;
+  paymentRecorded: boolean;
+  bookingConfirmed: boolean;
+  cancelled: boolean;
+  updatedAt: string;
+}
+
+export interface BookingStatusResponse extends PublicBookingStatus {
+  verified: boolean;
 }
 
 export interface CabinCheckoutResult {
   cabinId: number;
   ok: boolean;
-  bookingId?: number;
+  bookingId?: string;
+  reference?: string;
   error?: string;
 }
 
 export interface GroupCheckoutResponse {
-  groupId: string;
+  reference: string;
   results: CabinCheckoutResult[];
 }

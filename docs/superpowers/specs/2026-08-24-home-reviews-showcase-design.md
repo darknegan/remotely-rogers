@@ -6,11 +6,11 @@ Supersedes: `docs/superpowers/specs/2026-08-22-cabin-review-carousel-design.md`
 
 ## Problem
 
-Lodgify default rental pages cannot take a Raw HTML widget unless they are converted to custom pages. Six per-cabin paste files therefore cannot land on cabin profiles. Guest reviews still need a public home for the six A-frames.
+legacy hosted builder default rental pages cannot take a Raw HTML widget unless they are converted to custom pages. Six per-cabin paste files therefore cannot land on cabin profiles. Guest reviews still need a public home for the six A-frames.
 
 ## Decision
 
-One all-in-one Home block. `/preview/reviews` becomes a six-row gallery. Export **one** file, `reviews-home.html`, pasted into the Lodgify **Home** page Raw HTML widget.
+One all-in-one Home block. `/preview/reviews` becomes a six-row gallery. Export **one** file, `reviews-home.html`, pasted into the legacy hosted builder **Home** page Raw HTML widget.
 
 Do **not** paste reviews onto rental pages. Do **not** keep the six `reviews-*.html` cabin files.
 
@@ -27,8 +27,8 @@ Reviews page
   └─ six ReviewBand rows (CABIN_CONFIG order)
         ├─ cabin portrait + short name → /en/{slug}/
         └─ two visible reviews, shift-by-one every 15s
-Export: dist/lodgify-snippets/reviews-home.html
-Paste: Lodgify Home → Raw HTML
+Export: dist/legacy hosted builder-snippets/reviews-home.html
+Paste: legacy hosted builder Home → Raw HTML
 ```
 
 ### Angular
@@ -69,25 +69,25 @@ Desktop: two columns (portrait \| reviews or the reverse). Narrow screens: portr
 
 ## Export
 
-`npm run export:lodgify-snippets` writes:
+`npm run export:legacy hosted builder-snippets` writes:
 
-- `dist/lodgify-snippets/reviews-home.html`
+- `dist/legacy hosted builder-snippets/reviews-home.html`
 
 The file must:
 
 - Include all six bands in the order above
 - Inline avatars as `data:image/jpeg;base64,...` (no `/reviews/avatars/` URLs)
 - Include widget CSS plus vanilla script for 15s shift-by-one + per-band modal
-- Be Lodgify-safe (no Angular / PrimeNG tags, no `{{ }}`)
+- Be legacy hosted builder-safe (no Angular / PrimeNG tags, no `{{ }}`)
 
-Delete leftover `reviews-black-gum.html` … `reviews-post-oak.html` and `cabin-reviews.html` on export. Update `docs/lodgify/BUILDER-GUIDE.md` and `docs/lodgify/STYLES.md`.
+Delete leftover `reviews-black-gum.html` … `reviews-post-oak.html` and `cabin-reviews.html` on export. Update `docs/legacy hosted builder/BUILDER-GUIDE.md` and `docs/legacy hosted builder/STYLES.md`.
 
 ### Paste
 
-1. Run `npm run export:lodgify-snippets`
-2. Open `dist/lodgify-snippets/reviews-home.html`
+1. Run `npm run export:legacy hosted builder-snippets`
+2. Open `dist/legacy hosted builder-snippets/reviews-home.html`
 3. Select all, copy
-4. Lodgify → **Home** → Add widget → Raw HTML
+4. legacy hosted builder → **Home** → Add widget → Raw HTML
 5. Paste → Save → Publish
 6. Check the **live** home URL
 
@@ -108,7 +108,7 @@ Keep `reviewsForCabin`, `averageRating`, `guestInitials`.
 
 ## Out of scope
 
-- Custom Lodgify rental templates
+- Custom legacy hosted builder rental templates
 - Changing transcribed quotes
 - Recropping avatars
 - Footer injection

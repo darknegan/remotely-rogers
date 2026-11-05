@@ -80,7 +80,7 @@ describe('mapPeriodsToDays', () => {
     expect(days['2026-09-06']).toBe('blocked');
   });
 
-  it('reads nested Lodgify period payloads', () => {
+  it('reads nested legacy period payloads', () => {
     const periods = normalizeAvailabilityPeriods([
       {
         property_id: 756289,

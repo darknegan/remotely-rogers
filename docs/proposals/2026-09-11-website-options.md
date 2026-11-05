@@ -1,10 +1,10 @@
-## Option 1 — Rebuild the six cabin pages inside Lodgify
+## Option 1 — Rebuild the six cabin pages inside legacy hosted builder
 
 **Cost: $750**  
 **Time: about 2 to 3 weeks**  
 **Downpayment: $250**
 
-I rebuild just the six cabin pages inside Lodgify so reviews can go on them. The rest of the site stays as it is.
+I rebuild just the six cabin pages inside legacy hosted builder so reviews can go on them. The rest of the site stays as it is.
 
 **What you get**
 
@@ -20,7 +20,7 @@ I rebuild just the six cabin pages inside Lodgify so reviews can go on them. The
 
 **Please know this**
 
-Future changes on the website pages will still be slow. We would still be working around Lodgify’s locks. If Lodgify changes how their booking buttons work, fixing that could turn into a separate job.
+Future changes on the website pages will still be slow. We would still be working around legacy hosted builder’s locks. If legacy hosted builder changes how their booking buttons work, fixing that could turn into a separate job.
 
 ---
 
@@ -30,9 +30,9 @@ Future changes on the website pages will still be slow. We would still be workin
 **Time: about 4 to 6 weeks**  
 **Downpayment: $500**
 
-This will be a fully customizable website that grows with you. Guests still book through the same calendars. Your Airbnb and Booking.com listings stay connected. We keep Lodgify for reservations or move to a different service like Bookingmood.
+This will be a fully customizable website that grows with you. Guests still book through the same calendars. Your Airbnb and Booking.com listings stay connected. We keep legacy hosted builder for reservations or move to a different service like Bookingmood.
 
-The monthly payment for Lodgify is ~$300 a month, where as a service like Bookingmood that doesn't offer website creation is much cheaper. Currently Bookingmood is only $45 billed monthly and $36 billed annually.
+The monthly payment for legacy hosted builder is ~$300 a month, where as a service like Bookingmood that doesn't offer website creation is much cheaper. Currently Bookingmood is only $45 billed monthly and $36 billed annually.
 
 The site can still look like it does today, but if theres anything you want to change for the better we can work together to make it look and feel exactly how you want it to.
 
@@ -60,9 +60,9 @@ The site can still look like it does today, but if theres anything you want to c
 | Time                              | 2 to 3 weeks                            | 4 to 6 weeks                                  |
 | Reviews on each cabin page        | Yes                                     | Yes                                           |
 | What we rebuild                   | Only the six cabin pages                | The whole public website                      |
-| Bookings and Airbnb / Booking.com | Stay with Lodgify                       | Stay with Lodgify or Bookingmood              |
-| Next time you want a change       | Often slow, because of Lodgify’s locks  | A normal website change                       |
-| After this job                    | You still live inside Lodgify’s website | You have a website we can shape to your needs |
+| Bookings and Airbnb / Booking.com | Stay with legacy hosted builder                       | Stay with legacy hosted builder or Bookingmood              |
+| Next time you want a change       | Often slow, because of legacy hosted builder’s locks  | A normal website change                       |
+| After this job                    | You still live inside legacy hosted builder’s website | You have a website we can shape to your needs |
 
 
 ---
@@ -71,4 +71,4 @@ The site can still look like it does today, but if theres anything you want to c
 
 *Option 1* will get reviews on the cabin pages, but we will still run into the same limitations in the future for any new features that you want to add.
 
-*Option 2* costs more, but gives you more control on the look and feel of your website and allows for more flexibility when adding new features in the future. With access to the Lodgify or Bookingmood apis, your Airbnb and Booking.com listings will stay connected the same way that they do today.
+*Option 2* costs more, but gives you more control on the look and feel of your website and allows for more flexibility when adding new features in the future. With access to the legacy hosted builder or Bookingmood apis, your Airbnb and Booking.com listings will stay connected the same way that they do today.

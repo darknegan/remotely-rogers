@@ -1,27 +1,27 @@
 /**
- * Builds production Angular output (with SSR prerender) and packages Lodgify-safe
+ * Builds production Angular output (with SSR prerender) and packages hosted-HTML-safe
  * HTML snippets: plain div markup + compact inlined CSS (no PrimeNG custom elements).
  *
- * Run: npm run export:lodgify-snippets
+ * Run: npm run export:content-snippets
  */
 import { execSync } from 'node:child_process';
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { JSDOM } from 'jsdom';
-import { flattenForLodgify } from './lodgify-flatten.mjs';
-import { ACTIVITIES_FILTER_SCRIPT } from './lodgify-activities-filter.mjs';
-import { BOOKING_EMBED_RESIZE_SCRIPT } from './lodgify-booking-embed-resize.mjs';
-import { REVIEWS_CAROUSEL_SCRIPT } from './lodgify-reviews-carousel.mjs';
+import { flattenForContentExport } from './content-flatten.mjs';
+import { ACTIVITIES_FILTER_SCRIPT } from './content-activities-filter.mjs';
+import { BOOKING_EMBED_RESIZE_SCRIPT } from './content-booking-embed-resize.mjs';
+import { REVIEWS_CAROUSEL_SCRIPT } from './content-reviews-carousel.mjs';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const root = path.resolve(__dirname, '..');
 const browserDir = path.join(root, 'dist', 'remotely-rogers', 'browser');
-const outDir = path.join(root, 'dist', 'lodgify-snippets');
-const lodgifyScss = path.join(root, 'src', 'styles', 'lodgify-export.scss');
+const outDir = path.join(root, 'dist', 'content-snippets');
+const contentScss = path.join(root, 'src', 'styles', 'content-export.scss');
 
 const PASTE_BANNER =
-  '<!-- REMOTELY ROGERS LODGIFY EXPORT — paste this ENTIRE file into Lodgify Raw HTML widget. ' +
+  '<!-- REMOTELY ROGERS CONTENT EXPORT — paste this ENTIRE file into Hosted HTML Raw HTML widget. ' +
   'Plain HTML + inline CSS only (no Angular, no PrimeNG custom tags). -->';
 
 /** @type {{ route: string; file: string; host: string }[]} */
@@ -50,8 +50,8 @@ function runBuild() {
   execSync('npm run build', { cwd: root, stdio: 'inherit' });
 }
 
-function compileLodgifyCss() {
-  return execSync(`npx sass "${lodgifyScss}" --style=compressed --no-source-map`, {
+function compileContentExportCss() {
+  return execSync(`npx sass "${contentScss}" --style=compressed --no-source-map`, {
     cwd: root,
     encoding: 'utf8',
   }).trim();
@@ -133,7 +133,7 @@ function assertCompiledHtml(html, label) {
     scriptOnly;
   if (found.length > 0 && !allowsScript) {
     throw new Error(
-      `${label} still contains non-Lodgify markup (${found.join(', ')}). Flatten step failed.`,
+      `${label} still contains non-Hosted HTML markup (${found.join(', ')}). Flatten step failed.`,
     );
   }
 }
@@ -152,7 +152,7 @@ function wrapSnippet(
   if (withActivitiesFilter) script += ACTIVITIES_FILTER_SCRIPT;
   if (withBookingEmbedResize) script += BOOKING_EMBED_RESIZE_SCRIPT;
   if (withReviewsCarousel) script += REVIEWS_CAROUSEL_SCRIPT;
-  const rootClass = homeContained ? 'rr-lodgify-root rr-lodgify-root--home' : 'rr-lodgify-root';
+  const rootClass = homeContained ? 'rr-content-export-root rr-content-export-root--home' : 'rr-content-export-root';
   return (
     `${PASTE_BANNER}` +
     `<style>${css}</style>` +
@@ -168,17 +168,17 @@ function exportSnippets() {
     throw new Error(`Build output missing: ${browserDir}`);
   }
 
-  const lodgifyCss = compileLodgifyCss();
+  const contentCss = compileContentExportCss();
   fs.mkdirSync(outDir, { recursive: true });
-  fs.writeFileSync(path.join(outDir, 'lodgify-styles.css'), lodgifyCss, 'utf8');
-  log(`Wrote lodgify-styles.css (${(lodgifyCss.length / 1024).toFixed(1)} KB)`);
+  fs.writeFileSync(path.join(outDir, 'content-styles.css'), contentCss, 'utf8');
+  log(`Wrote content-styles.css (${(contentCss.length / 1024).toFixed(1)} KB)`);
 
   for (const entry of PAGES) {
     log(`Packaging /${entry.route}...`);
     const fullHtml = readPrerenderedPage(entry.route);
     const rawBody = extractHostHtml(fullHtml, entry.host);
-    const flatBody = inlineReviewAvatars(rewritePreviewLinks(flattenForLodgify(rawBody)));
-    const html = wrapSnippet(flatBody, lodgifyCss, {
+    const flatBody = inlineReviewAvatars(rewritePreviewLinks(flattenForContentExport(rawBody)));
+    const html = wrapSnippet(flatBody, contentCss, {
       withActivitiesFilter: entry.file === 'activities.html',
       withReviewsCarousel: entry.file === 'reviews-home.html',
       homeContained: entry.file === 'reviews-home.html',
@@ -218,26 +218,26 @@ function exportSnippets() {
   fs.writeFileSync(
     path.join(outDir, 'PASTE-INSTRUCTIONS.txt'),
     [
-      'Remotely Rogers — Lodgify paste instructions',
+      'Remotely Rogers — Hosted HTML paste instructions',
       '',
-      'Paste ONE of these files into Lodgify → Pages → Raw HTML widget:',
-      '  dist/lodgify-snippets/activities.html',
-      '  dist/lodgify-snippets/recommendations.html',
-      '  dist/lodgify-snippets/work-stays.html',
+      'Paste ONE of these files into Hosted HTML → Pages → Raw HTML widget:',
+      '  dist/content-snippets/activities.html',
+      '  dist/content-snippets/recommendations.html',
+      '  dist/content-snippets/work-stays.html',
       '',
       'Guest reviews — paste onto the Home page Raw HTML widget:',
-      '  dist/lodgify-snippets/reviews-home.html',
+      '  dist/content-snippets/reviews-home.html',
       '',
       'Each file is plain HTML + a single <style> block (~11 KB).',
       'Guest reviews on Home sit in the same content column as other Home widgets (no extra right gap).',
-      'No external fonts or CSS files required — uses your Lodgify site font.',
+      'No external fonts or CSS files required — uses your Hosted HTML site font.',
       '',
       'DO NOT paste from src/app/features/content/ (Angular templates).',
       '',
       'Steps (repeat for EACH page you update):',
-      '  1. npm run export:lodgify-snippets',
-      '  2. Open the matching .html file in dist/lodgify-snippets/',
-      '  3. Ctrl+A, copy ALL, paste into that page’s Raw HTML widget in Lodgify',
+      '  1. npm run export:content-snippets',
+      '  2. Open the matching .html file in dist/content-snippets/',
+      '  3. Ctrl+A, copy ALL, paste into that page’s Raw HTML widget in Hosted HTML',
       '  4. Save → Publish website → check LIVE URL (not builder preview)',
       '',
       'Page → snippet file:',
@@ -251,7 +251,7 @@ function exportSnippets() {
   );
 
   log(`Done — ${PAGES.length} snippets in ${outDir}`);
-  log('Paste each file into Lodgify → Pages → Raw HTML widget → Publish');
+  log('Paste each file into Hosted HTML → Pages → Raw HTML widget → Publish');
 }
 
 exportSnippets();

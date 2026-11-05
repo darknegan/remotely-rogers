@@ -1,14 +1,13 @@
 import { BookingConfig } from '../app/core/models/booking.models';
 
-/** Public cabin metadata — sync with `npm run sync-properties` when BFF is wired. */
+/** Public cabin metadata — map Bookingmood product UUIDs via Worker `BOOKINGMOOD_PRODUCT_MAP`. */
 export const CABIN_CONFIG: BookingConfig = {
   minNights: 2,
   maxGuestsPerCabin: 4,
   cabins: [
     {
       id: 1,
-      lodgifyPropertyId: 756289,
-      lodgifyRoomTypeId: 823412,
+      bookingmoodProductId: null,
       name: 'Black Gum Getaway-Cozy Forest A-frame Near Bentonville',
       slug: 'black-gum-getaway-cozy-forest-a-frame-near-bentonville',
       maxGuests: 4,
@@ -17,8 +16,7 @@ export const CABIN_CONFIG: BookingConfig = {
     },
     {
       id: 2,
-      lodgifyPropertyId: 756290,
-      lodgifyRoomTypeId: 823413,
+      bookingmoodProductId: null,
       name: 'Dogwood Den- Cozy Forest A-Frame Near Bentonville',
       slug: 'dogwood-den--cozy-forest-a-frame-near-bentonville',
       maxGuests: 4,
@@ -27,8 +25,7 @@ export const CABIN_CONFIG: BookingConfig = {
     },
     {
       id: 3,
-      lodgifyPropertyId: 756291,
-      lodgifyRoomTypeId: 823414,
+      bookingmoodProductId: null,
       name: 'Running Spring Retreat-Cozy Forest A-Frame near Bentonville',
       slug: 'running-spring-retreat-cozy-forest-a-frame-near-bentonville',
       maxGuests: 4,
@@ -37,8 +34,7 @@ export const CABIN_CONFIG: BookingConfig = {
     },
     {
       id: 4,
-      lodgifyPropertyId: 756292,
-      lodgifyRoomTypeId: 823415,
+      bookingmoodProductId: null,
       name: 'Black Walnut Bungalow-Cozy Forest A-frame near Bentonville',
       slug: 'black-walnut-bungalow-cozy-forest-a-frame-near-bentonville',
       maxGuests: 4,
@@ -47,8 +43,7 @@ export const CABIN_CONFIG: BookingConfig = {
     },
     {
       id: 5,
-      lodgifyPropertyId: 756293,
-      lodgifyRoomTypeId: 823416,
+      bookingmoodProductId: null,
       name: 'White Oak Haven-Cozy Forest A-frame near Bentonville',
       slug: 'white-oak-haven-cozy-forest-a-frame-near-bentonville',
       maxGuests: 4,
@@ -57,8 +52,7 @@ export const CABIN_CONFIG: BookingConfig = {
     },
     {
       id: 6,
-      lodgifyPropertyId: 756294,
-      lodgifyRoomTypeId: 823417,
+      bookingmoodProductId: null,
       name: 'Post Oak Perch-Cozy Forest A-frame Near Bentonville',
       slug: 'post-oak-perch-cozy-forest-a-frame-near-bentonville',
       maxGuests: 4,

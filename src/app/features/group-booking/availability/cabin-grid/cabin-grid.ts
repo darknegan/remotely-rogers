@@ -62,7 +62,7 @@ export class CabinGrid {
     let current: DaySegment | null = null;
 
     for (const date of dates) {
-      const status = quote?.days?.[toDateKey(date)] ?? 'available';
+      const status = quote?.days?.[toDateKey(date)] ?? 'unknown';
 
       if (status === 'available') {
         if (current) {
@@ -103,7 +103,16 @@ export class CabinGrid {
   }
 
   barLabel(status: DayStatus): string {
-    return status === 'booked' ? 'Reserved' : 'Closed';
+    if (status === 'booked') {
+      return 'Reserved';
+    }
+    if (status === 'pending') {
+      return 'Pending';
+    }
+    if (status === 'closed' || status === 'blocked') {
+      return 'Unavailable';
+    }
+    return 'Unavailable';
   }
 
   displayCabinName(name: string): string {

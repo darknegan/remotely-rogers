@@ -18,7 +18,7 @@ export interface CabinListing {
   parking: boolean;
   workspace: boolean;
   fireplace: boolean;
-  lodgifyUrl: string;
+  bookUrl: string;
 }
 
 const PHOTO: Record<string, string> = {
@@ -60,7 +60,7 @@ export const CABIN_LISTINGS: CabinListing[] = CABIN_CONFIG.cabins.map((cabin) =>
     parking: true,
     workspace: true,
     fireplace: true,
-    lodgifyUrl: `${environment.siteBaseUrl}/en/${cabin.slug}/`,
+    bookUrl: `${environment.siteBaseUrl}/group-booking?cabin=${cabin.slug}`,
   };
 });
 
