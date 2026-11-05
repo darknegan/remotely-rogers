@@ -624,6 +624,9 @@ a {
 
 .rr-cabins-v2 {
   background: var(--rr-limestone);
+  min-width: 0;
+  max-width: 100%;
+  overflow-x: clip;
 }
 
 .rr-cabins-v2__hero {
@@ -995,6 +998,146 @@ a {
   box-shadow: 0 10px 24px rgba(108, 32, 41, 0.28);
 }
 
+.rr-cabins-v2__booked {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 26px;
+  margin: 26px clamp(22px, 4vw, 60px) 0;
+  padding: 22px 26px;
+  background: #e9e2d6;
+  font-family: var(--rr-font-sans);
+  min-width: 0;
+}
+
+.rr-cabins-v2__booked-label {
+  grid-column: 1;
+  font-size: 10.5px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--rr-oxblood);
+  white-space: nowrap;
+}
+
+.rr-cabins-v2__booked-list {
+  grid-column: 2;
+  min-width: 0;
+  width: 100%;
+  overflow-x: auto;
+  overflow-y: hidden;
+  overscroll-behavior-x: contain;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(62, 44, 34, 0.45) rgba(62, 44, 34, 0.08);
+  padding-bottom: 6px;
+  touch-action: pan-x;
+}
+
+.rr-cabins-v2__booked-list::-webkit-scrollbar {
+  height: 6px;
+}
+
+.rr-cabins-v2__booked-list::-webkit-scrollbar-thumb {
+  background: rgba(62, 44, 34, 0.35);
+  border-radius: 999px;
+}
+
+.rr-cabins-v2__booked-list::-webkit-scrollbar-track {
+  background: rgba(62, 44, 34, 0.08);
+  border-radius: 999px;
+}
+
+.rr-cabins-v2__booked-track {
+  display: inline-flex;
+  flex-wrap: nowrap;
+  align-items: flex-start;
+  gap: 22px;
+  width: max-content;
+  max-width: none;
+  padding-right: 4px;
+}
+
+.rr-cabins-v2__booked-item {
+  display: inline-flex;
+  flex: 0 0 auto;
+  flex-shrink: 0;
+  align-items: center;
+  gap: 12px;
+  width: auto;
+  max-width: none;
+  overflow: visible;
+  color: var(--rr-ink);
+}
+
+.rr-cabins-v2__booked-item:hover {
+  color: var(--rr-oxblood);
+}
+
+.rr-cabins-v2__booked-item img {
+  width: 52px;
+  height: 40px;
+  object-fit: cover;
+  filter: grayscale(0.35);
+}
+
+.rr-cabins-v2__booked-copy {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  flex: 0 0 auto;
+  min-width: max-content;
+  max-width: none;
+  overflow: visible;
+}
+
+.rr-cabins-v2__booked-name {
+  font-family: var(--rr-font-display);
+  font-size: 16px;
+  line-height: 1.2;
+  white-space: nowrap;
+  overflow: visible;
+  text-overflow: clip;
+}
+
+.rr-cabins-v2__booked-next {
+  font-size: 12px;
+  color: var(--rr-muted);
+  white-space: nowrap;
+  overflow: visible;
+  text-overflow: clip;
+}
+
+.rr-cabins-v2__booked-jump {
+  grid-column: 3;
+  justify-self: end;
+  flex-shrink: 0;
+  position: relative;
+  z-index: 1;
+  padding-left: 8px;
+  background: linear-gradient(90deg, rgba(233, 226, 214, 0) 0%, #e9e2d6 28%);
+  font-size: 11.5px;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  border-bottom: 1px solid rgba(108, 32, 41, 0.35);
+  padding-bottom: 3px;
+  color: var(--rr-oxblood);
+}
+
+.rr-cabins-v2__booked-jump:hover {
+  border-bottom-color: var(--rr-oxblood);
+}
+
+.rr-cabins-v2__group-calendar-slot .rr-group-booking {
+  padding: 0;
+  background: transparent;
+}
+
+.rr-cabins-v2__group-calendar-slot .rr-group-booking--embed .rr-pane-toggle {
+  margin-top: 12px;
+}
+
 .rr-cabins-v2__empty {
   padding: 72px clamp(22px, 4vw, 60px);
 }
@@ -1077,6 +1220,16 @@ a {
 
 .rr-cabins-v2__group-calendar-slot {
   min-height: 1px;
+  min-width: 0;
+  max-width: 100%;
+  overflow-x: clip;
+}
+
+.rr-cabins-v2__group-calendar-slot app-cabin-grid,
+.rr-cabins-v2__group-calendar-slot app-cart-summary {
+  display: block;
+  min-width: 0;
+  max-width: 100%;
 }
 
 .rr-cabins-v2__location {
@@ -1204,6 +1357,28 @@ a {
 
   .rr-cabins-v2__grid {
     grid-template-columns: 1fr;
+  }
+
+  .rr-cabins-v2__booked {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+
+  .rr-cabins-v2__booked-label {
+    grid-column: 1;
+    white-space: normal;
+  }
+
+  .rr-cabins-v2__booked-list {
+    grid-column: 1;
+    width: 100%;
+    margin: 0 -4px;
+    padding: 0 4px 6px;
+  }
+
+  .rr-cabins-v2__booked-jump {
+    grid-column: 1;
+    justify-self: start;
   }
 
   .rr-cabins-v2__group {

@@ -73,6 +73,7 @@
                 class="rr-cabin-grid__day-col"
                 [class.rr-cabin-grid__day-col--today]="isToday(date)"
                 [class.rr-cabin-grid__day-col--weekend]="isWeekend(date)"
+                [class.rr-cabin-grid__day-col--listing-stay]="state.isInListingStay(date)"
               >
                 <span class="rr-cabin-grid__weekday">{{ formatWeekday(date) }}</span>
                 <span class="rr-cabin-grid__date">{{ date.getDate() }}</span>
@@ -94,7 +95,7 @@
                     <img [src]="cabin.imageUrl" [alt]="cabin.name" loading="lazy" />
                   }
                   <div class="rr-cabin-grid__cabin-copy">
-                    <strong [attr.title]="cabin.name">{{ cabin.name }}</strong>
+                    <strong [attr.title]="cabin.name">{{ displayCabinName(cabin.name) }}</strong>
                     <span class="rr-cabin-grid__cabin-id">{{ cabin.lodgifyPropertyId }}</span>
                     @if (selection) {
                       <span class="rr-cabin-grid__rate">
@@ -119,6 +120,7 @@
                     [class.rr-cabin-grid__cell--weekend]="isWeekend(date)"
                     [class.rr-cabin-grid__cell--past]="isPast(date)"
                     [class.rr-cabin-grid__cell--disabled]="!selectable"
+                    [class.rr-cabin-grid__cell--listing-stay]="state.isInListingStay(date)"
                   >
                     <button
                       type="button"

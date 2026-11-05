@@ -1,4 +1,4 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, computed, inject, input, signal } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { ActivatedRoute } from '@angular/router';
 import { map } from 'rxjs';
@@ -17,8 +17,13 @@ import { DateRangeForm } from '../availability/date-range-form/date-range-form';
 })
 export class GroupBookingShell {
   readonly cartOpen = signal(false);
+  /** Hide marketing header when embedded on `/cabins` or Lodgify iframe. */
+  readonly embeddedInCabins = input(false);
   protected readonly embedMode = toSignal(
     inject(ActivatedRoute).queryParamMap.pipe(map((params) => params.get('embed') === '1')),
     { initialValue: false },
+  );
+  protected readonly compactLayout = computed(
+    () => this.embedMode() || this.embeddedInCabins(),
   );
 }

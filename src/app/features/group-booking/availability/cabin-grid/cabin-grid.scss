@@ -17,6 +17,8 @@
   --lf-font: Archivo, system-ui, sans-serif;
 
   display: block;
+  max-width: 100%;
+  min-width: 0;
 }
 
 .rr-cabin-grid__empty,
@@ -132,7 +134,13 @@
 }
 
 .rr-cabin-grid__scroll {
-  overflow: auto;
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  overflow-x: auto;
+  overflow-y: auto;
+  overscroll-behavior-x: contain;
+  -webkit-overflow-scrolling: touch;
   max-height: min(70vh, 36rem);
   border: 1px solid var(--lf-border);
   border-radius: 0;
@@ -140,7 +148,7 @@
 }
 
 .rr-cabin-grid__table {
-  width: 100%;
+  width: max-content;
   min-width: 48rem;
   table-layout: fixed;
   border-collapse: separate;
@@ -208,6 +216,10 @@
 
 .rr-cabin-grid__day-col--stay {
   background-color: var(--lf-stay-bg);
+}
+
+.rr-cabin-grid__day-col--listing-stay {
+  box-shadow: inset 0 -3px 0 rgba(108, 32, 41, 0.45);
 }
 
 .rr-cabin-grid__day-col--today .rr-cabin-grid__date {
@@ -311,6 +323,10 @@
 
 .rr-cabin-grid__cell--stay {
   background-color: var(--lf-stay-bg);
+}
+
+.rr-cabin-grid__cell--listing-stay {
+  box-shadow: inset 0 0 0 1px rgba(108, 32, 41, 0.18);
 }
 
 .rr-cabin-grid__cell--available {
@@ -451,4 +467,86 @@
   padding: 0 0.75rem;
   border: 1px solid var(--lf-border);
   color: var(--lf-text);
+}
+
+@media (max-width: 900px) {
+  .rr-cabin-grid__toolbar {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .rr-cabin-grid__legend {
+    gap: 0.45rem 0.75rem;
+    font-size: 0.6875rem;
+  }
+
+  .rr-cabin-grid__scroll {
+    max-height: none;
+  }
+
+  .rr-cabin-grid__table {
+    min-width: 34rem;
+  }
+
+  .rr-cabin-grid__cabin-col,
+  .rr-cabin-grid__cabin {
+    width: 6.5rem;
+    min-width: 6.5rem;
+    max-width: 6.5rem;
+    padding-left: 0.45rem;
+    padding-right: 0.45rem;
+  }
+
+  .rr-cabin-grid__cabin-info {
+    gap: 0.4rem;
+  }
+
+  .rr-cabin-grid__cabin-info img {
+    width: 1.75rem;
+    height: 1.75rem;
+  }
+
+  .rr-cabin-grid__cabin-copy strong {
+    font-size: 0.6875rem;
+    white-space: normal;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  .rr-cabin-grid__day-col {
+    min-width: 3.35rem;
+    padding: 0.35rem 0.1rem;
+  }
+
+  .rr-cabin-grid__cell {
+    height: 3rem;
+  }
+
+  .rr-cabin-grid__cell-btn {
+    min-height: 3rem;
+    padding: 0.25rem 0.1rem;
+  }
+
+  .rr-cabin-grid__price {
+    font-size: 0.75rem;
+  }
+
+  .rr-cabin-grid__bar {
+    flex-direction: column;
+    gap: 0.15rem;
+    height: auto;
+    min-height: 2.5rem;
+    padding: 0.25rem 0.2rem;
+    font-size: 0.5625rem;
+    white-space: normal;
+    line-height: 1.15;
+    overflow: visible;
+    text-overflow: unset;
+  }
+
+  .rr-cabin-grid__bar i {
+    font-size: 0.625rem;
+  }
 }

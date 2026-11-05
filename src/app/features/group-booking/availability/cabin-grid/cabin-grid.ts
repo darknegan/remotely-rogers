@@ -12,6 +12,7 @@ import {
   startOfDay,
   toDateKey,
 } from '../../../../core/utils/date-utils';
+import { shortCabinName } from '../../../../core/utils/reviews';
 import { CabinAvailability, DayRate, DayStatus } from '../../../../core/models/booking.models';
 
 export interface DaySegment {
@@ -102,7 +103,11 @@ export class CabinGrid {
   }
 
   barLabel(status: DayStatus): string {
-    return status === 'booked' ? 'Reserved' : 'Closed period';
+    return status === 'booked' ? 'Reserved' : 'Closed';
+  }
+
+  displayCabinName(name: string): string {
+    return shortCabinName(name);
   }
 
   onCellClick(cabinId: number, date: Date): void {

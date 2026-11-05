@@ -1,11 +1,16 @@
 :host {
   display: block;
+  max-width: 100%;
+  min-width: 0;
 }
 
 .rr-group-booking {
   padding: 1rem;
   background: #f5f0e6;
   color: #3e2c22;
+  max-width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
 }
 
 .rr-group-booking__header {
@@ -45,6 +50,8 @@
   display: grid;
   gap: 1rem;
   margin-top: 0.85rem;
+  min-width: 0;
+  max-width: 100%;
 }
 
 @media (min-width: 960px) {
@@ -61,6 +68,28 @@
 
 .rr-group-booking--embed {
   padding: 0.5rem 0.35rem 0.75rem;
+  overflow-x: clip;
+}
+
+.rr-group-booking--cabins-embed {
+  overflow-x: clip;
+}
+
+@media (max-width: 959px) {
+  .rr-group-booking--embed .rr-group-booking__layout,
+  .rr-group-booking--cabins-embed .rr-group-booking__layout {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .rr-group-booking--cabins-embed .rr-cart-desktop {
+    display: block;
+    max-width: 100%;
+    min-width: 0;
+  }
+
+  .rr-group-booking--cabins-embed .rr-pane-toggle {
+    display: none;
+  }
 }
 
 .rr-group-booking--embed .rr-group-booking__header {

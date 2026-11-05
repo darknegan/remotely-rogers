@@ -1,14 +1,18 @@
-<div class="rr-group-booking" [class.rr-group-booking--embed]="embedMode()">
-  <header class="rr-group-booking__header">
-    <p class="rr-kicker">Group booking</p>
-    <h2>Book multiple cabins together</h2>
-    <p>
-      Pick dates on each cabin row to build your group stay — every cabin can have a different
-      check-in, check-out, and number of nights.
-    </p>
-  </header>
+<div class="rr-group-booking" [class.rr-group-booking--embed]="compactLayout()" [class.rr-group-booking--cabins-embed]="embeddedInCabins()">
+  @if (!compactLayout()) {
+    <header class="rr-group-booking__header">
+      <p class="rr-kicker">Group booking</p>
+      <h2>Book multiple cabins together</h2>
+      <p>
+        Pick dates on each cabin row to build your group stay — every cabin can have a different
+        check-in, check-out, and number of nights.
+      </p>
+    </header>
+  }
 
-  <app-date-range-form />
+  @if (!embeddedInCabins()) {
+    <app-date-range-form />
+  }
 
   <div class="rr-group-booking__layout">
     <app-cabin-grid />
