@@ -1013,8 +1013,69 @@ a {
   margin-top: 28px;
 }
 
-.rr-cabins-v2__group-shell {
+.rr-cabins-v2__group {
   scroll-margin-top: 96px;
+  margin-top: 100px;
+  padding: 90px clamp(22px, 4vw, 60px) 100px;
+  background: #e9e2d6;
+  border-top: 2px solid var(--rr-brass);
+}
+
+.rr-cabins-v2__group-intro {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 70px;
+  align-items: end;
+  margin-bottom: 40px;
+}
+
+.rr-cabins-v2__group-title {
+  margin: 16px 0 0;
+  font-family: var(--rr-font-display);
+  font-size: clamp(34px, 4vw, 50px);
+  font-weight: 400;
+  line-height: 1.08;
+}
+
+.rr-cabins-v2__group-steps {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  border-top: 1px solid rgba(62, 44, 34, 0.2);
+  font-family: var(--rr-font-sans);
+}
+
+.rr-cabins-v2__group-steps li {
+  padding: 16px 18px 0 0;
+}
+
+.rr-cabins-v2__group-steps li + li {
+  padding: 16px 18px 0;
+  border-left: 1px solid rgba(62, 44, 34, 0.2);
+}
+
+.rr-cabins-v2__group-steps li:last-child {
+  padding-right: 0;
+  padding-left: 18px;
+}
+
+.rr-cabins-v2__step-num {
+  display: block;
+  font-family: var(--rr-font-display);
+  font-size: 30px;
+  color: var(--rr-oxblood);
+}
+
+.rr-cabins-v2__group-steps p {
+  margin: 6px 0 0;
+  font-size: 13.5px;
+  line-height: 1.5;
+  color: var(--rr-walnut-soft);
+}
+
+.rr-cabins-v2__group-calendar-slot {
   min-height: 1px;
 }
 
@@ -1143,6 +1204,37 @@ a {
 
   .rr-cabins-v2__grid {
     grid-template-columns: 1fr;
+  }
+
+  .rr-cabins-v2__group {
+    margin-top: 64px;
+    padding-top: 64px;
+    padding-bottom: 72px;
+  }
+
+  .rr-cabins-v2__group-intro {
+    grid-template-columns: 1fr;
+    gap: 32px;
+    align-items: start;
+  }
+
+  .rr-cabins-v2__group-steps {
+    grid-template-columns: 1fr;
+  }
+
+  .rr-cabins-v2__group-steps li {
+    padding: 16px 0 0;
+  }
+
+  .rr-cabins-v2__group-steps li + li {
+    margin-top: 16px;
+    padding: 16px 0 0;
+    border-left: 0;
+    border-top: 1px solid rgba(62, 44, 34, 0.2);
+  }
+
+  .rr-cabins-v2__group-steps li:last-child {
+    padding-left: 0;
   }
 
   .rr-cabins-v2__location {
