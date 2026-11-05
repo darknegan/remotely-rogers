@@ -13,5 +13,5 @@ import { ReviewBand } from '../../shared/review-band/review-band';
 })
 export class Home {
   readonly cabins = CABIN_LISTINGS;
-  readonly hero = '/media/cabins/hero.jpg';
+  readonly hero = '/cabins/hero.jpg';
 }
