@@ -18,7 +18,7 @@
     </div>
 
     <div class="rr-date-form__field rr-date-form__field--guests">
-      <label for="group-guests">Guests</label>
+      <label for="group-guests">Guests per cabin</label>
       <p-input-number
         inputId="group-guests"
         [ngModel]="state.guestCount()"
@@ -30,6 +30,7 @@
         buttonLayout="horizontal"
         incrementButtonIcon="pi pi-plus"
         decrementButtonIcon="pi pi-minus"
+        suffix=" guests"
       />
     </div>
 
@@ -38,20 +39,19 @@
       <p-button
         type="submit"
         label="Update"
-        icon="pi pi-refresh"
         styleClass="rr-date-form__submit"
         [loading]="state.loading()"
         [disabled]="!!state.dateError() || !state.viewStartDate()"
       />
     </div>
+
+    <p class="rr-date-form__hint">
+      Click an available night on a cabin's row, then a second night 2–5 days later to fill between.
+      Click again to clear that cabin. Each cabin can have its own check-in and check-out.
+    </p>
   </div>
 
   @if (state.dateError(); as dateError) {
     <p-message severity="warn" [text]="dateError" styleClass="rr-date-form__message" />
   }
-
-  <p class="rr-date-form__hint">
-    Click available nights on a cabin row to build a stay one day at a time. Click a second night
-    2–5 days away to fill the dates in between. Click a selected night again to clear that cabin.
-  </p>
 </form>

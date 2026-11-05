@@ -5,29 +5,71 @@
     reservation per cabin.
   </p>
 
-  <label for="guest-first-name">First name</label>
-  <input id="guest-first-name" pInputText formControlName="firstName" autocomplete="given-name" />
-  @if (invalid('firstName')) {
-    <p class="rr-guest-form__error">First name is required.</p>
-  }
+  <label class="rr-guest-form__field">
+    <span>First name *</span>
+    <input
+      id="guest-first-name"
+      pInputText
+      formControlName="firstName"
+      autocomplete="given-name"
+      placeholder="First name"
+    />
+    @if (invalid('firstName')) {
+      <small class="rr-guest-form__error">First name is required.</small>
+    }
+  </label>
 
-  <label for="guest-last-name">Last name</label>
-  <input id="guest-last-name" pInputText formControlName="lastName" autocomplete="family-name" />
-  @if (invalid('lastName')) {
-    <p class="rr-guest-form__error">Last name is required.</p>
-  }
+  <label class="rr-guest-form__field">
+    <span>Last name *</span>
+    <input
+      id="guest-last-name"
+      pInputText
+      formControlName="lastName"
+      autocomplete="family-name"
+      placeholder="Last name"
+    />
+    @if (invalid('lastName')) {
+      <small class="rr-guest-form__error">Last name is required.</small>
+    }
+  </label>
 
-  <label for="guest-email">Email</label>
-  <input id="guest-email" pInputText type="email" formControlName="email" autocomplete="email" />
-  @if (invalid('email')) {
-    <p class="rr-guest-form__error">Enter a valid email.</p>
-  }
+  <label class="rr-guest-form__field rr-guest-form__field--full">
+    <span>Email *</span>
+    <input
+      id="guest-email"
+      pInputText
+      type="email"
+      formControlName="email"
+      autocomplete="email"
+      placeholder="you@example.com"
+    />
+    @if (invalid('email')) {
+      <small class="rr-guest-form__error">Enter a valid email.</small>
+    }
+  </label>
 
-  <label for="guest-phone">Phone <span>(optional)</span></label>
-  <input id="guest-phone" pInputText type="tel" formControlName="phone" autocomplete="tel" />
+  <label class="rr-guest-form__field">
+    <span>Phone <em>(optional)</em></span>
+    <input
+      id="guest-phone"
+      pInputText
+      type="tel"
+      formControlName="phone"
+      autocomplete="tel"
+      placeholder="Phone"
+    />
+  </label>
 
-  <label for="guest-notes">Notes <span>(optional)</span></label>
-  <textarea id="guest-notes" pTextarea formControlName="notes" rows="3"></textarea>
+  <label class="rr-guest-form__field rr-guest-form__field--full">
+    <span>Notes <em>(optional)</em></span>
+    <textarea
+      id="guest-notes"
+      pTextarea
+      formControlName="notes"
+      rows="3"
+      placeholder="Arrival time, special requests…"
+    ></textarea>
+  </label>
 
   @if (state.checkoutError(); as checkoutError) {
     <p-message severity="error" [text]="checkoutError" styleClass="rr-guest-form__message" />
@@ -37,15 +79,14 @@
     <p-button
       type="button"
       label="Back"
-      severity="secondary"
-      [outlined]="true"
+      styleClass="rr-cabins-btn rr-cabins-btn--outline"
       [disabled]="state.checkoutLoading()"
       (onClick)="backToCalendar()"
     />
     <p-button
       type="submit"
       label="Pay now"
-      styleClass="rr-accent-btn"
+      styleClass="rr-cabins-btn rr-cabins-btn--primary"
       [loading]="state.checkoutLoading()"
       [disabled]="state.cartItems().length === 0"
     />

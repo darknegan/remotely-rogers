@@ -80,6 +80,13 @@ export function shortCabinName(name: string): string {
   return name.split('-')[0].trim();
 }
 
+/** Shorter display label for mobile cabin cards and review carousel (F-M01). */
+export function carouselCabinName(name: string): string {
+  return shortCabinName(name)
+    .replace(/\s+(Getaway|Den|Retreat|Bungalow|Haven|Perch)$/i, '')
+    .trim();
+}
+
 export function airbnbListingToCabinSlug(listingTitle: string): string | null {
   const normalized = listingTitle.trim().toLowerCase();
   const match = LISTING_PREFIXES.find(({ prefix }) => normalized.startsWith(prefix));

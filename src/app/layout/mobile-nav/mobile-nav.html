@@ -1,0 +1,40 @@
+<p-drawer
+  [visible]="visible()"
+  (visibleChange)="visibleChange.emit($event)"
+  position="right"
+  [modal]="true"
+  [showCloseIcon]="false"
+  styleClass="rr-mobile-nav-drawer"
+  [style]="{ width: 'min(100vw, 22rem)' }"
+>
+  <div class="rr-mobile-nav">
+    <nav class="rr-mobile-nav__links" aria-label="Mobile">
+      @for (link of links; track link.path) {
+        <a
+          class="rr-mobile-nav__link"
+          [routerLink]="link.path"
+          routerLinkActive="rr-mobile-nav__link--active"
+          [routerLinkActiveOptions]="{ exact: link.path === '/' }"
+          (click)="close()"
+        >
+          {{ link.label }}
+        </a>
+      }
+    </nav>
+
+    <div class="rr-mobile-nav__footer">
+      <a class="rr-mobile-nav__cta" routerLink="/cabins" (click)="close()">
+        Check availability
+      </a>
+      <div class="rr-mobile-nav__contact">
+        <a href="tel:4794405011">479-440-5011</a>
+        <a href="https://instagram.com/remotely.rogers" target="_blank" rel="noopener noreferrer">
+          @remotely.rogers
+        </a>
+      </div>
+      <a class="rr-mobile-nav__email" href="mailto:Jeff@remotelyrogers.com">
+        Jeff@remotelyrogers.com
+      </a>
+    </div>
+  </div>
+</p-drawer>
