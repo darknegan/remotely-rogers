@@ -8,10 +8,12 @@ import {
   allowlistedProductIds,
   BookingWorkerEnv,
   hasBookingmoodApiKey,
+  isAirbnbPreviewEnabled,
   isBookingWriteEnabled,
   occupancyForAdults,
   resolveCabinProducts,
 } from './booking-config';
+import { buildAirbnbPreviewCabins } from './airbnb-preview';
 import { BookingmoodClient } from './bookingmood-client';
 import {
   isStayAvailable,
@@ -40,6 +42,19 @@ export async function buildAvailabilityResponse(
   const windowStart = addDays(arrival, -2);
   const windowEnd = addDays(departure, 2);
   const windowNights = eachNight(windowStart, windowEnd);
+
+  if (isAirbnbPreviewEnabled(env)) {
+    return {
+      bookingEnabled: false,
+      cabins: await buildAirbnbPreviewCabins(
+        env,
+        windowNights,
+        request.arrival,
+        request.departure,
+        origin,
+      ),
+    };
+  }
 
   const products = resolveCabinProducts(env);
   const allowlisted = allowlistedProductIds(env);
