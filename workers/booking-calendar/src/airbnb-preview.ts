@@ -95,6 +95,20 @@ export async function fetchAirbnbCalendar(
   return calendarMonths.flatMap((month) => month.days ?? []);
 }
 
+/** Airbnb-blocked nights close open Bookingmood days. Booked and closed nights stay as Bookingmood reported them. */
+export function blockNightsAirbnbMarksUnavailable(
+  days: Record<string, DayStatus>,
+  airbnbDays: Record<string, DayStatus>,
+): Record<string, DayStatus> {
+  const next = { ...days };
+  for (const [key, status] of Object.entries(airbnbDays)) {
+    if (status === 'blocked' && (next[key] === 'available' || next[key] === 'unknown')) {
+      next[key] = 'blocked';
+    }
+  }
+  return next;
+}
+
 export function mapAirbnbDaysToStatuses(
   days: AirbnbCalendarDay[],
   windowNights: Date[],
@@ -122,6 +136,21 @@ export function monthSpan(windowNights: Date[]): { year: number; month: number; 
     month: first.getMonth() + 1,
     count: Math.min(Math.max(count, 1), MAX_MONTHS),
   };
+}
+
+export async function airbnbStatusesForCabin(
+  env: BookingWorkerEnv,
+  cabinId: number,
+  windowNights: Date[],
+): Promise<Record<string, DayStatus> | null> {
+  const listingId = parseAirbnbListingMap(env.AIRBNB_LISTING_MAP)[cabinId];
+  if (!listingId || !env.AIRBNB_WEB_API_KEY?.trim() || windowNights.length === 0) {
+    return null;
+  }
+
+  const span = monthSpan(windowNights);
+  const calendar = await fetchAirbnbCalendar(listingId, span.year, span.month, span.count, env);
+  return mapAirbnbDaysToStatuses(calendar, windowNights);
 }
 
 export async function buildAirbnbPreviewCabins(

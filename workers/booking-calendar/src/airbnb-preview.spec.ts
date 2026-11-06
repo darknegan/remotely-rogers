@@ -269,11 +269,23 @@ describe('buildAvailabilityResponse with the Airbnb preview', () => {
     expect(client.search).not.toHaveBeenCalled();
   });
 
-  it('uses the Bookingmood path when the flag is off', async () => {
+  it('keeps Bookingmood checkout data and closes nights Airbnb marks unavailable', async () => {
     const fetchMock = stubFetch(Response.json(FIXTURE));
-    const client = bookingmoodClient();
+    const client = {
+      getAvailability: vi.fn().mockResolvedValue([
+        {
+          product_id: PRODUCT,
+          intervals: [
+            { start: '2026-11-01T00:00', end: '2026-11-13T00:00', status: 'available' },
+            { start: '2026-11-13T00:00', end: '2026-11-14T00:00', status: 'booked' },
+            { start: '2026-11-14T00:00', end: '2026-12-01T00:00', status: 'available' },
+          ],
+        },
+      ]),
+      search: vi.fn().mockResolvedValue([]),
+    } as unknown as BookingmoodClient;
 
-    await buildAvailabilityResponse(
+    const result = await buildAvailabilityResponse(
       { arrival: '2026-11-09', departure: '2026-11-12', adults: 2 },
       client,
       previewEnv({
@@ -284,7 +296,13 @@ describe('buildAvailabilityResponse with the Airbnb preview', () => {
       'https://example.com',
     );
 
+    const blackGum = result.cabins.find((cabin) => cabin.cabinId === 1)!;
     expect(client.getAvailability).toHaveBeenCalled();
-    expect(fetchMock).not.toHaveBeenCalled();
+    expect(fetchMock).toHaveBeenCalled();
+    expect(result.bookingEnabled).toBe(false);
+    expect(blackGum.days['2026-11-07']).toBe('blocked');
+    expect(blackGum.days['2026-11-09']).toBe('available');
+    expect(blackGum.days['2026-11-13']).toBe('booked');
+    expect(blackGum.available).toBe(true);
   });
 });
