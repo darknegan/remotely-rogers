@@ -15,6 +15,8 @@
   --lf-stay-bg: rgba(108, 32, 41, 0.08);
   --lf-weekend-bg: #ede5d6;
   --lf-font: Archivo, system-ui, sans-serif;
+  --rr-cabin-col: 14.5rem;
+  --rr-day-col: 3.7rem;
 
   display: block;
   max-width: 100%;
@@ -148,8 +150,7 @@
 }
 
 .rr-cabin-grid__table {
-  width: max-content;
-  min-width: 48rem;
+  width: 100%;
   table-layout: fixed;
   border-collapse: separate;
   border-spacing: 0;
@@ -181,9 +182,9 @@
 .rr-cabin-grid__cabin {
   position: sticky;
   left: 0;
-  width: 14.5rem;
-  min-width: 14.5rem;
-  max-width: 14.5rem;
+  width: var(--rr-cabin-col);
+  min-width: var(--rr-cabin-col);
+  max-width: var(--rr-cabin-col);
   overflow: hidden;
   text-align: left;
   background: var(--lf-bg);
@@ -205,7 +206,8 @@
 }
 
 .rr-cabin-grid__day-col {
-  min-width: 4.25rem;
+  width: auto;
+  min-width: var(--rr-day-col);
   padding: 0.45rem 0.2rem;
   text-align: center;
 }
@@ -484,15 +486,13 @@
     max-height: none;
   }
 
-  .rr-cabin-grid__table {
-    min-width: 34rem;
+  :host {
+    --rr-cabin-col: 6.5rem;
+    --rr-day-col: 3.35rem;
   }
 
   .rr-cabin-grid__cabin-col,
   .rr-cabin-grid__cabin {
-    width: 6.5rem;
-    min-width: 6.5rem;
-    max-width: 6.5rem;
     padding-left: 0.45rem;
     padding-right: 0.45rem;
   }
@@ -516,7 +516,6 @@
   }
 
   .rr-cabin-grid__day-col {
-    min-width: 3.35rem;
     padding: 0.35rem 0.1rem;
   }
 

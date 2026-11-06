@@ -73,16 +73,18 @@
     }
 
     @if (mode() === 'calendar') {
-      <p-button
-        label="Continue to checkout"
-        styleClass="rr-cart__checkout rr-group-booking-cta"
-        [disabled]="!state.canCheckout()"
-        (onClick)="continueToCheckout()"
-      />
+      <div class="rr-cart__actions">
+        <p-button
+          label="Continue to checkout"
+          styleClass="rr-cart__checkout rr-group-booking-cta"
+          [disabled]="!state.canCheckout()"
+          (onClick)="continueToCheckout()"
+        />
 
-      <p class="rr-cart__note">
-        You'll complete one Bookingmood checkout for all selected cabins.
-      </p>
+        <p class="rr-cart__note">
+          You'll complete one Bookingmood checkout for all selected cabins.
+        </p>
+      </div>
     }
   }
 </aside>

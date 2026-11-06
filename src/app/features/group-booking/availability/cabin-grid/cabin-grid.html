@@ -61,7 +61,7 @@
     }
 
     <div class="rr-cabin-grid__scroll">
-      <table class="rr-cabin-grid__table">
+      <table class="rr-cabin-grid__table" [style.min-width]="tableMinWidth()">
         <thead>
           <tr>
             <th scope="col" class="rr-cabin-grid__cabin-col">
@@ -152,6 +152,7 @@
                   <td
                     class="rr-cabin-grid__cell rr-cabin-grid__cell--bar"
                     [attr.colspan]="segment.colspan"
+                    [attr.aria-label]="barLabel(segment.status)"
                     [class.rr-cabin-grid__cell--booked]="segment.status === 'booked'"
                     [class.rr-cabin-grid__cell--blocked]="
                       segment.status === 'blocked' ||
@@ -164,6 +165,7 @@
                       class="rr-cabin-grid__bar"
                       [class.rr-cabin-grid__bar--booked]="segment.status === 'booked'"
                       [class.rr-cabin-grid__bar--blocked]="segment.status === 'blocked'"
+                      [attr.title]="barLabel(segment.status)"
                     >
                       <i
                         class="pi"
@@ -171,7 +173,9 @@
                         [class.pi-ban]="segment.status === 'blocked'"
                         aria-hidden="true"
                       ></i>
-                      {{ barLabel(segment.status) }}
+                      @if (segment.colspan > 1) {
+                        <span>{{ barLabel(segment.status) }}</span>
+                      }
                     </div>
                   </td>
                 }
