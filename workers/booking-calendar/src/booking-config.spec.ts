@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
 
 import {
+  buildGuestFormValues,
   isBookingWriteEnabled,
   parseProductMap,
   resolveCabinProducts,
@@ -44,6 +45,34 @@ describe('isBookingWriteEnabled', () => {
 
   it('is true when required config and bindings present', () => {
     expect(isBookingWriteEnabled(durableEnv)).toBe(true);
+  });
+
+  it('is true with a combined Bookingmood name service', () => {
+    expect(
+      isBookingWriteEnabled({
+        ...durableEnv,
+        BOOKINGMOOD_FORM_SERVICES: JSON.stringify({
+          name: MOCK_UUID,
+          email: '44444444-4444-4444-8444-444444444444',
+        }),
+      }),
+    ).toBe(true);
+  });
+});
+
+describe('buildGuestFormValues', () => {
+  it('sends a Bookingmood name service as first and last name', () => {
+    const name = '55555555-5555-4555-8555-555555555555';
+    const email = '66666666-6666-4666-8666-666666666666';
+    expect(
+      buildGuestFormValues(
+        { name, email },
+        { firstName: 'Ada', lastName: 'Lovelace', email: 'ada@example.com' },
+      ),
+    ).toEqual({
+      [name]: { first_name: 'Ada', last_name: 'Lovelace' },
+      [email]: 'ada@example.com',
+    });
   });
 });
 

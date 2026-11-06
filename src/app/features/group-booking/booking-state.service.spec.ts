@@ -80,7 +80,7 @@ describe('BookingStateService booking write policy', () => {
     expect(service.canCheckout()).toBe(false);
   });
 
-  it('prices available nights at $132 when Bookingmood sends no rate', () => {
+  it('prices available nights at $1 when Bookingmood sends no rate', () => {
     const quote = sampleQuote(1);
     quote.nightlyRate = 0;
     quote.days = { '2026-08-01': 'available', '2026-08-02': 'available' };
@@ -93,7 +93,7 @@ describe('BookingStateService booking write policy', () => {
       },
     });
 
-    expect(service.cartItems()[0].totalPrice).toBe(264);
+    expect(service.cartItems()[0].totalPrice).toBe(2);
   });
 
   it('keeps checkout disabled when API omits bookingEnabled', () => {

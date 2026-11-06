@@ -1,4 +1,5 @@
 import { CABIN_CONFIG } from '../../../src/environments/cabin-config';
+import { BookingmoodFormValue } from './bookingmood-client';
 
 export interface BookingWorkerEnv {
   ASSETS: Fetcher;
@@ -24,6 +25,8 @@ export interface ResolvedCabinProduct {
 }
 
 export interface GuestFormServiceIds {
+  /** Bookingmood `name` service. Sent as `{ first_name, last_name }`. */
+  name?: string;
   firstName?: string;
   lastName?: string;
   email?: string;
@@ -150,7 +153,10 @@ export function isBookingWriteEnabled(env: BookingWorkerEnv): boolean {
   }
 
   const services = parseGuestFormServices(env.BOOKINGMOOD_FORM_SERVICES);
-  if (!services.firstName || !services.lastName || !services.email) {
+  const hasName =
+    isServiceId(services.name) ||
+    (isServiceId(services.firstName) && isServiceId(services.lastName));
+  if (!hasName || !isServiceId(services.email)) {
     return false;
   }
 
@@ -178,24 +184,43 @@ export function buildGuestFormValues(
     phone?: string;
     notes?: string;
   },
-): Record<string, string> {
-  const values: Record<string, string> = {};
-  if (services.firstName) {
-    values[services.firstName] = guest.firstName;
+): Record<string, BookingmoodFormValue> {
+  const values: Record<string, BookingmoodFormValue> = {};
+  if (isServiceId(services.name)) {
+    values[services.name] = {
+      first_name: guest.firstName,
+      last_name: guest.lastName,
+    };
+  } else if (
+    isServiceId(services.firstName) &&
+    services.firstName === services.lastName
+  ) {
+    values[services.firstName] = {
+      first_name: guest.firstName,
+      last_name: guest.lastName,
+    };
+  } else {
+    if (isServiceId(services.firstName)) {
+      values[services.firstName] = guest.firstName;
+    }
+    if (isServiceId(services.lastName)) {
+      values[services.lastName] = guest.lastName;
+    }
   }
-  if (services.lastName) {
-    values[services.lastName] = guest.lastName;
-  }
-  if (services.email) {
+  if (isServiceId(services.email)) {
     values[services.email] = guest.email;
   }
-  if (services.phone && guest.phone) {
+  if (isServiceId(services.phone) && guest.phone) {
     values[services.phone] = guest.phone;
   }
-  if (services.notes && guest.notes) {
+  if (isServiceId(services.notes) && guest.notes) {
     values[services.notes] = guest.notes;
   }
   return values;
+}
+
+function isServiceId(value: string | undefined): value is string {
+  return !!value && UUID.test(value);
 }
 
 export function occupancyForAdults(env: BookingWorkerEnv, adults: number): Record<string, number> {

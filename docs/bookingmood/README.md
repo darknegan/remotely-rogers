@@ -12,7 +12,7 @@ Set on the **booking Worker** with Wrangler — never in Angular or git:
 | `BOOKINGMOOD_WEBHOOK_SIGNING_SECRET` | Standard Webhooks HMAC verification |
 | `BOOKINGMOOD_PRODUCT_MAP` | Optional JSON `{"1":"<product-uuid>",…}` cabin id → product |
 | `BOOKINGMOOD_CAPACITY_GROUP_ID` | Occupancy map key for cart/book |
-| `BOOKINGMOOD_FORM_SERVICES` | JSON map `{ "firstName": "<service-uuid>", … }` |
+| `BOOKINGMOOD_FORM_SERVICES` | JSON map. A Bookingmood `name` service uses `{ "name", "email", "phone" }` and is sent as `{ first_name, last_name }`. Split text fields use `{ "firstName", "lastName", "email" }`. |
 | `BOOKINGMOOD_BOOKING_ENABLED` | Must be **`true`** (explicit) to allow checkout writes; unset/`false`/other values keep writes off |
 
 Copy `.env.example` → `.dev.vars` for local Worker dev.
@@ -135,6 +135,6 @@ These are **review / cutover gates** — not automated in this migration PR:
 | **Concurrency / ordering** | Status merges are atomic per reference in `BookingCoordinator` DO; **KV webhook dedupe** is not cross-isolate atomic. Extreme parallel delivery may need operational monitoring. |
 | **Checkout timeout E2E** | Coordinator marks stale pending **indeterminate**; full **cart-checkout timeout → guest outcome** path is not covered by Vitest E2E. |
 | **Webhook before seed** | `calendar_events.*` needs `booking:id:{uuid}` from checkout; early webhook → **422** (retry). No live Bookingmood booking lookup in Worker yet. |
-| **Cloudflare plan** | **Classic** Durable Object (`BookingCoordinator`, `state.storage`, `migrations.new_classes`). Confirm account Workers plan supports classic DOs; replace placeholder KV ids before deploy. |
+| **Cloudflare plan** | SQLite-backed Durable Object (`BookingCoordinator`, `state.storage`, `migrations.new_sqlite_classes`). The Workers free plan rejects classic `new_classes` migrations. |
 
 Keep **`BOOKINGMOOD_BOOKING_ENABLED`** off until secrets, product map, bindings, and webhook registration are done. PR remains unmerged until review sign-off — not production approval.

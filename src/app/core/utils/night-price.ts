@@ -1,8 +1,11 @@
 import { CabinAvailability } from '../models/booking.models';
 import { toDateKey } from './date-utils';
 
-/** Shown on available nights until Bookingmood returns a per-night price. */
-export const PLACEHOLDER_NIGHTLY_RATE = 132;
+/**
+ * Shown on available nights until Bookingmood returns a per-night price.
+ * Temporary checkout rent on the cabins is $1 per night.
+ */
+export const PLACEHOLDER_NIGHTLY_RATE = 1;
 
 /** Price to show for one night. Real rates win; available nights fall back to the placeholder. */
 export function displayedNightPrice(
