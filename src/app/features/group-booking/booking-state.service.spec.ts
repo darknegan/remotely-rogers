@@ -120,6 +120,28 @@ describe('BookingStateService booking write policy', () => {
     expect(createCheckout).not.toHaveBeenCalled();
   });
 
+  it('sizes the calendar window to the fitted day count and refetches once', () => {
+    const start = startOfDay(new Date());
+    start.setDate(start.getDate() + 20);
+    service.setViewStartDate(start);
+    service.setViewDayCount(12);
+    service.searchAvailability();
+
+    expect(service.timelineDates()).toHaveLength(12);
+    expect(fetchAvailability).toHaveBeenCalledTimes(1);
+
+    service.setViewDayCount(18);
+    expect(service.timelineDates()).toHaveLength(18);
+    expect(fetchAvailability).toHaveBeenCalledTimes(2);
+
+    service.setViewDayCount(18);
+    expect(fetchAvailability).toHaveBeenCalledTimes(2);
+
+    service.setViewDayCount(2);
+    expect(service.viewDayCount()).toBe(7);
+    expect(service.timelineDates()).toHaveLength(7);
+  });
+
   it('calls createCheckout when API enabled booking and cart is ready', () => {
     fetchAvailability.mockReturnValue(
       of({

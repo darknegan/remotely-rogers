@@ -26,7 +26,10 @@ import { findNextOpenStay, formatNextOpenLabel } from './booking-next-open';
 const MAX_AUTO_FILL_GAP_DAYS = 5;
 const CART_STORAGE_KEY = 'rr-group-booking-cart';
 
-export const DEFAULT_VIEW_DAYS = 7;
+/** Fallback window before the calendar measures how many days fit. */
+export const DEFAULT_VIEW_DAYS = 14;
+export const MIN_VIEW_DAYS = 7;
+export const MAX_VIEW_DAYS = 28;
 
 interface PendingCellSelection {
   cabinId: number;
@@ -49,6 +52,7 @@ export class BookingStateService {
   readonly cabins = this.config.cabins;
 
   readonly viewStartDate = signal<Date | null>(null);
+  readonly viewDayCount = signal(DEFAULT_VIEW_DAYS);
   readonly guestCount = signal(2);
   readonly availabilityMap = signal<Record<number, CabinAvailability>>({});
   readonly cabinSelections = signal<Record<number, CabinSelection>>({});
@@ -76,7 +80,7 @@ export class BookingStateService {
 
     return {
       arrival: start,
-      departure: addDays(start, DEFAULT_VIEW_DAYS),
+      departure: addDays(start, this.viewDayCount()),
     };
   });
 
@@ -270,8 +274,28 @@ export class BookingStateService {
       return;
     }
 
-    this.setViewStartDate(addDays(start, direction * DEFAULT_VIEW_DAYS));
+    this.setViewStartDate(addDays(start, direction * this.viewDayCount()));
     this.searchAvailability();
+  }
+
+  /**
+   * Show as many nights as fit the calendar width. Refetches only after a
+   * search has already run, so the first load can measure before fetching.
+   */
+  setViewDayCount(days: number): void {
+    if (!Number.isFinite(days)) {
+      return;
+    }
+
+    const next = Math.min(MAX_VIEW_DAYS, Math.max(MIN_VIEW_DAYS, Math.trunc(days)));
+    if (next === this.viewDayCount()) {
+      return;
+    }
+
+    this.viewDayCount.set(next);
+    if (this.hasSearched() && this.viewStartDate() && !this.dateError()) {
+      this.searchAvailability();
+    }
   }
 
   setViewStartDate(date: Date | null): void {
