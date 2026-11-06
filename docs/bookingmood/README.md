@@ -71,7 +71,8 @@ Bookingmood sync is **iCal import/export**, not full listing import. See [iCal s
 A stopgap so `POST /api/availability` shows real Airbnb availability before the cabins' Airbnb `.ics` feeds are imported into Bookingmood (`workers/booking-calendar/src/airbnb-preview.ts`).
 
 - It calls Airbnb's **undocumented** `PdpAvailabilityCalendar` query through Bookingmood's `airbnb-availability` relay. It can break without warning if Airbnb rotates the query hash or web key, or if Bookingmood changes the route. Demo use only.
-- It is **read-only**. While the flag is on, it takes precedence over the Bookingmood account even when a key and product map are set, `bookingEnabled` is `false`, and `POST /api/checkout` is refused. Nights come back as `available` or `blocked` (Airbnb doesn't say booked vs closed), prices are `0`, and nights outside the response are `unknown`.
+- With the listing map and web key set, Airbnb blocks are applied on top of Bookingmood availability even when `AIRBNB_PREVIEW_ENABLED` is off. A night Airbnb marks unavailable becomes `blocked` unless Bookingmood already has it booked, pending, or closed. Checkout stays enabled and refuses those nights. If the Airbnb calendar request fails, that cabin is returned as an error instead of shown as open.
+- While `AIRBNB_PREVIEW_ENABLED` is `true`, Airbnb replaces Bookingmood entirely, `bookingEnabled` is `false`, and `POST /api/checkout` is refused. Nights come back as `available` or `blocked`, prices are `0`, and nights outside the response are `unknown`.
 - Upstream responses are cached at the edge for 5 minutes.
 
 | Name | Type | Purpose |
