@@ -8,6 +8,10 @@ export interface BookingWorkerEnv {
   BOOKINGMOOD_CAPACITY_GROUP_ID?: string;
   BOOKINGMOOD_FORM_SERVICES?: string;
   BOOKINGMOOD_BOOKING_ENABLED?: string;
+  AIRBNB_PREVIEW_ENABLED?: string;
+  AIRBNB_LISTING_MAP?: string;
+  AIRBNB_WEB_API_KEY?: string;
+  AIRBNB_PREVIEW_UPSTREAM?: string;
   BOOKING_STATE?: KVNamespace;
   BOOKING_COORDINATOR?: DurableObjectNamespace;
 }
@@ -49,6 +53,32 @@ export function parseProductMap(raw: string | undefined): Record<number, string>
   } catch {
     return {};
   }
+}
+
+export function parseAirbnbListingMap(raw: string | undefined): Record<number, string> {
+  if (!raw?.trim()) {
+    return {};
+  }
+
+  try {
+    const parsed = JSON.parse(raw) as Record<string, unknown>;
+    const map: Record<number, string> = {};
+    for (const [key, value] of Object.entries(parsed)) {
+      const id = Number(key);
+      const listingId = typeof value === 'number' ? String(value) : value;
+      if (!Number.isFinite(id) || typeof listingId !== 'string' || !/^\d+$/.test(listingId)) {
+        continue;
+      }
+      map[id] = listingId;
+    }
+    return map;
+  } catch {
+    return {};
+  }
+}
+
+export function isAirbnbPreviewEnabled(env: BookingWorkerEnv): boolean {
+  return env.AIRBNB_PREVIEW_ENABLED?.trim().toLowerCase() === 'true';
 }
 
 export function resolveCabinProducts(env: BookingWorkerEnv): ResolvedCabinProduct[] {
@@ -102,7 +132,7 @@ export function isExplicitBookingWriteFlagEnabled(env: BookingWorkerEnv): boolea
 }
 
 export function isBookingWriteEnabled(env: BookingWorkerEnv): boolean {
-  if (!isExplicitBookingWriteFlagEnabled(env)) {
+  if (!isExplicitBookingWriteFlagEnabled(env) || isAirbnbPreviewEnabled(env)) {
     return false;
   }
 
