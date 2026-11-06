@@ -46,6 +46,13 @@ export interface BookingmoodBookingConfirmation {
   payment_expiry_timestamp?: string | null;
 }
 
+export type BookingmoodFormValue =
+  | string
+  | number
+  | boolean
+  | null
+  | Record<string, string | null>;
+
 export type BookingmoodFetch = (
   input: RequestInfo | URL,
   init?: RequestInit,
@@ -143,7 +150,7 @@ export class BookingmoodClient {
       product_id: string;
       interval: { start: string; end: string };
       occupancy: Record<string, number>;
-      form_values: Record<string, string | number | boolean | null>;
+      form_values: Record<string, BookingmoodFormValue>;
     }>;
     couponCodes?: string[];
   }): Promise<BookingmoodCartValidateItem[]> {
@@ -168,7 +175,7 @@ export class BookingmoodClient {
       product_id: string;
       interval: { start: string; end: string };
       occupancy: Record<string, number>;
-      form_values: Record<string, string | number | boolean | null>;
+      form_values: Record<string, BookingmoodFormValue>;
     }>;
     couponCodes?: string[];
   }): Promise<BookingmoodBookingConfirmation> {

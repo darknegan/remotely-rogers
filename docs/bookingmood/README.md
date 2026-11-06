@@ -12,7 +12,7 @@ Set on the **booking Worker** with Wrangler — never in Angular or git:
 | `BOOKINGMOOD_WEBHOOK_SIGNING_SECRET` | Standard Webhooks HMAC verification |
 | `BOOKINGMOOD_PRODUCT_MAP` | Optional JSON `{"1":"<product-uuid>",…}` cabin id → product |
 | `BOOKINGMOOD_CAPACITY_GROUP_ID` | Occupancy map key for cart/book |
-| `BOOKINGMOOD_FORM_SERVICES` | JSON map `{ "firstName": "<service-uuid>", … }` |
+| `BOOKINGMOOD_FORM_SERVICES` | JSON map. A Bookingmood `name` service uses `{ "name", "email", "phone" }` and is sent as `{ first_name, last_name }`. Split text fields use `{ "firstName", "lastName", "email" }`. |
 | `BOOKINGMOOD_BOOKING_ENABLED` | Must be **`true`** (explicit) to allow checkout writes; unset/`false`/other values keep writes off |
 
 Copy `.env.example` → `.dev.vars` for local Worker dev.

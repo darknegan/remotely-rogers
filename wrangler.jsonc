@@ -15,8 +15,7 @@
   "kv_namespaces": [
     {
       "binding": "BOOKING_STATE",
-      "id": "00000000000000000000000000000000",
-      "preview_id": "00000000000000000000000000000001"
+      "id": "57d85ac3dce6486f8858f9ae327c9152"
     }
   ],
   "durable_objects": {

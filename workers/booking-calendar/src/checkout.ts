@@ -110,7 +110,7 @@ export async function createBookingCheckout(
     product_id: string;
     interval: { start: string; end: string };
     occupancy: Record<string, number>;
-    form_values: Record<string, string>;
+    form_values: ReturnType<typeof buildGuestFormValues>;
   }> = [];
 
   const unavailable: string[] = [];
