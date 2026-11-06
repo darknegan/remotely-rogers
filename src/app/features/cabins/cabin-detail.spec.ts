@@ -27,14 +27,15 @@ describe('CabinDetail single-cabin booking entry', () => {
     }).compileComponents();
   });
 
-  it('Book now targets internal group-booking, not external payment URLs', () => {
+  it('Book now opens checkout with this cabin preselected', () => {
     const fixture = TestBed.createComponent(CabinDetail);
     fixture.detectChanges();
 
     const href = fixture.componentInstance.bookHref();
 
-    expect(href.startsWith('/group-booking')).toBe(true);
+    expect(href.startsWith('/group-booking/checkout')).toBe(true);
     expect(href).toContain('cabin=');
+    expect(href).toContain('product_id=936c1ff7-2900-410b-9ced-cc2cf6ec3b65');
     expect(href).not.toMatch(/lodgify|stripe|bookingmood\.com\/pay/i);
   });
 });

@@ -17,6 +17,7 @@ import { SearchState } from '../../core/search/search-state.service';
 import { nightCount, toDateKey } from '../../core/utils/date-utils';
 import { averageRating } from '../../core/utils/reviews';
 import { reviewsForCabin } from '../content/reviews/reviews.data';
+import { bookingmoodProductId } from '../../core/booking/bookingmood-products';
 import { environment } from '../../../environments/environment';
 import { BookingBar } from '../../layout/booking-bar/booking-bar';
 import { MapEmbed } from '../../layout/map-embed/map-embed';
@@ -66,13 +67,18 @@ export class CabinDetail {
     if (!cabin) {
       return '/cabins';
     }
-    const url = new URL(cabin.bookUrl, environment.siteBaseUrl);
+    const productId = bookingmoodProductId(cabin.id);
+    const url = new URL('/group-booking/checkout', environment.siteBaseUrl);
+    url.searchParams.set('cabin', cabin.slug);
+    if (productId) {
+      url.searchParams.set('product_id', productId);
+    }
     const arrival = this.search.checkIn();
     const departure = this.search.checkOut();
     if (arrival && departure && !this.search.dateError()) {
-      url.searchParams.set('checkIn', toDateKey(arrival));
-      url.searchParams.set('checkOut', toDateKey(departure));
-      url.searchParams.set('adults', String(this.search.adults()));
+      url.searchParams.set('start', toDateKey(arrival));
+      url.searchParams.set('end', toDateKey(departure));
+      url.searchParams.set('guests', String(this.search.adults()));
     }
     return url.pathname + url.search;
   });

@@ -40,7 +40,10 @@ describe('CheckoutPage direct URL guard', () => {
           provide: BookingApiService,
           useValue: {
             getConfig: () => ({
-              cabins: [{ id: 1, slug: 'test', name: 'Test Cabin' }],
+              cabins: [
+              { id: 1, slug: 'test', name: 'Test Cabin' },
+              { id: 2, slug: 'test-2', name: 'Second Cabin' },
+            ],
               maxGuestsPerCabin: 8,
               minNights: 1,
             }),
@@ -60,7 +63,7 @@ describe('CheckoutPage direct URL guard', () => {
     vi.spyOn(router, 'navigate').mockResolvedValue(true);
   });
 
-  it('stays on checkout when writes are disabled but the cart has cabins', async () => {
+  it('opens the Bookingmood widget on the single selected cabin', () => {
     const state = TestBed.inject(BookingStateService);
     state.availabilityMap.set({ 1: sampleQuote(1) });
     state.cabinSelections.set({
@@ -70,23 +73,39 @@ describe('CheckoutPage direct URL guard', () => {
         departure: parseDateKey('2026-08-03'),
       },
     });
-    expect(state.canContinue()).toBe(true);
-    expect(state.bookingEnabled()).toBe(false);
 
     const fixture = TestBed.createComponent(CheckoutPage);
     fixture.detectChanges();
-    fixture.componentInstance.leaveIfCartEmpty();
+    const url = new URL(fixture.componentInstance.widgetUrl());
 
+    expect(url.hostname).toBe('www.bookingmood.com');
+    expect(url.searchParams.get('product_id')).toBe('936c1ff7-2900-410b-9ced-cc2cf6ec3b65');
+    expect(url.searchParams.get('start')).toBe('2026-08-01');
+    expect(url.searchParams.get('end')).toBe('2026-08-03');
     expect(router.navigate).not.toHaveBeenCalled();
   });
 
-  it('redirects away from checkout when the cart is empty', () => {
+  it('keeps the shopping cart open when several cabins are selected', () => {
+    const state = TestBed.inject(BookingStateService);
+    state.availabilityMap.set({ 1: sampleQuote(1), 2: sampleQuote(2) });
+    state.cabinSelections.set({
+      1: {
+        cabinId: 1,
+        arrival: parseDateKey('2026-08-01'),
+        departure: parseDateKey('2026-08-03'),
+      },
+      2: {
+        cabinId: 2,
+        arrival: parseDateKey('2026-08-01'),
+        departure: parseDateKey('2026-08-03'),
+      },
+    });
+
     const fixture = TestBed.createComponent(CheckoutPage);
     fixture.detectChanges();
-    fixture.componentInstance.leaveIfCartEmpty();
+    const url = new URL(fixture.componentInstance.widgetUrl());
 
-    expect(router.navigate).toHaveBeenCalledWith(['/group-booking'], {
-      queryParamsHandling: 'preserve',
-    });
+    expect(url.searchParams.has('product_id')).toBe(false);
+    expect(url.searchParams.has('start')).toBe(false);
   });
 });

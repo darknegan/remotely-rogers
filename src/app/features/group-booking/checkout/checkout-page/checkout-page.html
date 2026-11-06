@@ -1,13 +1,14 @@
 <div class="rr-checkout" [class.rr-checkout--embed]="embedMode()">
   <header class="rr-checkout__header">
     <h2>Checkout</h2>
-    <p>Enter guest details, then pay for every selected cabin in one Stripe checkout.</p>
+    <p>
+      Book one cabin, or add several in the Bookingmood cart and pay once. Stripe charges the card
+      on the Bookingmood account.
+    </p>
   </header>
 
-  <div class="rr-checkout__widget">
-    <div class="rr-checkout__layout">
-      <app-guest-details-form />
-      <app-cart-summary mode="checkout" />
-    </div>
+  <div class="rr-checkout__layout">
+    <iframe class="rr-checkout__frame" [src]="widgetSrc()" title="Book your cabins"></iframe>
+    <app-cart-summary mode="checkout" />
   </div>
 </div>
