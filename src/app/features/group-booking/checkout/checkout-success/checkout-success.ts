@@ -27,8 +27,6 @@ export class CheckoutSuccessPage {
       inject(ActivatedRoute).snapshot.queryParamMap.get('booking_reference');
     if (reference) {
       this.state.loadCheckoutReference(reference);
-    } else {
-      this.state.checkoutError.set('Missing booking reference. Return to checkout and try again.');
     }
   }
 }

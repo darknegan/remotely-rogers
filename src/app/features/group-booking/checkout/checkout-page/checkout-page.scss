@@ -41,6 +41,14 @@
   color: var(--rr-muted);
 }
 
+.rr-checkout__frame {
+  width: 100%;
+  min-height: 44rem;
+  border: 0;
+  border-radius: 4px;
+  background: #fff;
+}
+
 .rr-checkout__layout {
   display: grid;
   gap: 1rem;
