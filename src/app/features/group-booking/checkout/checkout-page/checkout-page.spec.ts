@@ -55,11 +55,12 @@ describe('CheckoutPage direct URL guard', () => {
     }).compileComponents();
 
     localStorage.clear();
+    sessionStorage.clear();
     router = TestBed.inject(Router);
     vi.spyOn(router, 'navigate').mockResolvedValue(true);
   });
 
-  it('redirects away from checkout when writes are disabled even with cart items', async () => {
+  it('stays on checkout when writes are disabled but the cart has cabins', async () => {
     const state = TestBed.inject(BookingStateService);
     state.availabilityMap.set({ 1: sampleQuote(1) });
     state.cabinSelections.set({
@@ -69,14 +70,23 @@ describe('CheckoutPage direct URL guard', () => {
         departure: parseDateKey('2026-08-03'),
       },
     });
-    expect(state.cartItems().length).toBeGreaterThan(0);
+    expect(state.canContinue()).toBe(true);
     expect(state.bookingEnabled()).toBe(false);
 
-    TestBed.createComponent(CheckoutPage);
-    await vi.waitFor(() => {
-      expect(router.navigate).toHaveBeenCalledWith(['/group-booking'], {
-        queryParamsHandling: 'preserve',
-      });
+    const fixture = TestBed.createComponent(CheckoutPage);
+    fixture.detectChanges();
+    fixture.componentInstance.leaveIfCartEmpty();
+
+    expect(router.navigate).not.toHaveBeenCalled();
+  });
+
+  it('redirects away from checkout when the cart is empty', () => {
+    const fixture = TestBed.createComponent(CheckoutPage);
+    fixture.detectChanges();
+    fixture.componentInstance.leaveIfCartEmpty();
+
+    expect(router.navigate).toHaveBeenCalledWith(['/group-booking'], {
+      queryParamsHandling: 'preserve',
     });
   });
 });

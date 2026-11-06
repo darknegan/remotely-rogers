@@ -60,6 +60,7 @@ describe('BookingStateService booking write policy', () => {
     });
 
     localStorage.clear();
+    sessionStorage.clear();
     service = TestBed.inject(BookingStateService);
   });
 
@@ -72,10 +73,27 @@ describe('BookingStateService booking write policy', () => {
     });
   }
 
-  it('defaults bookingEnabled to false and blocks checkout', () => {
+  it('defaults bookingEnabled to false and blocks payment, but still opens checkout', () => {
     seedCart();
     expect(service.bookingEnabled()).toBe(false);
+    expect(service.canContinue()).toBe(true);
     expect(service.canCheckout()).toBe(false);
+  });
+
+  it('prices available nights at $132 when Bookingmood sends no rate', () => {
+    const quote = sampleQuote(1);
+    quote.nightlyRate = 0;
+    quote.days = { '2026-08-01': 'available', '2026-08-02': 'available' };
+    service.availabilityMap.set({ 1: quote });
+    service.cabinSelections.set({
+      1: {
+        cabinId: 1,
+        arrival: parseDateKey('2026-08-01'),
+        departure: parseDateKey('2026-08-03'),
+      },
+    });
+
+    expect(service.cartItems()[0].totalPrice).toBe(264);
   });
 
   it('keeps checkout disabled when API omits bookingEnabled', () => {

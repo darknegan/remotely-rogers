@@ -22,6 +22,7 @@ import {
   toDateKey,
 } from '../../core/utils/date-utils';
 import { findNextOpenStay, formatNextOpenLabel } from './booking-next-open';
+import { chargeNightPrice } from '../../core/utils/night-price';
 
 const MAX_AUTO_FILL_GAP_DAYS = 5;
 const CART_STORAGE_KEY = 'rr-group-booking-cart';
@@ -116,10 +117,10 @@ export class BookingStateService {
         const quote = quotes[cabin.id];
         const nights = nightCount(selection.arrival, selection.departure);
         const stayNights = eachNight(selection.arrival, selection.departure);
-        const nightsTotal = stayNights.reduce((sum, night) => {
-          const rate = quote?.dayRates?.[toDateKey(night)];
-          return sum + (rate?.price ?? quote?.nightlyRate ?? 0);
-        }, 0);
+        const nightsTotal = stayNights.reduce(
+          (sum, night) => sum + chargeNightPrice(quote, night),
+          0,
+        );
 
         return {
           cabin,
@@ -135,12 +136,13 @@ export class BookingStateService {
     this.cartItems().reduce((sum, item) => sum + item.totalPrice, 0),
   );
 
+  /** Open the checkout page. Payment itself still requires booking writes. */
+  readonly canContinue = computed(
+    () => this.cartItems().length > 0 && !this.loading() && !this.dateError(),
+  );
+
   readonly canCheckout = computed(
-    () =>
-      this.bookingEnabled() &&
-      this.cartItems().length > 0 &&
-      !this.loading() &&
-      !this.dateError(),
+    () => this.bookingEnabled() && this.canContinue(),
   );
 
   constructor() {
