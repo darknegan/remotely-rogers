@@ -66,6 +66,57 @@ Other types are acknowledged but ignored. Dedupe uses `BOOKING_STATE` KV keyed b
 
 Bookingmood sync is **iCal import/export**, not full listing import. See [iCal synchronization](https://www.bookingmood.com/en-US/docs/synchronization/ical).
 
+## Temporary Airbnb preview
+
+A stopgap so `POST /api/availability` shows real Airbnb availability before the cabins' Airbnb `.ics` feeds are imported into Bookingmood (`workers/booking-calendar/src/airbnb-preview.ts`).
+
+- It calls Airbnb's **undocumented** `PdpAvailabilityCalendar` query through Bookingmood's `airbnb-availability` relay. It can break without warning if Airbnb rotates the query hash or web key, or if Bookingmood changes the route. Demo use only.
+- It is **read-only**. While the flag is on, it takes precedence over the Bookingmood account even when a key and product map are set, `bookingEnabled` is `false`, and `POST /api/checkout` is refused. Nights come back as `available` or `blocked` (Airbnb doesn't say booked vs closed), prices are `0`, and nights outside the response are `unknown`.
+- Upstream responses are cached at the edge for 5 minutes.
+
+| Name | Type | Purpose |
+|------|------|---------|
+| `AIRBNB_PREVIEW_ENABLED` | var | `true` turns the preview on; anything else uses Bookingmood |
+| `AIRBNB_LISTING_MAP` | var | JSON site cabin id → Airbnb listing id (numeric strings) |
+| `AIRBNB_WEB_API_KEY` | secret | Airbnb's public web API key, sent as `X-Airbnb-Api-Key` |
+| `AIRBNB_PREVIEW_UPSTREAM` | var (optional) | Override base URL, e.g. `https://www.airbnb.com/api/v3/PdpAvailabilityCalendar/<hash>` if the Bookingmood relay is blocked |
+
+`AIRBNB_LISTING_MAP` is set in `vars` in `wrangler.jsonc` and `wrangler.booking-test.jsonc`:
+
+```
+AIRBNB_LISTING_MAP={"1":"1522512039110168394","2":"1547465342213988673","3":"1515997598220048670","4":"1511108076176473313","5":"1509551118415599833","6":"1497757944361518833"}
+```
+
+Enable on a deployed Worker (add `-c wrangler.booking-test.jsonc` for the test Worker). `AIRBNB_PREVIEW_ENABLED` is stored as a secret so `wrangler deploy` doesn't wipe it and it can be flipped without a redeploy:
+
+```bash
+npx wrangler secret put AIRBNB_WEB_API_KEY      # paste the d306… key
+npx wrangler secret put AIRBNB_PREVIEW_ENABLED  # true
+```
+
+The web key is embedded in Airbnb's own page HTML. To get the current value:
+
+```bash
+curl -s -A 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36' \
+  https://www.airbnb.com/rooms/1522512039110168394 | rg -o '"key":"d306[a-z0-9]+"'
+```
+
+A cabin with no listing id is `unconfigured`; a failed or malformed upstream response (including a missing or stale key) is `error`.
+
+**Removal:** import each cabin's Airbnb `.ics` into its unit in the Bookingmood account, confirm the Bookingmood calendar shows the Airbnb nights, then run `npx wrangler secret delete AIRBNB_PREVIEW_ENABLED` (locally, set it to `false` in `.dev.vars`). In a follow-up, delete `airbnb-preview.ts` and its spec, the `AIRBNB_*` env fields and helpers in `booking-config.ts`, the preview branch in `availability.ts`, `AIRBNB_LISTING_MAP` from the Wrangler `vars`, and the `AIRBNB_WEB_API_KEY` secret.
+
+## Switching to a new Bookingmood account
+
+API keys only work for the organization that created them, so every ID from the old account is invalid in the new one.
+
+1. In the new account, create six units, one per cabin, using the same names.
+2. Under **Settings › API keys**, create a key.
+3. Locally, put the key in `.dev.vars` and run `BOOKINGMOOD_API_KEY=… npm run sync-bookingmood-products` (read-only; the script reads the key from the environment or `.env`). Record each unit's product UUID.
+4. Replace every account-specific value on the booking Worker with `npx wrangler secret put` (add `-c wrangler.booking-test.jsonc` for the test Worker): `BOOKINGMOOD_API_KEY`, `BOOKINGMOOD_PRODUCT_MAP` (`{"1":"<uuid>",…,"6":"<uuid>"}`), `BOOKINGMOOD_CAPACITY_GROUP_ID`, and `BOOKINGMOOD_FORM_SERVICES`.
+5. Register `https://<booking worker>/api/bookingmood/webhook` in the new account and update `BOOKINGMOOD_WEBHOOK_SIGNING_SECRET`. Delete the webhook in the old account.
+6. Leave `BOOKINGMOOD_BOOKING_ENABLED` unset or `false` until payments and form services are configured in the new account.
+7. Check that `GET /api/products` lists the new units.
+
 ## Cutover / rollback
 
 1. Configure products, feeds, form services, and payment provider in Bookingmood.
