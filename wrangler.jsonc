@@ -28,8 +28,8 @@
   },
   "migrations": [
     {
-      "tag": "v1-booking-coordinator",
-      "new_classes": ["BookingCoordinator"]
+      "tag": "v1-booking-coordinator-sqlite",
+      "new_sqlite_classes": ["BookingCoordinator"]
     }
   ],
   "observability": {
