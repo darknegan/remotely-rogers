@@ -54,11 +54,12 @@ describe('CartSummary checkout entry', () => {
     }).compileComponents();
 
     localStorage.clear();
+    sessionStorage.clear();
     router = TestBed.inject(Router);
     vi.spyOn(router, 'navigate').mockResolvedValue(true);
   });
 
-  it('does not navigate to checkout when booking writes are disabled', () => {
+  it('opens checkout when the cart has cabins even if booking writes are disabled', () => {
     const state = TestBed.inject(BookingStateService);
     state.availabilityMap.set({ 1: sampleQuote(1) });
     state.cabinSelections.set({
@@ -68,7 +69,20 @@ describe('CartSummary checkout entry', () => {
         departure: parseDateKey('2026-08-03'),
       },
     });
+    expect(state.bookingEnabled()).toBe(false);
+    expect(state.canContinue()).toBe(true);
 
+    const fixture = TestBed.createComponent(CartSummary);
+    fixture.detectChanges();
+
+    fixture.componentInstance.continueToCheckout();
+
+    expect(router.navigate).toHaveBeenCalledWith(['/group-booking/checkout'], {
+      queryParamsHandling: 'preserve',
+    });
+  });
+
+  it('does not navigate to checkout when the cart is empty', () => {
     const fixture = TestBed.createComponent(CartSummary);
     fixture.detectChanges();
 

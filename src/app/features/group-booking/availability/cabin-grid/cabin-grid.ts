@@ -12,6 +12,7 @@ import {
   startOfDay,
   toDateKey,
 } from '../../../../core/utils/date-utils';
+import { displayedNightPrice } from '../../../../core/utils/night-price';
 import { shortCabinName } from '../../../../core/utils/reviews';
 import { CabinAvailability, DayRate, DayStatus } from '../../../../core/models/booking.models';
 
@@ -81,21 +82,14 @@ export class CabinGrid implements AfterViewInit, OnDestroy {
   }
 
   dayRate(quote: CabinAvailability | undefined, date: Date): DayRate | undefined {
-    if (!quote) {
+    const price = displayedNightPrice(quote, date);
+    if (price == null) {
       return undefined;
     }
 
-    const exact = quote.dayRates?.[toDateKey(date)];
-    if (exact && exact.price > 0) {
-      return exact;
-    }
-
-    if (quote.days?.[toDateKey(date)] !== 'available' || quote.nightlyRate <= 0) {
-      return exact;
-    }
-
+    const exact = quote?.dayRates?.[toDateKey(date)];
     return {
-      price: quote.nightlyRate,
+      price,
       minStay: exact?.minStay || this.state.config.minNights,
     };
   }

@@ -22,10 +22,12 @@ export class CheckoutPage {
   );
 
   constructor() {
-    afterNextRender(() => {
-      if (!this.state.canCheckout()) {
-        void this.router.navigate(['/group-booking'], { queryParamsHandling: 'preserve' });
-      }
-    });
+    afterNextRender(() => this.leaveIfCartEmpty());
+  }
+
+  leaveIfCartEmpty(): void {
+    if (!this.state.canContinue()) {
+      void this.router.navigate(['/group-booking'], { queryParamsHandling: 'preserve' });
+    }
   }
 }
