@@ -66,45 +66,13 @@ Other types are acknowledged but ignored. Dedupe uses `BOOKING_STATE` KV keyed b
 
 Bookingmood sync is **iCal import/export**, not full listing import. See [iCal synchronization](https://www.bookingmood.com/en-US/docs/synchronization/ical).
 
-## Temporary Airbnb preview
+## Airbnb availability
 
-A stopgap so `POST /api/availability` shows real Airbnb availability before the cabins' Airbnb `.ics` feeds are imported into Bookingmood (`workers/booking-calendar/src/airbnb-preview.ts`).
+Each cabin's Airbnb calendar is an imported iCal feed on its Bookingmood unit (Synchronization → Import iCal feed), with event status set to confirmed. `POST /api/availability` and checkout call Bookingmood `GET /availability` with `perform_sync=true`. Bookingmood refreshes those feeds before answering, and it syncs a given feed at most once every 5 minutes. Confirmed imported events come back as `booked`.
 
-- It calls Airbnb's **undocumented** `PdpAvailabilityCalendar` query through Bookingmood's `airbnb-availability` relay. It can break without warning if Airbnb rotates the query hash or web key, or if Bookingmood changes the route. Demo use only.
-- With the listing map and web key set, Airbnb blocks are applied on top of Bookingmood availability even when `AIRBNB_PREVIEW_ENABLED` is off. A night Airbnb marks unavailable becomes `blocked` unless Bookingmood already has it booked, pending, or closed. Checkout stays enabled and refuses those nights. If the Airbnb calendar request fails, that cabin is returned as an error instead of shown as open.
-- While `AIRBNB_PREVIEW_ENABLED` is `true`, Airbnb replaces Bookingmood entirely, `bookingEnabled` is `false`, and `POST /api/checkout` is refused. Nights come back as `available` or `blocked`, prices are `0`, and nights outside the response are `unknown`.
-- Upstream responses are cached at the edge for 5 minutes.
+The Worker does not call Airbnb. The Bookingmood export that Airbnb reads must leave "Include events from imported calendars" off, so Airbnb bookings are not sent back to Airbnb through Bookingmood.
 
-| Name | Type | Purpose |
-|------|------|---------|
-| `AIRBNB_PREVIEW_ENABLED` | var | `true` turns the preview on; anything else uses Bookingmood |
-| `AIRBNB_LISTING_MAP` | var | JSON site cabin id → Airbnb listing id (numeric strings) |
-| `AIRBNB_WEB_API_KEY` | secret | Airbnb's public web API key, sent as `X-Airbnb-Api-Key` |
-| `AIRBNB_PREVIEW_UPSTREAM` | var (optional) | Override base URL, e.g. `https://www.airbnb.com/api/v3/PdpAvailabilityCalendar/<hash>` if the Bookingmood relay is blocked |
-
-`AIRBNB_LISTING_MAP` is set in `vars` in `wrangler.jsonc` and `wrangler.booking-test.jsonc`:
-
-```
-AIRBNB_LISTING_MAP={"1":"1522512039110168394","2":"1547465342213988673","3":"1515997598220048670","4":"1511108076176473313","5":"1509551118415599833","6":"1497757944361518833"}
-```
-
-Enable on a deployed Worker (add `-c wrangler.booking-test.jsonc` for the test Worker). `AIRBNB_PREVIEW_ENABLED` is stored as a secret so `wrangler deploy` doesn't wipe it and it can be flipped without a redeploy:
-
-```bash
-npx wrangler secret put AIRBNB_WEB_API_KEY      # paste the d306… key
-npx wrangler secret put AIRBNB_PREVIEW_ENABLED  # true
-```
-
-The web key is embedded in Airbnb's own page HTML. To get the current value:
-
-```bash
-curl -s -A 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36' \
-  https://www.airbnb.com/rooms/1522512039110168394 | rg -o '"key":"d306[a-z0-9]+"'
-```
-
-A cabin with no listing id is `unconfigured`; a failed or malformed upstream response (including a missing or stale key) is `error`.
-
-**Removal:** import each cabin's Airbnb `.ics` into its unit in the Bookingmood account, confirm the Bookingmood calendar shows the Airbnb nights, then run `npx wrangler secret delete AIRBNB_PREVIEW_ENABLED` (locally, set it to `false` in `.dev.vars`). In a follow-up, delete `airbnb-preview.ts` and its spec, the `AIRBNB_*` env fields and helpers in `booking-config.ts`, the preview branch in `availability.ts`, `AIRBNB_LISTING_MAP` from the Wrangler `vars`, and the `AIRBNB_WEB_API_KEY` secret.
+Dates past Airbnb's open booking window are imported as booked. As of the November 16, 2026 import, every cabin has a block from May 15, 2027 through November 18, 2027. The site shows those nights as booked until they are opened on Airbnb.
 
 ## Switching to a new Bookingmood account
 
