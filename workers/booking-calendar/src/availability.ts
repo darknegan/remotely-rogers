@@ -2,23 +2,16 @@ import { CABIN_CONFIG } from '../../../src/environments/cabin-config';
 import {
   AvailabilityState,
   CabinAvailability,
-  DayStatus,
 } from '../../../src/app/core/models/booking.models';
 import { addDays, eachNight, parseDateKey, toDateKey } from '../../../src/app/core/utils/date-utils';
 import {
   allowlistedProductIds,
   BookingWorkerEnv,
   hasBookingmoodApiKey,
-  isAirbnbPreviewEnabled,
   isBookingWriteEnabled,
   occupancyForAdults,
   resolveCabinProducts,
 } from './booking-config';
-import {
-  airbnbStatusesForCabin,
-  blockNightsAirbnbMarksUnavailable,
-  buildAirbnbPreviewCabins,
-} from './airbnb-preview';
 import { BookingmoodClient } from './bookingmood-client';
 import {
   isStayAvailable,
@@ -48,19 +41,6 @@ export async function buildAvailabilityResponse(
   const windowEnd = addDays(departure, 2);
   const windowNights = eachNight(windowStart, windowEnd);
 
-  if (isAirbnbPreviewEnabled(env)) {
-    return {
-      bookingEnabled: false,
-      cabins: await buildAirbnbPreviewCabins(
-        env,
-        windowNights,
-        request.arrival,
-        request.departure,
-        origin,
-      ),
-    };
-  }
-
   const products = resolveCabinProducts(env);
   const allowlisted = allowlistedProductIds(env);
 
@@ -77,7 +57,7 @@ export async function buildAvailabilityResponse(
   let availabilityError = false;
 
   try {
-    rows = await client.getAvailability({ productIds: allowlisted, performSync: false });
+    rows = await client.getAvailability({ productIds: allowlisted, performSync: true });
   } catch (error) {
     availabilityError = true;
     console.error('bookingmood_availability_failed', {
@@ -100,41 +80,16 @@ export async function buildAvailabilityResponse(
     }
   }
 
-  const airbnbByCabin = new Map<number, Record<string, DayStatus> | 'error'>();
-  if (!availabilityError) {
-    await Promise.all(
-      products.map(async (cabin) => {
-        try {
-          const statuses = await airbnbStatusesForCabin(env, cabin.cabinId, windowNights);
-          if (statuses) {
-            airbnbByCabin.set(cabin.cabinId, statuses);
-          }
-        } catch (error) {
-          airbnbByCabin.set(cabin.cabinId, 'error');
-          console.error('airbnb_availability_failed', {
-            cabinId: cabin.cabinId,
-            message: error instanceof Error ? error.message : String(error),
-          });
-        }
-      }),
-    );
-  }
-
   const cabins = products.map((cabin) => {
     if (!cabin.productId) {
       return unavailableCabin(cabin.cabinId, windowNights, origin, cabin.slug, 'unconfigured');
     }
 
-    if (availabilityError || airbnbByCabin.get(cabin.cabinId) === 'error') {
+    if (availabilityError) {
       return unavailableCabin(cabin.cabinId, windowNights, origin, cabin.slug, 'error');
     }
 
-    const airbnbDays = airbnbByCabin.get(cabin.cabinId);
-    const bookingmoodDays = mapAvailabilityRowsToDays(rows, cabin.productId, windowNights);
-    const days =
-      airbnbDays && airbnbDays !== 'error'
-        ? blockNightsAirbnbMarksUnavailable(bookingmoodDays, airbnbDays)
-        : bookingmoodDays;
+    const days = mapAvailabilityRowsToDays(rows, cabin.productId, windowNights);
     const stayAvailable = isStayAvailable(days, request.arrival, request.departure);
     const search = searchResults.find((item) => item.productId === cabin.productId);
     const currency = 'USD';
@@ -204,21 +159,9 @@ export async function isCabinRangeAvailable(
     return false;
   }
 
-  const rows = await client.getAvailability({ productIds: [productId], performSync: false });
+  const rows = await client.getAvailability({ productIds: [productId], performSync: true });
   const nights = eachNight(parseDateKey(arrival), parseDateKey(departure));
-  let days = mapAvailabilityRowsToDays(rows, productId, nights);
-  try {
-    const airbnbDays = await airbnbStatusesForCabin(env, cabinId, nights);
-    if (airbnbDays) {
-      days = blockNightsAirbnbMarksUnavailable(days, airbnbDays);
-    }
-  } catch (error) {
-    console.error('airbnb_availability_failed', {
-      cabinId,
-      message: error instanceof Error ? error.message : String(error),
-    });
-    return false;
-  }
+  const days = mapAvailabilityRowsToDays(rows, productId, nights);
   return isStayAvailable(days, arrival, departure);
 }
 
