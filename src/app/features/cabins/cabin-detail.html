@@ -60,14 +60,18 @@
     </div>
 
     <aside class="rr-widget">
-      <h2>From {{ cabin.nightlyFrom | currency: 'USD' : 'symbol' : '1.0-0' }} / night</h2>
-      <p class="rr-stars">{{ rating() }} · Airbnb</p>
-      <app-booking-bar />
-      @if (nights() > 0) {
-        <p>{{ nights() }} nights × {{ cabin.nightlyFrom | currency: 'USD' : 'symbol' : '1.0-0' }}</p>
-        <p><strong>Estimated {{ total() | currency: 'USD' : 'symbol' : '1.0-0' }}</strong></p>
+      @if (useCustomBooking) {
+        <app-booking-panel [cabinId]="cabin.id" [nightlyFrom]="cabin.nightlyFrom" />
+      } @else {
+        <h2>From {{ cabin.nightlyFrom | currency: 'USD' : 'symbol' : '1.0-0' }} / night</h2>
+        <p class="rr-stars">{{ rating() }} · Airbnb</p>
+        <app-booking-bar />
+        @if (nights() > 0) {
+          <p>{{ nights() }} nights × {{ cabin.nightlyFrom | currency: 'USD' : 'symbol' : '1.0-0' }}</p>
+          <p><strong>Estimated {{ total() | currency: 'USD' : 'symbol' : '1.0-0' }}</strong></p>
+        }
+        <a class="rr-btn" [href]="bookHref()" style="margin-top: 16px">Book now</a>
       }
-      <a class="rr-btn" [href]="bookHref()" style="margin-top: 16px">Book now</a>
     </aside>
   </section>
 
@@ -77,11 +81,15 @@
   </div>
 
   <p-drawer header="Book this cabin" [visible]="widgetOpen()" (visibleChange)="widgetOpen.set($event)" position="bottom" [style]="{ height: '70vh' }">
-    <app-booking-bar />
-    @if (nights() > 0) {
-      <p>{{ nights() }} nights · {{ total() | currency: 'USD' : 'symbol' : '1.0-0' }}</p>
+    @if (useCustomBooking) {
+      <app-booking-panel [cabinId]="cabin.id" [nightlyFrom]="cabin.nightlyFrom" [compact]="true" />
+    } @else {
+      <app-booking-bar />
+      @if (nights() > 0) {
+        <p>{{ nights() }} nights · {{ total() | currency: 'USD' : 'symbol' : '1.0-0' }}</p>
+      }
+      <a class="rr-btn" [href]="bookHref()">Book now</a>
     }
-    <a class="rr-btn" [href]="bookHref()">Book now</a>
   </p-drawer>
 
   <p-dialog

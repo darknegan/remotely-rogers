@@ -1,0 +1,107 @@
+.rr-booking-calendar {
+  margin-top: 1rem;
+  font-family: var(--rr-font-sans);
+}
+
+.rr-booking-calendar__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 0.5rem;
+}
+
+.rr-booking-calendar__title {
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  font-size: 0.75rem;
+  color: var(--rr-brass);
+}
+
+.rr-booking-calendar__grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 4px;
+}
+
+.rr-cal-weekday {
+  text-align: center;
+  font-size: 0.65rem;
+  color: var(--rr-sage);
+  text-transform: uppercase;
+}
+
+.rr-cal-day {
+  aspect-ratio: 1;
+  border: 1px solid var(--rr-brass-line);
+  background: var(--rr-ivory);
+  color: var(--rr-walnut);
+  font-size: 0.8rem;
+  cursor: pointer;
+}
+
+.rr-cal-day--muted {
+  opacity: 0.35;
+}
+
+.rr-cal-day--past,
+.rr-cal-day--closed {
+  background: #e8e2d6;
+  color: var(--rr-sage);
+}
+
+.rr-cal-day--reserved {
+  background: repeating-linear-gradient(
+    -45deg,
+    #f5f0e6,
+    #f5f0e6 4px,
+    #dcd4c8 4px,
+    #dcd4c8 8px
+  );
+}
+
+.rr-cal-day--selected-endpoint {
+  background: var(--rr-oxblood);
+  color: var(--rr-ivory);
+}
+
+.rr-cal-day--in-stay {
+  background: #c4a574;
+  color: var(--rr-ivory);
+}
+
+.rr-booking-calendar__legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px 14px;
+  margin-top: 10px;
+  font-size: 0.65rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--rr-sage);
+}
+
+.rr-booking-calendar__legend .dot {
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  margin-right: 4px;
+  border: 1px solid var(--rr-brass-line);
+  vertical-align: middle;
+}
+
+.rr-booking-calendar__legend .dot.endpoint {
+  background: var(--rr-oxblood);
+}
+
+.rr-booking-calendar__legend .dot.stay {
+  background: #c4a574;
+}
+
+.rr-booking-calendar__legend .dot.reserved {
+  background: repeating-linear-gradient(-45deg, #f5f0e6, #f5f0e6 2px, #ccc 2px, #ccc 4px);
+}
+
+.rr-booking-calendar__legend .dot.closed {
+  background: #e8e2d6;
+}

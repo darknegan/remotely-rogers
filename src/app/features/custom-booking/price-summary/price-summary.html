@@ -1,0 +1,31 @@
+@if (state.validating()) {
+  <p class="rr-price-summary__loading">Calculating price…</p>
+} @else if (state.validateError()) {
+  <p class="rr-price-summary__error">{{ state.validateError() }}</p>
+} @else if (state.cartLineItems().length === 0) {
+  <p class="rr-price-summary__muted">Select dates and cabins to see pricing.</p>
+} @else {
+  <dl class="rr-price-summary">
+    @for (line of state.cartLineItems(); track line.id) {
+      <div class="rr-price-row">
+        <dt>{{ line.id }}</dt>
+        <dd>{{ toDollars(line.price?.subtotal ?? 0) | currency: 'USD' }}</dd>
+      </div>
+    }
+    <div class="rr-price-row">
+      <dt>Taxes &amp; fees</dt>
+      <dd>{{ toDollars(taxCents()) | currency: 'USD' }}</dd>
+    </div>
+    <div class="rr-price-row rr-price-row--total">
+      <dt>Total</dt>
+      <dd>{{ toDollars(totalCents()) | currency: 'USD' }}</dd>
+    </div>
+    @if (depositCents() > 0) {
+      <div class="rr-price-row">
+        <dt>Due at reservation (deposit)</dt>
+        <dd>{{ toDollars(depositCents()) | currency: 'USD' }}</dd>
+      </div>
+    }
+    <p class="rr-price-summary__note">Plus a $250 security pre-authorization, held and not charged.</p>
+  </dl>
+}

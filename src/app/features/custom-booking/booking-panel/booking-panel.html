@@ -1,0 +1,69 @@
+<div class="rr-booking-panel" [class.rr-booking-panel--compact]="compact()">
+  @if (state.reservationsOff()) {
+    <app-reservations-off-banner />
+  }
+
+  @if (state.loading()) {
+    <p class="rr-booking-panel__loading">Loading availability…</p>
+  } @else if (state.error()) {
+    <div class="rr-booking-panel__error">
+      <p>{{ state.error() }}</p>
+      <button type="button" class="rr-btn rr-btn--ghost" (click)="state.loadChannel()">Retry</button>
+    </div>
+  } @else {
+    <header class="rr-booking-panel__price">
+      <p>
+        From <strong>{{ nightlyFrom() | currency: 'USD' : 'symbol' : '1.0-0' }}</strong> / night
+      </p>
+    </header>
+
+    <div class="rr-date-tiles">
+      <div>
+        <span class="rr-kicker">Check-in</span>
+        @if (state.checkIn(); as ci) {
+          <strong>{{ ci | date: 'EEE, MMM d' }}</strong>
+        } @else {
+          <strong>Select date</strong>
+        }
+        <small>After 3:00 PM</small>
+      </div>
+      <div>
+        <span class="rr-kicker">Checkout</span>
+        @if (state.checkOut(); as co) {
+          <strong>{{ co | date: 'EEE, MMM d' }}</strong>
+        } @else {
+          <strong>Select date</strong>
+        }
+        <small>By 11:00 AM</small>
+      </div>
+    </div>
+
+    <app-booking-calendar (daySelected)="onDatesSet()" />
+
+    @if (productId(); as pid) {
+      <app-guest-steppers [productId]="pid" [disabled]="state.reservationsOff()" />
+    }
+
+    @if (state.reservationsOff()) {
+      <div class="rr-booking-panel__off">
+        <strong>Booking unavailable</strong>
+        <p>Reservations are turned off on this preview. Dates are shown for browsing only.</p>
+      </div>
+    } @else {
+      <app-price-summary />
+    }
+
+    <button
+      type="button"
+      class="rr-btn rr-booking-panel__cta"
+      (click)="continue()"
+      [disabled]="state.reservationsOff() || !state.checkIn() || !state.checkOut()"
+    >
+      {{ state.reservationsOff() ? 'Booking unavailable' : 'Continue to guest details' }}
+    </button>
+
+    <p class="rr-booking-panel__stripe">
+      You&apos;ll pay on a secure Stripe page. We never collect card details here.
+    </p>
+  }
+</div>

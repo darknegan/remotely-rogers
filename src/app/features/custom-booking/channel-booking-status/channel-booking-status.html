@@ -1,0 +1,15 @@
+<section class="rr-section">
+  @if (!checkoutEnabled) {
+    <h1>Booking status</h1>
+    <p>
+      Status pages are only available after a successful checkout. Checkout is disabled in this build, so this
+      page is not reachable in normal browsing.
+    </p>
+    <a class="rr-btn" routerLink="/cabins">Back to cabins</a>
+  } @else if (!state.bookingRecord()) {
+    <p>Loading booking status…</p>
+  } @else {
+    <h1>Booking status</h1>
+    <pre>{{ state.bookingRecord() | json }}</pre>
+  }
+</section>

@@ -19,14 +19,17 @@ import { averageRating } from '../../core/utils/reviews';
 import { reviewsForCabin } from '../content/reviews/reviews.data';
 import { bookingmoodProductId } from '../../core/booking/bookingmood-products';
 import { environment } from '../../../environments/environment';
+import { BookingPanel } from '../custom-booking/booking-panel/booking-panel';
 import { BookingBar } from '../../layout/booking-bar/booking-bar';
+
+const useCustomBookingComponents = environment.useCustomBookingComponents === true;
 import { MapEmbed } from '../../layout/map-embed/map-embed';
 import { ReviewBand } from '../../shared/review-band/review-band';
 
 @Component({
   selector: 'app-cabin-detail',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [CurrencyPipe, RouterLink, Dialog, Drawer, BookingBar, MapEmbed, ReviewBand],
+  imports: [CurrencyPipe, RouterLink, Dialog, Drawer, BookingBar, BookingPanel, MapEmbed, ReviewBand],
   templateUrl: './cabin-detail.html',
 })
 export class CabinDetail {
@@ -45,6 +48,7 @@ export class CabinDetail {
   readonly description = CABIN_DESCRIPTION;
   readonly email = SITE_EMAIL;
   readonly phone = SITE_PHONE;
+  readonly useCustomBooking = useCustomBookingComponents;
 
   readonly nights = computed(() => {
     const arrival = this.search.checkIn();

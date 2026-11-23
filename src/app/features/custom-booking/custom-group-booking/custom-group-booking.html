@@ -1,0 +1,69 @@
+<section class="rr-custom-group">
+  @if (state.reservationsOff()) {
+    <app-reservations-off-banner />
+  }
+
+  <header>
+    <p class="rr-kicker">Step 1</p>
+    <h2>Pick shared dates and guests per cabin</h2>
+    <p>One check-in and checkout for the whole group.</p>
+  </header>
+
+  @if (state.loading()) {
+    <p>Loading channel…</p>
+  } @else if (state.error()) {
+    <div class="rr-custom-group__error">
+      <p>{{ state.error() }}</p>
+      <button type="button" class="rr-btn rr-btn--ghost" (click)="state.loadChannel()">Retry</button>
+    </div>
+  } @else {
+    <div class="rr-custom-group__layout">
+      <div class="rr-custom-group__main">
+        <app-booking-calendar (daySelected)="state.validateCart()" />
+
+        <h3>Select cabins</h3>
+        <ul class="rr-cabin-pick-list">
+          @for (cabin of cabins; track cabin.id) {
+            @if (productIdForCabin(cabin.id); as pid) {
+              <li [class.is-selected]="isSelected(cabin.id)">
+                <label>
+                  <input
+                    type="checkbox"
+                    [checked]="isSelected(cabin.id)"
+                    [disabled]="!state.checkIn() || !state.checkOut() || !state.isProductSelectable(pid)"
+                    (change)="toggle(cabin.id)"
+                  />
+                  <span>
+                    <strong>{{ cabin.name }}</strong>
+                    <small>Sleeps {{ cabin.guests }}</small>
+                  </span>
+                </label>
+                @if (isSelected(cabin.id)) {
+                  <app-guest-steppers [productId]="pid" [disabled]="state.reservationsOff()" />
+                } @else if (!state.isProductSelectable(pid) && state.checkIn() && state.checkOut()) {
+                  <p class="rr-cabin-unavailable">Not available for these dates.</p>
+                }
+              </li>
+            }
+          }
+        </ul>
+
+        <button
+          type="button"
+          class="rr-btn"
+          [disabled]="state.reservationsOff() || state.selectedProductIds().length === 0"
+          [routerLink]="['/group-booking/checkout/guest']"
+        >
+          Continue to guest details
+        </button>
+      </div>
+
+      <aside class="rr-custom-group__summary">
+        <h3>Your cabins</h3>
+        <p>{{ state.selectedProductIds().length }} cabins · {{ state.nights() }} nights</p>
+        <p>{{ state.sharedRangeLabel() }}</p>
+        <app-price-summary />
+      </aside>
+    </div>
+  }
+</section>

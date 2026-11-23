@@ -1,0 +1,42 @@
+.rr-price-summary {
+  margin: 1rem 0 0;
+  padding-top: 1rem;
+  border-top: 1px solid var(--rr-brass-line);
+  font-family: var(--rr-font-sans);
+  font-size: 0.85rem;
+}
+
+.rr-price-row {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 0.35rem;
+}
+
+.rr-price-row dt {
+  margin: 0;
+  font-weight: 400;
+  color: var(--rr-walnut-soft);
+}
+
+.rr-price-row dd {
+  margin: 0;
+}
+
+.rr-price-row--total {
+  margin-top: 0.5rem;
+  font-weight: 700;
+  font-family: var(--rr-font-display);
+  font-size: 1.1rem;
+}
+
+.rr-price-summary__note,
+.rr-price-summary__muted,
+.rr-price-summary__error,
+.rr-price-summary__loading {
+  font-size: 0.75rem;
+  color: var(--rr-sage);
+}
+
+.rr-price-summary__error {
+  color: var(--rr-oxblood);
+}

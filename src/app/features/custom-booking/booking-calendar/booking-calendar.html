@@ -1,0 +1,33 @@
+<div class="rr-booking-calendar">
+  <div class="rr-booking-calendar__head">
+    <button type="button" class="rr-btn rr-btn--ghost" (click)="state.shiftMonth(-1)" [disabled]="disabled()">‹</button>
+    <span class="rr-booking-calendar__title">{{ monthLabel() }}</span>
+    <button type="button" class="rr-btn rr-btn--ghost" (click)="state.shiftMonth(1)" [disabled]="disabled()">›</button>
+  </div>
+
+  <div class="rr-booking-calendar__grid">
+    @for (label of ['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa']; track label) {
+      <span class="rr-cal-weekday">{{ label }}</span>
+    }
+    @for (week of weeks(); track $index) {
+      @for (cell of week; track cell.date.getTime()) {
+        <button
+          type="button"
+          [class]="classFor(cell.kind, cell.inMonth)"
+          (click)="pickDay(cell.date)"
+          [disabled]="disabled() || cell.kind === 'past' || cell.kind === 'reserved'"
+        >
+          {{ cell.date.getDate() }}
+        </button>
+      }
+    }
+  </div>
+
+  <div class="rr-booking-calendar__legend">
+    <span><i class="dot available"></i> Available</span>
+    <span><i class="dot endpoint"></i> Check-in / out</span>
+    <span><i class="dot stay"></i> Your stay</span>
+    <span><i class="dot reserved"></i> Reserved</span>
+    <span><i class="dot closed"></i> Closed</span>
+  </div>
+</div>

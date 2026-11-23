@@ -74,6 +74,27 @@ export const routes: Routes = [
           ),
       },
       {
+        path: 'checkout/guest',
+        loadComponent: () =>
+          import('./features/custom-booking/channel-guest-form/channel-guest-form').then(
+            (m) => m.ChannelGuestForm,
+          ),
+      },
+      {
+        path: 'checkout/review',
+        loadComponent: () =>
+          import('./features/custom-booking/channel-review/channel-review').then(
+            (m) => m.ChannelReview,
+          ),
+      },
+      {
+        path: 'status/:bookingId',
+        loadComponent: () =>
+          import('./features/custom-booking/channel-booking-status/channel-booking-status').then(
+            (m) => m.ChannelBookingStatus,
+          ),
+      },
+      {
         path: 'checkout/success',
         loadComponent: () =>
           import('./features/group-booking/checkout/checkout-success/checkout-success').then(

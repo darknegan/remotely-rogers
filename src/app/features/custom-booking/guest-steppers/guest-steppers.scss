@@ -1,0 +1,46 @@
+.rr-guest-steppers {
+  margin-top: 1rem;
+  border-top: 1px solid var(--rr-brass-line);
+  padding-top: 1rem;
+  font-family: var(--rr-font-sans);
+}
+
+.rr-guest-steppers header {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 0.75rem;
+  font-size: 0.8rem;
+}
+
+.rr-guest-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  align-items: center;
+  margin-bottom: 0.75rem;
+}
+
+.rr-guest-row p {
+  margin: 0;
+  font-size: 0.75rem;
+  color: var(--rr-sage);
+}
+
+.rr-stepper {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.rr-stepper button {
+  width: 32px;
+  height: 32px;
+  border: 1px solid var(--rr-brass-line);
+  background: var(--rr-ivory);
+  cursor: pointer;
+}
+
+.rr-stepper button:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}

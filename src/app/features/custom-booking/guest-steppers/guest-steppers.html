@@ -1,0 +1,20 @@
+<div class="rr-guest-steppers">
+  <header>
+    <span class="rr-kicker">Guests</span>
+    <span>{{ state.totalGuestsForProduct(productId()) }} guests</span>
+  </header>
+
+  @for (groupId of groupsForProduct(); track groupId) {
+    <div class="rr-guest-row">
+      <div>
+        <strong>{{ state.guestStepperLabel(groupId) }}</strong>
+        <p>Counts toward this cabin&apos;s capacity.</p>
+      </div>
+      <div class="rr-stepper">
+        <button type="button" (click)="change(groupId, -1)" [disabled]="disabled()">−</button>
+        <span>{{ count(groupId) }}</span>
+        <button type="button" (click)="change(groupId, 1)" [disabled]="disabled()">+</button>
+      </div>
+    </div>
+  }
+</div>

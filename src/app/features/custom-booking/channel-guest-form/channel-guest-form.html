@@ -1,0 +1,33 @@
+<section class="rr-channel-guest">
+  <app-booking-progress [step]="2" />
+
+  <div class="rr-channel-guest__layout">
+    <div>
+      <p class="rr-kicker">Step 2 of 4</p>
+      <h1>Guest details</h1>
+      <p>Who should we send the confirmation to? Fields come from the Bookingmood channel form.</p>
+
+      <form [formGroup]="form" (ngSubmit)="submit()">
+        @for (service of state.formServices(); track service.id) {
+          <label class="rr-field">
+            <span>{{ state.serviceLabel(service) }}{{ state.isServiceRequired(service) ? ' *' : '' }}</span>
+            <input type="text" [formControlName]="service.id" />
+          </label>
+        }
+
+        <p class="rr-field-hint">* Required for confirmation. No card details are collected here.</p>
+
+        <div class="rr-channel-guest__actions">
+          <a routerLink="/group-booking/checkout" class="rr-btn rr-btn--ghost">Back</a>
+          <button type="submit" class="rr-btn" [disabled]="state.reservationsOff()">Review booking</button>
+        </div>
+      </form>
+    </div>
+
+    <aside>
+      <h3>Your trip</h3>
+      <p>{{ state.sharedRangeLabel() }}</p>
+      <app-price-summary />
+    </aside>
+  </div>
+</section>
