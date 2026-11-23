@@ -24,6 +24,18 @@ HTTP 403
 
 `GET /channels/b36240bc-…` returns 200 with six products, one capacity group (`f8558449-…`, empty name), and per-product services: Name, Email, Phone, Address.
 
+### `form_values` shapes (verify before go-live)
+
+Official channel docs only show a string example for `form_values`. This PR maps:
+
+| Service `type` | Value sent under `form_values[SERVICE_ID]` |
+|----------------|--------------------------------------------|
+| `name` | string (single full name) |
+| `email` / `phone` | string |
+| `address` | `{ street, city, zip, country }` — per design HANDOFF / cart-validate example; **not** enumerated on the channel `services` payload |
+
+Capacity **max** per product comes from `products[].capacity[groupId].max` (dev channel: **2**), not site “sleeps 4” copy.
+
 ## Bundle scan
 
 After `npm run build`, run `npm run scan:booking-bundle-secrets`.

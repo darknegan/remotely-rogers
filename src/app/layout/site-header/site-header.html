@@ -13,7 +13,11 @@
         {{ link.label }}
       </a>
     }
-    <a class="rr-btn" routerLink="/cabins">Check availability</a>
+    @if (reservationsOff) {
+      <span class="rr-btn rr-btn--disabled" aria-disabled="true">Booking unavailable</span>
+    } @else {
+      <a class="rr-btn" routerLink="/cabins">Check availability</a>
+    }
   </nav>
 </header>
 
@@ -22,7 +26,11 @@
     <strong>Remotely Rogers</strong>
   </a>
   <div style="display: flex; align-items: center; gap: 6px">
-    <a class="rr-btn" routerLink="/cabins">Book</a>
+    @if (reservationsOff) {
+      <span class="rr-btn rr-btn--disabled" aria-disabled="true">Booking unavailable</span>
+    } @else {
+      <a class="rr-btn" routerLink="/cabins">Book</a>
+    }
     <button type="button" class="rr-menu-btn" aria-label="Open menu" (click)="menuOpen.set(true)">
       <span></span>
       <span></span>
@@ -42,6 +50,10 @@
     @for (link of links; track link.path) {
       <a [routerLink]="link.path" (click)="closeMenu()">{{ link.label }}</a>
     }
-    <a class="rr-btn" routerLink="/cabins" (click)="closeMenu()">Check availability</a>
+    @if (reservationsOff) {
+      <span class="rr-btn rr-btn--disabled" aria-disabled="true">Booking unavailable</span>
+    } @else {
+      <a class="rr-btn" routerLink="/cabins" (click)="closeMenu()">Check availability</a>
+    }
   </nav>
 </p-drawer>

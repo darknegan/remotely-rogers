@@ -1,7 +1,6 @@
 import { Injectable, computed, inject, signal } from '@angular/core';
 
 import { environment } from '../../../../environments/environment';
-import { CABIN_CONFIG } from '../../../../environments/cabin-config';
 import { bookingmoodProductId } from '../bookingmood-products';
 import { nightCount, startOfDay, toDateKey } from '../../utils/date-utils';
 import {
@@ -17,6 +16,10 @@ import {
   buildDayKinds,
   productLabel,
 } from './booking-channel-calendar';
+import {
+  buildFormValuesForCart,
+  BookingmoodServiceFormValue,
+} from './booking-channel-form-values';
 import {
   BookingmoodCartItemRequest,
   BookingmoodCartValidateItem,
@@ -54,7 +57,7 @@ export class BookingChannelStateService {
 
   readonly selectedProductIds = signal<string[]>([]);
   readonly occupancyByProduct = signal<Record<string, Record<string, number>>>({});
-  readonly formValues = signal<Record<string, string>>({});
+  readonly formValues = signal<Record<string, BookingmoodServiceFormValue>>({});
 
   readonly step = signal<CustomBookingStep>('dates');
   readonly bookingId = signal<string | null>(null);
@@ -148,10 +151,14 @@ export class BookingChannelStateService {
       return;
     }
     const product = this.products().find((p) => p.id === productId);
-    const max = product?.capacity?.[groupId]?.max ?? CABIN_CONFIG.maxGuestsPerCabin;
+    const max = this.maxGuestsForProduct(productId);
+    const min = product?.capacity?.[groupId]?.min ?? 1;
     this.occupancyByProduct.update((current) => ({
       ...current,
-      [productId]: { ...(current[productId] ?? {}), [groupId]: Math.min(2, max) },
+      [productId]: {
+        ...(current[productId] ?? {}),
+        [groupId]: Math.min(Math.max(min, 1), max),
+      },
     }));
   }
 
@@ -233,7 +240,7 @@ export class BookingChannelStateService {
   changeOccupancy(productId: string, groupId: string, delta: number): void {
     const product = this.products().find((p) => p.id === productId);
     const limits = product?.capacity?.[groupId];
-    const max = limits?.max ?? CABIN_CONFIG.maxGuestsPerCabin;
+    const max = limits?.max ?? this.maxGuestsForProduct(productId);
     const min = limits?.min ?? 1;
     this.occupancyByProduct.update((current) => {
       const row = { ...(current[productId] ?? {}) };
@@ -290,17 +297,29 @@ export class BookingChannelStateService {
     }));
   }
 
-  mapFormValuesForApi(): Record<string, string> {
-    const values = this.formValues();
-    const services = this.formServices();
-  const mapped: Record<string, string> = {};
-    for (const service of services) {
-      const value = values[service.type] ?? values[service.id];
-      if (typeof value === 'string' && value.trim()) {
-        mapped[service.id] = value.trim();
+  mapFormValuesForApi(): Record<string, BookingmoodServiceFormValue> {
+    return buildFormValuesForCart(this.formServices(), this.formValues());
+  }
+
+  capacityGroupIdForProduct(productId: string): string | null {
+    const product = this.products().find((p) => p.id === productId);
+    if (product?.capacity) {
+      const keys = Object.keys(product.capacity);
+      if (keys.length > 0) {
+        return keys[0] ?? null;
       }
     }
-    return mapped;
+    return this.primaryCapacityGroupId();
+  }
+
+  maxGuestsForProduct(productId: string): number {
+    const groupId = this.capacityGroupIdForProduct(productId);
+    const product = this.products().find((p) => p.id === productId);
+    if (groupId && product?.capacity?.[groupId]?.max != null) {
+      return product.capacity[groupId].max!;
+    }
+    const min = product?.capacity?.[groupId ?? '']?.min;
+    return typeof min === 'number' && min > 0 ? min : 1;
   }
 
   validateCart(): void {
@@ -333,7 +352,7 @@ export class BookingChannelStateService {
     this.step.set('guest');
   }
 
-  continueToReview(formValues: Record<string, string>): void {
+  continueToReview(formValues: Record<string, BookingmoodServiceFormValue>): void {
     if (this.reservationsOff()) {
       return;
     }
@@ -387,10 +406,8 @@ export class BookingChannelStateService {
     return 'Something went wrong. Please try again.';
   }
 
-  guestStepperLabel(groupId: string): string {
-    const group = this.capacityGroups().find((g) => g.id === groupId);
-    const label = group?.name?.default || group?.name_singular?.default || 'Guests';
-    return label.trim() || 'Guests';
+  guestStepperLabel(): string {
+    return 'Guests';
   }
 
   productName(product: BookingmoodChannelProduct): string {
@@ -402,6 +419,6 @@ export class BookingChannelStateService {
   }
 
   isServiceRequired(service: BookingmoodFormService): boolean {
-    return service.type === 'name' || service.type === 'email';
+    return service.type === 'name' || service.type === 'email' || service.type === 'address';
   }
 }

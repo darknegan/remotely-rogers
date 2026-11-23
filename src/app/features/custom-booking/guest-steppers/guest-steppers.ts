@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, inject, input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, input } from '@angular/core';
 
 import { BookingChannelStateService } from '../../../core/booking/channel/booking-channel-state.service';
 
@@ -14,20 +14,19 @@ export class GuestSteppers {
 
   protected readonly state = inject(BookingChannelStateService);
 
-  groupsForProduct(): string[] {
-    const product = this.state.products().find((p) => p.id === this.productId());
-    if (!product?.capacity) {
-      return this.state.primaryCapacityGroupId() ? [this.state.primaryCapacityGroupId()!] : [];
+  readonly groupId = computed(() => this.state.capacityGroupIdForProduct(this.productId()));
+  readonly maxGuests = computed(() => this.state.maxGuestsForProduct(this.productId()));
+  readonly guestCount = computed(() => {
+    const gid = this.groupId();
+    if (!gid) {
+      return 0;
     }
-    return Object.keys(product.capacity);
-  }
+    return this.state.occupancyByProduct()[this.productId()]?.[gid] ?? 0;
+  });
 
-  count(groupId: string): number {
-    return this.state.occupancyByProduct()[this.productId()]?.[groupId] ?? 1;
-  }
-
-  change(groupId: string, delta: number): void {
-    if (this.disabled()) {
+  change(delta: number): void {
+    const groupId = this.groupId();
+    if (!groupId || this.disabled()) {
       return;
     }
     this.state.changeOccupancy(this.productId(), groupId, delta);

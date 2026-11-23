@@ -2,6 +2,13 @@
   padding: 1.5rem;
 }
 
+.rr-shopping-cart-note {
+  margin-top: 0.75rem;
+  font-size: 0.8rem;
+  color: var(--rr-sage);
+  max-width: 52rem;
+}
+
 .rr-custom-group__layout {
   display: grid;
   grid-template-columns: 1fr 320px;

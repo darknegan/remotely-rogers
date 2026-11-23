@@ -11,7 +11,7 @@
         @for (service of state.formServices(); track service.id) {
           <p>
             <strong>{{ state.serviceLabel(service) }}:</strong>
-            {{ state.formValues()[service.type] || state.formValues()[service.id] || '—' }}
+            {{ formatFormValue(service, state.formValues()[service.id]) }}
           </p>
         }
       </article>

@@ -1,6 +1,7 @@
 import { ChangeDetectionStrategy, Component, OnInit, inject } from '@angular/core';
 import { RouterLink } from '@angular/router';
 
+import { formatFormValueForDisplay } from '../../../core/booking/channel/booking-channel-form-values';
 import { BookingChannelStateService } from '../../../core/booking/channel/booking-channel-state.service';
 import { PriceSummary } from '../price-summary/price-summary';
 import { BookingProgress } from '../booking-progress/booking-progress';
@@ -14,6 +15,7 @@ import { BookingProgress } from '../booking-progress/booking-progress';
 })
 export class ChannelReview implements OnInit {
   protected readonly state = inject(BookingChannelStateService);
+  readonly formatFormValue = formatFormValueForDisplay;
 
   ngOnInit(): void {
     this.state.loadChannel();

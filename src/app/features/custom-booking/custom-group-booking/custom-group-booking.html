@@ -7,6 +7,11 @@
     <p class="rr-kicker">Step 1</p>
     <h2>Pick shared dates and guests per cabin</h2>
     <p>One check-in and checkout for the whole group.</p>
+    <p class="rr-shopping-cart-note">
+      Multi-cabin carts depend on the channel&apos;s shopping-cart setting, which is currently off on the dev
+      channel (not exposed in <code>GET /channels/:id</code> beyond coupons/reviews). This layout is the target UI
+      if/when that setting is enabled.
+    </p>
   </header>
 
   @if (state.loading()) {

@@ -28,6 +28,10 @@
   font-family: var(--rr-font-sans);
 }
 
+.rr-field-row .rr-field {
+  margin-bottom: 1rem;
+}
+
 .rr-channel-guest__actions {
   display: flex;
   gap: 12px;

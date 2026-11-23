@@ -81,12 +81,21 @@ export interface BookingmoodChannelPayload {
   availability?: BookingmoodProductAvailability[];
 }
 
+export type BookingmoodCartFormValue =
+  | string
+  | {
+      street: string;
+      city: string;
+      zip: string;
+      country: string;
+    };
+
 export interface BookingmoodCartItemRequest {
   id: string;
   product_id: string;
   interval: { start: string; end: string };
   occupancy: Record<string, number>;
-  form_values: Record<string, string>;
+  form_values: Record<string, BookingmoodCartFormValue>;
 }
 
 export interface BookingmoodCartValidateItem {

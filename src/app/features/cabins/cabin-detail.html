@@ -1,4 +1,7 @@
 @if (cabin(); as cabin) {
+  @if (useCustomBooking && reservationsOffPreview) {
+    <app-reservations-off-banner />
+  }
   <section class="rr-gallery">
     <button type="button" (click)="showPhoto(0)">
       <img [src]="cabin.gallery[0]" [alt]="cabin.name" />
@@ -75,9 +78,18 @@
     </aside>
   </section>
 
-  <div class="rr-mobile-book">
-    <span>From {{ cabin.nightlyFrom | currency: 'USD' : 'symbol' : '1.0-0' }}</span>
-    <button type="button" class="rr-btn" (click)="widgetOpen.set(true)">Check availability</button>
+  <div class="rr-mobile-book" [class.rr-mobile-book--browse-only]="useCustomBooking && reservationsOffPreview">
+    <div class="rr-mobile-book__price">
+      <strong>From {{ cabin.nightlyFrom | currency: 'USD' : 'symbol' : '1.0-0' }} / night</strong>
+      @if (useCustomBooking && reservationsOffPreview) {
+        <small>Browsing only</small>
+      }
+    </div>
+    @if (useCustomBooking && reservationsOffPreview) {
+      <span class="rr-btn rr-btn--disabled" aria-disabled="true">Booking unavailable</span>
+    } @else {
+      <button type="button" class="rr-btn" (click)="widgetOpen.set(true)">Check availability</button>
+    }
   </div>
 
   <p-drawer header="Book this cabin" [visible]="widgetOpen()" (visibleChange)="widgetOpen.set($event)" position="bottom" [style]="{ height: '70vh' }">
