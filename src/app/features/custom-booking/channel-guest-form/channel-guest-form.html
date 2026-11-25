@@ -1,0 +1,83 @@
+<section class="rr-channel-guest">
+  <app-booking-progress [step]="2" />
+
+  <div class="rr-channel-guest__layout">
+    <div>
+      <p class="rr-kicker">Step 2 of 4</p>
+      <h1>Guest details</h1>
+      <p>Who should we send the confirmation to? One lead guest is enough for the whole group.</p>
+
+      <form [formGroup]="form" (ngSubmit)="submit()">
+        @for (service of state.formServices(); track service.id) {
+          @switch (service.type) {
+            @case ('name') {
+              <label class="rr-field">
+                <span>{{ state.serviceLabel(service) }} *</span>
+                <input type="text" [formControlName]="service.id" autocomplete="name" />
+              </label>
+            }
+            @case ('email') {
+              <div class="rr-field-row">
+                <label class="rr-field rr-field--grow">
+                  <span>{{ state.serviceLabel(service) }} *</span>
+                  <input type="email" [formControlName]="service.id" autocomplete="email" />
+                </label>
+                @if (phoneService(); as phone) {
+                  <label class="rr-field rr-field--grow">
+                    <span>{{ state.serviceLabel(phone) }} *</span>
+                    <input type="tel" [formControlName]="phone.id" autocomplete="tel" />
+                  </label>
+                }
+              </div>
+            }
+            @case ('phone') {
+              <!-- Rendered beside email -->
+            }
+            @case ('address') {
+              <fieldset class="rr-address-fieldset" [formGroupName]="service.id">
+                <legend>{{ state.serviceLabel(service) }} *</legend>
+                <label class="rr-field">
+                  <span>Street</span>
+                  <input type="text" formControlName="street" autocomplete="street-address" />
+                </label>
+                <div class="rr-field-row">
+                  <label class="rr-field rr-field--grow">
+                    <span>City</span>
+                    <input type="text" formControlName="city" autocomplete="address-level2" />
+                  </label>
+                  <label class="rr-field rr-field--zip">
+                    <span>ZIP</span>
+                    <input type="text" formControlName="zip" autocomplete="postal-code" inputmode="numeric" />
+                  </label>
+                </div>
+                <label class="rr-field">
+                  <span>Country</span>
+                  <input type="text" formControlName="country" autocomplete="country-name" />
+                </label>
+              </fieldset>
+            }
+            @default {
+              <label class="rr-field">
+                <span>{{ state.serviceLabel(service) }}</span>
+                <input type="text" [formControlName]="service.id" />
+              </label>
+            }
+          }
+        }
+
+        <p class="rr-field-hint">* Required. We use these details for your confirmation and check-in instructions.</p>
+
+        <div class="rr-channel-guest__actions">
+          <a routerLink="/group-booking/checkout" class="rr-btn rr-btn--ghost">Back</a>
+          <button type="submit" class="rr-btn" [disabled]="state.reservationsOff()">Review booking</button>
+        </div>
+      </form>
+    </div>
+
+    <aside>
+      <h3>Your trip</h3>
+      <p>{{ state.sharedRangeLabel() }}</p>
+      <app-price-summary />
+    </aside>
+  </div>
+</section>

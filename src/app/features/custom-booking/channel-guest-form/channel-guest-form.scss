@@ -1,0 +1,39 @@
+.rr-channel-guest {
+  padding: 1.5rem;
+}
+
+.rr-channel-guest__layout {
+  display: grid;
+  grid-template-columns: 1fr 320px;
+  gap: 2rem;
+}
+
+.rr-field {
+  display: block;
+  margin-bottom: 1rem;
+}
+
+.rr-field span {
+  display: block;
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  margin-bottom: 4px;
+}
+
+.rr-field input {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid var(--rr-brass-line);
+  font-family: var(--rr-font-sans);
+}
+
+.rr-field-row .rr-field {
+  margin-bottom: 1rem;
+}
+
+.rr-channel-guest__actions {
+  display: flex;
+  gap: 12px;
+  margin-top: 1.5rem;
+}

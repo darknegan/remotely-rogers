@@ -1,0 +1,45 @@
+<section class="rr-channel-review">
+  <app-booking-progress [step]="3" />
+
+  <div class="rr-channel-review__layout">
+    <div>
+      <h1>Review your booking</h1>
+      <p>Check everything below. Nothing is charged until you finish on Stripe.</p>
+
+      <article class="rr-review-block">
+        <h2>Lead guest</h2>
+        @for (service of state.formServices(); track service.id) {
+          <p>
+            <strong>{{ state.serviceLabel(service) }}:</strong>
+            {{ formatFormValue(service, state.formValues()[service.id]) }}
+          </p>
+        }
+      </article>
+
+      <article class="rr-review-block">
+        <h2>Dates</h2>
+        <p>{{ state.sharedRangeLabel() }} · {{ state.nights() }} nights</p>
+      </article>
+
+      <div class="rr-stripe-callout">
+        Payment happens on a secure Stripe page. Remotely Rogers never sees or stores your card details.
+      </div>
+
+      @if (state.validateError()) {
+        <p class="rr-review-error">{{ state.validateError() }}</p>
+      }
+
+      <div class="rr-channel-review__actions">
+        <a routerLink="/group-booking/checkout/guest" class="rr-btn rr-btn--ghost">Edit details</a>
+        <button type="button" class="rr-btn" [disabled]="state.reservationsOff()" (click)="pay()">
+          {{ state.reservationsOff() ? 'Booking unavailable' : 'Continue to secure payment' }}
+        </button>
+      </div>
+    </div>
+
+    <aside>
+      <h3>Price breakdown</h3>
+      <app-price-summary />
+    </aside>
+  </div>
+</section>

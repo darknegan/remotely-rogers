@@ -1,0 +1,71 @@
+.rr-custom-booking-shell {
+  min-height: 40vh;
+}
+
+.rr-btn--disabled {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 13px 22px;
+  background: #c9c0b4;
+  color: #5c5348;
+  font-family: var(--rr-font-sans);
+  font-size: 11.5px;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  pointer-events: none;
+  user-select: none;
+}
+
+.rr-mobile-book__price {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.rr-mobile-book__price strong {
+  white-space: nowrap;
+  font-family: var(--rr-font-display);
+  font-weight: 400;
+}
+
+.rr-mobile-book__price small {
+  font-size: 0.65rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  opacity: 0.85;
+}
+
+.rr-mobile-book--browse-only {
+  flex-wrap: nowrap;
+}
+
+.rr-field-row {
+  display: flex;
+  gap: 12px;
+  align-items: flex-end;
+}
+
+.rr-field--grow {
+  flex: 1 1 0;
+}
+
+.rr-field--zip {
+  flex: 0 0 34%;
+  max-width: 140px;
+}
+
+.rr-address-fieldset {
+  border: 0;
+  margin: 0 0 1rem;
+  padding: 0;
+}
+
+.rr-address-fieldset legend {
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  margin-bottom: 6px;
+}

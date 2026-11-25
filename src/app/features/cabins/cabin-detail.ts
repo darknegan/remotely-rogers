@@ -19,14 +19,29 @@ import { averageRating } from '../../core/utils/reviews';
 import { reviewsForCabin } from '../content/reviews/reviews.data';
 import { bookingmoodProductId } from '../../core/booking/bookingmood-products';
 import { environment } from '../../../environments/environment';
+import { customBookingReservationsOff } from '../../core/booking/booking-reservations-off';
+import { BookingPanel } from '../custom-booking/booking-panel/booking-panel';
+import { ReservationsOffBanner } from '../custom-booking/reservations-off-banner/reservations-off-banner';
 import { BookingBar } from '../../layout/booking-bar/booking-bar';
+
+const useCustomBookingComponents = environment.useCustomBookingComponents === true;
 import { MapEmbed } from '../../layout/map-embed/map-embed';
 import { ReviewBand } from '../../shared/review-band/review-band';
 
 @Component({
   selector: 'app-cabin-detail',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [CurrencyPipe, RouterLink, Dialog, Drawer, BookingBar, MapEmbed, ReviewBand],
+  imports: [
+    CurrencyPipe,
+    RouterLink,
+    Dialog,
+    Drawer,
+    BookingBar,
+    BookingPanel,
+    ReservationsOffBanner,
+    MapEmbed,
+    ReviewBand,
+  ],
   templateUrl: './cabin-detail.html',
 })
 export class CabinDetail {
@@ -45,6 +60,8 @@ export class CabinDetail {
   readonly description = CABIN_DESCRIPTION;
   readonly email = SITE_EMAIL;
   readonly phone = SITE_PHONE;
+  readonly useCustomBooking = useCustomBookingComponents;
+  readonly reservationsOffPreview = customBookingReservationsOff();
 
   readonly nights = computed(() => {
     const arrival = this.search.checkIn();

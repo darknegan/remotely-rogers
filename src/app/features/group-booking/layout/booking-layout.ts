@@ -4,10 +4,11 @@ import { ActivatedRoute, RouterOutlet } from '@angular/router';
 import { map } from 'rxjs';
 
 import { BookingStateService } from '../booking-state.service';
+import { BookingChannelStateService } from '../../../core/booking/channel/booking-channel-state.service';
 
 @Component({
   selector: 'app-booking-layout',
-  providers: [BookingStateService],
+  providers: [BookingStateService, BookingChannelStateService],
   imports: [RouterOutlet],
   templateUrl: './booking-layout.html',
   styleUrl: './booking-layout.scss',

@@ -1,4 +1,5 @@
 import { Component, computed, inject } from '@angular/core';
+import { CustomGroupBooking } from '../../../custom-booking/custom-group-booking/custom-group-booking';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { DomSanitizer } from '@angular/platform-browser';
 import { ActivatedRoute } from '@angular/router';
@@ -8,16 +9,19 @@ import { bookingmoodProductId } from '../../../../core/booking/bookingmood-produ
 import { bookingmoodWidgetSrc } from '../../../../core/booking/bookingmood-widget';
 import { toDateKey } from '../../../../core/utils/date-utils';
 import { environment } from '../../../../../environments/environment';
+
+const useCustomBookingComponents = environment.useCustomBookingComponents === true;
 import { BookingStateService } from '../../booking-state.service';
 import { CartSummary } from '../../cart/cart-summary/cart-summary';
 
 @Component({
   selector: 'app-checkout-page',
-  imports: [CartSummary],
+  imports: [CartSummary, CustomGroupBooking],
   templateUrl: './checkout-page.html',
   styleUrl: './checkout-page.scss',
 })
 export class CheckoutPage {
+  protected readonly useCustomBooking = useCustomBookingComponents;
   private readonly state = inject(BookingStateService);
   private readonly sanitizer = inject(DomSanitizer);
   private readonly query = toSignal(inject(ActivatedRoute).queryParamMap, {

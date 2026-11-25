@@ -1,0 +1,32 @@
+.rr-channel-review {
+  padding: 1.5rem;
+}
+
+.rr-channel-review__layout {
+  display: grid;
+  grid-template-columns: 1fr 320px;
+  gap: 2rem;
+}
+
+.rr-review-block {
+  margin: 1.25rem 0;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid var(--rr-brass-line);
+}
+
+.rr-stripe-callout {
+  border: 1px solid var(--rr-brass);
+  padding: 12px;
+  margin: 1rem 0;
+  font-size: 0.85rem;
+}
+
+.rr-channel-review__actions {
+  display: flex;
+  gap: 12px;
+  margin-top: 1.5rem;
+}
+
+.rr-review-error {
+  color: var(--rr-oxblood);
+}

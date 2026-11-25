@@ -1,0 +1,58 @@
+.rr-booking-panel {
+  background: var(--rr-ivory);
+  border: 1px solid var(--rr-brass-line);
+  box-shadow: 0 12px 40px rgba(42, 26, 18, 0.08);
+  padding: 1.25rem;
+}
+
+.rr-booking-panel--compact {
+  box-shadow: none;
+}
+
+.rr-date-tiles {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  margin: 1rem 0 0.5rem;
+}
+
+.rr-date-tiles strong {
+  display: block;
+  font-family: var(--rr-font-display);
+  font-size: 1.15rem;
+}
+
+.rr-date-tiles small {
+  font-size: 0.7rem;
+  color: var(--rr-sage);
+}
+
+.rr-booking-panel__cta {
+  width: 100%;
+  margin-top: 1rem;
+}
+
+.rr-booking-panel__cta:disabled {
+  background: #c9c0b4;
+  color: #666;
+  cursor: not-allowed;
+}
+
+.rr-booking-panel__stripe {
+  margin-top: 0.75rem;
+  font-size: 0.75rem;
+  font-style: italic;
+  color: var(--rr-sage);
+  text-align: center;
+}
+
+.rr-booking-panel__off {
+  margin-top: 1rem;
+  padding: 0.75rem;
+  border: 1px solid var(--rr-oxblood);
+  font-size: 0.8rem;
+}
+
+.rr-booking-panel__error {
+  margin-top: 1rem;
+}
