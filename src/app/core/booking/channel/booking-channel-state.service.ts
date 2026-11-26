@@ -1,6 +1,9 @@
 import { Injectable, computed, inject, signal } from '@angular/core';
 
 import { CABIN_CONFIG } from '../../../../environments/cabin-config';
+
+/** Manual capacity group max from Bookingmood when channel capacity is not loaded yet. */
+const BOOKINGMOOD_CAPACITY_GROUP_MAX_FALLBACK = 2;
 import { environment } from '../../../../environments/environment';
 import { bookingmoodProductId } from '../bookingmood-products';
 import { addDays, formatDateRangeLabel, nightCount, startOfDay, toDateKey } from '../../utils/date-utils';
@@ -346,7 +349,7 @@ export class BookingChannelStateService {
     if (groupId && product?.capacity?.[groupId]?.max != null) {
       return product.capacity[groupId].max!;
     }
-    return CABIN_CONFIG.maxGuestsPerCabin;
+    return BOOKINGMOOD_CAPACITY_GROUP_MAX_FALLBACK;
   }
 
   validateCart(): void {

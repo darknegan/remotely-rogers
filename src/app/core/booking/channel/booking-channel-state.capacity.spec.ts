@@ -56,7 +56,11 @@ describe('BookingChannelStateService capacity', () => {
     expect(service.totalGuestsForProduct(PRODUCT_ID)).toBe(4);
   });
 
-  it('falls back to site max guests per cabin when capacity is missing', () => {
-    expect(service.maxGuestsForProduct(PRODUCT_ID)).toBe(4);
+  it('falls back to Bookingmood capacity max (2) when channel capacity is missing', () => {
+    expect(service.maxGuestsForProduct(PRODUCT_ID)).toBe(2);
+    service.selectedProductIds.set([PRODUCT_ID]);
+    service.seedOccupancy(PRODUCT_ID);
+    service.changeOccupancy(PRODUCT_ID, GROUP_ID, 5);
+    expect(service.totalGuestsForProduct(PRODUCT_ID)).toBe(2);
   });
 });
