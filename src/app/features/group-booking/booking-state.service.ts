@@ -393,6 +393,20 @@ export class BookingStateService {
     }
 
     if (!existing) {
+      const pending = this.pendingSelection();
+      if (pending?.cabinId === cabinId && toDateKey(pending.arrival) !== toDateKey(normalized)) {
+        const anchor = startOfDay(pending.arrival);
+        const gapDays = Math.abs(differenceInCalendarDays(anchor, normalized));
+
+        if (gapDays >= 1 && gapDays <= MAX_AUTO_FILL_GAP_DAYS) {
+          const rangeStart = anchor <= normalized ? anchor : normalized;
+          const rangeEnd = anchor <= normalized ? normalized : anchor;
+          this.applySelection(cabinId, rangeStart, rangeEnd);
+          this.pendingSelection.set({ cabinId, arrival: normalized });
+          return;
+        }
+      }
+
       this.applySelection(cabinId, normalized, normalized, { merge: false });
       this.pendingSelection.set({ cabinId, arrival: normalized });
       return;

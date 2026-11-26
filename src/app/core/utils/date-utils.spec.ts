@@ -22,6 +22,13 @@ describe('formatDateRangeLabel', () => {
     const departure = parseDateKey('2026-12-09');
     expect(formatDateRangeLabel(arrival, departure)).toBe('Dec 7 – Dec 9 (2 nights)');
   });
+
+  it('legacy grid: labels exclusive departure after last occupied night (Dec 7–9 nights → Dec 10)', () => {
+    const arrival = parseDateKey('2026-12-07');
+    const departure = parseDateKey('2026-12-10');
+    expect(nightCount(arrival, departure)).toBe(3);
+    expect(formatDateRangeLabel(arrival, departure)).toBe('Dec 7 – Dec 10 (3 nights)');
+  });
 });
 
 describe('validateDateRange', () => {

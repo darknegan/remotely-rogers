@@ -6,7 +6,12 @@ import { of, throwError } from 'rxjs';
 import { CABIN_CONFIG } from '../../../environments/cabin-config';
 import { BookingApiService } from '../../core/services/booking-api.service';
 import { CabinAvailability, GuestDetails } from '../../core/models/booking.models';
-import { parseDateKey, startOfDay, toDateKey } from '../../core/utils/date-utils';
+import {
+  formatDateRangeLabel,
+  parseDateKey,
+  startOfDay,
+  toDateKey,
+} from '../../core/utils/date-utils';
 import { BookingStateService } from './booking-state.service';
 
 function sampleQuote(cabinId: number): CabinAvailability {
@@ -212,6 +217,28 @@ describe('BookingStateService booking write policy', () => {
     service.selectCell(1, parseDateKey('2026-12-07'));
     expect(service.cabinSelections()[1]).toBeUndefined();
     expect(service.selectionError()).toContain('Minimum stay');
+  });
+
+  it('legacy grid Dec 7 then Dec 9 charges 3 nights and labels check-out Dec 10', () => {
+    const quote = sampleQuote(1);
+    quote.days = {
+      '2026-12-07': 'available',
+      '2026-12-08': 'available',
+      '2026-12-09': 'available',
+    };
+    service.availabilityMap.set({ 1: quote });
+
+    service.selectCell(1, parseDateKey('2026-12-07'));
+    expect(service.cabinSelections()[1]).toBeUndefined();
+
+    service.selectCell(1, parseDateKey('2026-12-09'));
+    const selection = service.getCabinSelection(1);
+    expect(selection).toBeDefined();
+    expect(toDateKey(selection!.arrival)).toBe('2026-12-07');
+    expect(toDateKey(selection!.departure)).toBe('2026-12-10');
+    expect(formatDateRangeLabel(selection!.arrival, selection!.departure)).toBe(
+      'Dec 7 – Dec 10 (3 nights)',
+    );
   });
 
   it('drops hydrated cart lines shorter than the minimum stay', () => {
