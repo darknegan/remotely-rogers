@@ -1,4 +1,5 @@
 import { Component, computed, inject } from '@angular/core';
+import { CustomCheckoutSummary } from '../../../custom-booking/custom-checkout-summary/custom-checkout-summary';
 import { CustomGroupBooking } from '../../../custom-booking/custom-group-booking/custom-group-booking';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { DomSanitizer } from '@angular/platform-browser';
@@ -16,13 +17,14 @@ import { CartSummary } from '../../cart/cart-summary/cart-summary';
 
 @Component({
   selector: 'app-checkout-page',
-  imports: [CartSummary, CustomGroupBooking],
+  imports: [CartSummary, CustomGroupBooking, CustomCheckoutSummary],
   templateUrl: './checkout-page.html',
   styleUrl: './checkout-page.scss',
 })
 export class CheckoutPage {
   protected readonly useCustomBooking = useCustomBookingComponents;
   private readonly state = inject(BookingStateService);
+  protected readonly showCustomCheckoutSummary = computed(() => this.state.cartItems().length > 0);
   private readonly sanitizer = inject(DomSanitizer);
   private readonly query = toSignal(inject(ActivatedRoute).queryParamMap, {
     initialValue: inject(ActivatedRoute).snapshot.queryParamMap,

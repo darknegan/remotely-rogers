@@ -3,7 +3,10 @@ import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { Router, RouterLink } from '@angular/router';
 
 import { BookingmoodServiceFormValue } from '../../../core/booking/channel/booking-channel-form-values';
+import { syncChannelFromGroupBooking } from '../../../core/booking/group-booking-channel-sync';
 import { BookingChannelStateService } from '../../../core/booking/channel/booking-channel-state.service';
+import { BookingStateService } from '../../group-booking/booking-state.service';
+import { formatGuestCount } from '../../../core/utils/guest-label';
 import { BookingmoodFormService } from '../../../core/booking/channel/bookingmood-channel.types';
 import { PriceSummary } from '../price-summary/price-summary';
 import { BookingProgress } from '../booking-progress/booking-progress';
@@ -18,11 +21,13 @@ import { BookingProgress } from '../booking-progress/booking-progress';
 export class ChannelGuestForm {
   private readonly fb = inject(FormBuilder);
   private readonly router = inject(Router);
+  private readonly group = inject(BookingStateService);
   protected readonly state = inject(BookingChannelStateService);
 
   readonly form = this.fb.group({});
 
   constructor() {
+    syncChannelFromGroupBooking(this.state, this.group);
     this.state.loadChannel();
     effect(() => {
       const services = this.state.formServices();
@@ -72,6 +77,10 @@ export class ChannelGuestForm {
 
   phoneService(): BookingmoodFormService | undefined {
     return this.state.formServices().find((service) => service.type === 'phone');
+  }
+
+  tripGuests(): string {
+    return formatGuestCount(this.state.totalSelectedGuests());
   }
 
   private controlForService(service: BookingmoodFormService) {

@@ -89,7 +89,7 @@
         <p-button
           label="Continue to checkout"
           styleClass="rr-cart__checkout rr-group-booking-cta"
-          [disabled]="!state.canContinue()"
+          [disabled]="!state.canContinue() || state.checkoutBlockedByWorker()"
           (onClick)="continueToCheckout()"
         />
 

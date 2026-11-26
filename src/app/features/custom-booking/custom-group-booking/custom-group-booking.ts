@@ -7,6 +7,7 @@ import { BookingChannelStateService } from '../../../core/booking/channel/bookin
 import { ReservationsOffBanner } from '../reservations-off-banner/reservations-off-banner';
 import { BookingCalendar } from '../booking-calendar/booking-calendar';
 import { GuestSteppers } from '../guest-steppers/guest-steppers';
+import { formatGuestCount } from '../../../core/utils/guest-label';
 import { PriceSummary } from '../price-summary/price-summary';
 
 @Component({
@@ -31,6 +32,10 @@ export class CustomGroupBooking implements OnInit {
 
   cabinName(cabinId: number): string {
     return this.cabins.find((c) => c.id === cabinId)?.name ?? 'Cabin';
+  }
+
+  guestSummary(): string {
+    return formatGuestCount(this.state.totalSelectedGuests());
   }
 
   toggle(cabinId: number): void {

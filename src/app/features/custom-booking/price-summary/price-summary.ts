@@ -2,6 +2,7 @@ import { CurrencyPipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
 
 import { BookingChannelStateService } from '../../../core/booking/channel/booking-channel-state.service';
+import { BookingmoodCartValidateItem } from '../../../core/booking/channel/bookingmood-channel.types';
 
 @Component({
   selector: 'app-price-summary',
@@ -29,5 +30,12 @@ export class PriceSummary {
 
   toDollars(cents: number): number {
     return cents / 100;
+  }
+
+  lineLabel(line: BookingmoodCartValidateItem): string {
+    const index = Number(line.id.replace('item-', '')) - 1;
+    const productId = this.state.selectedProductIds()[index];
+    const product = this.state.products().find((row) => row.id === productId);
+    return product ? this.state.productName(product) : `Cabin ${index + 1}`;
   }
 }

@@ -51,7 +51,10 @@ describe('GroupBookingShell reservations-off', () => {
     sessionStorage.clear();
   });
 
-  it('shows the browse-only banner on /group-booking when checkout is disabled', () => {
+  it('shows the browse-only banner only when bookingEnabled is explicitly false', () => {
+    const state = TestBed.inject(BookingStateService);
+    state.bookingEnabled.set(false);
+
     const fixture = TestBed.createComponent(GroupBookingShell);
     fixture.detectChanges();
     const root: HTMLElement = fixture.nativeElement;

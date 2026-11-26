@@ -67,7 +67,15 @@
 
       <aside class="rr-custom-group__summary">
         <h3>Your cabins</h3>
-        <p>{{ state.selectedProductIds().length }} cabins · {{ state.nights() }} nights</p>
+        <p>
+          {{ state.selectedProductIds().length }}
+          {{ state.selectedProductIds().length === 1 ? 'cabin' : 'cabins' }}
+          ·
+          {{ state.nights() }}
+          {{ state.nights() === 1 ? 'night' : 'nights' }}
+          ·
+          {{ guestSummary() }}
+        </p>
         <p>{{ state.sharedRangeLabel() }}</p>
         <app-price-summary />
       </aside>

@@ -76,6 +76,15 @@
 
     <aside>
       <h3>Your trip</h3>
+      <p>
+        {{ state.selectedProductIds().length }}
+        {{ state.selectedProductIds().length === 1 ? 'cabin' : 'cabins' }}
+        ·
+        {{ state.nights() }}
+        {{ state.nights() === 1 ? 'night' : 'nights' }}
+        ·
+        {{ tripGuests() }}
+      </p>
       <p>{{ state.sharedRangeLabel() }}</p>
       <app-price-summary />
     </aside>

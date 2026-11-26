@@ -8,7 +8,7 @@
   <dl class="rr-price-summary">
     @for (line of state.cartLineItems(); track line.id) {
       <div class="rr-price-row">
-        <dt>{{ line.id }}</dt>
+        <dt>{{ lineLabel(line) }}</dt>
         <dd>{{ toDollars(line.price?.subtotal ?? 0) | currency: 'USD' }}</dd>
       </div>
     }

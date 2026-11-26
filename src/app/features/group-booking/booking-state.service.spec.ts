@@ -73,12 +73,35 @@ describe('BookingStateService booking write policy', () => {
     });
   }
 
-  it('defaults bookingEnabled to false and blocks checkout entry while browsing', () => {
+  it('does not treat unknown bookingEnabled as reservations-off when the cart is ready', () => {
     seedCart();
-    expect(service.bookingEnabled()).toBe(false);
-    expect(service.reservationsOff()).toBe(true);
-    expect(service.canContinue()).toBe(false);
+    expect(service.bookingEnabled()).toBeNull();
+    expect(service.reservationsOff()).toBe(false);
+    expect(service.checkoutBlockedByWorker()).toBe(false);
+    expect(service.canContinue()).toBe(true);
     expect(service.canCheckout()).toBe(false);
+  });
+
+  it('blocks checkout only when availability explicitly returns bookingEnabled false', () => {
+    seedCart();
+    service.bookingEnabled.set(false);
+    expect(service.reservationsOff()).toBe(true);
+    expect(service.checkoutBlockedByWorker()).toBe(true);
+    expect(service.canContinue()).toBe(true);
+    expect(service.canCheckout()).toBe(false);
+  });
+
+  it('allows checkout when availability explicitly returns bookingEnabled true', () => {
+    seedCart();
+    service.bookingEnabled.set(true);
+    expect(service.reservationsOff()).toBe(false);
+    expect(service.canCheckout()).toBe(true);
+  });
+
+  it('keeps continue enabled while availability is loading', () => {
+    seedCart();
+    service.loading.set(true);
+    expect(service.canContinue()).toBe(true);
   });
 
   it('prices available nights at $1 when Bookingmood sends no rate', () => {
@@ -97,7 +120,7 @@ describe('BookingStateService booking write policy', () => {
     expect(service.cartItems()[0].totalPrice).toBe(2);
   });
 
-  it('keeps checkout disabled when API omits bookingEnabled', () => {
+  it('leaves bookingEnabled unknown when API omits bookingEnabled', () => {
     fetchAvailability.mockReturnValue(
       of({
         cabins: [sampleQuote(1)],
@@ -109,11 +132,30 @@ describe('BookingStateService booking write policy', () => {
     service.setViewStartDate(start);
     service.searchAvailability();
 
-    expect(service.bookingEnabled()).toBe(false);
-    expect(service.canCheckout()).toBe(false);
+    expect(service.bookingEnabled()).toBeNull();
+    expect(service.reservationsOff()).toBe(false);
+    seedCart();
+    expect(service.canContinue()).toBe(true);
   });
 
-  it('clears bookingEnabled on availability errors', () => {
+  it('sets bookingEnabled false only when the API sends false', () => {
+    fetchAvailability.mockReturnValue(
+      of({
+        cabins: [sampleQuote(1)],
+        bookingEnabled: false,
+      }),
+    );
+
+    const start = startOfDay(new Date());
+    start.setDate(start.getDate() + 14);
+    service.setViewStartDate(start);
+    service.searchAvailability();
+
+    expect(service.bookingEnabled()).toBe(false);
+    expect(service.reservationsOff()).toBe(true);
+  });
+
+  it('preserves bookingEnabled on availability errors', () => {
     fetchAvailability.mockReturnValue(throwError(() => new Error('network')));
     service.bookingEnabled.set(true);
 
@@ -122,8 +164,9 @@ describe('BookingStateService booking write policy', () => {
     service.setViewStartDate(start);
     service.searchAvailability();
 
-    expect(service.bookingEnabled()).toBe(false);
-    expect(service.canCheckout()).toBe(false);
+    expect(service.bookingEnabled()).toBe(true);
+    seedCart();
+    expect(service.canContinue()).toBe(true);
   });
 
   it('does not call createCheckout when writes are disabled', () => {

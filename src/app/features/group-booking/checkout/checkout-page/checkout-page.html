@@ -1,5 +1,9 @@
 @if (useCustomBooking) {
-  <app-custom-group-booking />
+  @if (showCustomCheckoutSummary()) {
+    <app-custom-checkout-summary />
+  } @else {
+    <app-custom-group-booking />
+  }
 } @else {
   <div class="rr-checkout" [class.rr-checkout--embed]="embedMode()">
     <header class="rr-checkout__header">

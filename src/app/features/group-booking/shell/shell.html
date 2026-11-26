@@ -27,7 +27,13 @@
     <app-cart-summary class="rr-cart-desktop" />
   </div>
   <div class="rr-pane-toggle" style="margin-top: 16px">
-    <p-button type="button" label="Your group cart" (onClick)="cartOpen.set(true)" />
+    <p-button
+      type="button"
+      label="View cart summary"
+      [text]="true"
+      severity="secondary"
+      (onClick)="cartOpen.set(true)"
+    />
   </div>
   <p-drawer header="Your group cart" [visible]="cartOpen()" (visibleChange)="cartOpen.set($event)" position="bottom" [style]="{ height: '70vh' }">
     <app-cart-summary />
