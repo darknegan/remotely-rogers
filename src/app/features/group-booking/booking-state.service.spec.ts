@@ -73,10 +73,11 @@ describe('BookingStateService booking write policy', () => {
     });
   }
 
-  it('defaults bookingEnabled to false and blocks payment, but still opens checkout', () => {
+  it('defaults bookingEnabled to false and blocks checkout entry while browsing', () => {
     seedCart();
     expect(service.bookingEnabled()).toBe(false);
-    expect(service.canContinue()).toBe(true);
+    expect(service.reservationsOff()).toBe(true);
+    expect(service.canContinue()).toBe(false);
     expect(service.canCheckout()).toBe(false);
   });
 
@@ -158,6 +159,38 @@ describe('BookingStateService booking write policy', () => {
     service.setViewDayCount(2);
     expect(service.viewDayCount()).toBe(7);
     expect(service.timelineDates()).toHaveLength(7);
+  });
+
+  it('drops hydrated cart lines shorter than the minimum stay', () => {
+    sessionStorage.setItem(
+      'rr-group-booking-cart',
+      JSON.stringify({
+        guestCount: 2,
+        cabinSelections: {
+          '1': { cabinId: 1, arrival: '2026-08-01', departure: '2026-08-02' },
+        },
+        availabilityMap: { 1: sampleQuote(1) },
+      }),
+    );
+
+    TestBed.resetTestingModule();
+    TestBed.configureTestingModule({
+      providers: [
+        BookingStateService,
+        provideRouter([]),
+        {
+          provide: BookingApiService,
+          useValue: {
+            getConfig: () => CABIN_CONFIG,
+            fetchAvailability,
+            createCheckout,
+            getBookingStatus: vi.fn(),
+          },
+        },
+      ],
+    });
+    const hydrated = TestBed.inject(BookingStateService);
+    expect(hydrated.cabinSelections()).toEqual({});
   });
 
   it('calls createCheckout when API enabled booking and cart is ready', () => {

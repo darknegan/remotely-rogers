@@ -141,9 +141,13 @@ export async function buildAvailabilityResponse(
     let totalPrice = 0;
     let nightlyRate = 0;
 
+    const dayRates: CabinAvailability['dayRates'] = {};
     if (search?.price && nights.length > 0) {
       totalPrice = (search.price.min + search.price.max) / 2 / 100;
       nightlyRate = totalPrice / nights.length;
+      for (const night of nights) {
+        dayRates[toDateKey(night)] = { price: nightlyRate };
+      }
     }
 
     return {
@@ -153,7 +157,7 @@ export async function buildAvailabilityResponse(
       currency,
       available: stayAvailable,
       days,
-      dayRates: {},
+      dayRates,
       cleaningFee: 0,
       availabilityState: 'ok' satisfies AvailabilityState,
       bookingUrl: `${origin}/cabins/${cabin.slug}`,

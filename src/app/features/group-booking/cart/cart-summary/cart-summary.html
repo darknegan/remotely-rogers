@@ -25,6 +25,18 @@
       }
     </div>
 
+    @if (state.reservationsOff()) {
+      <p-message
+        severity="info"
+        text="Reservations are temporarily unavailable. Browse dates and pricing, but checkout is disabled."
+        styleClass="rr-cart__warning"
+      />
+    }
+
+    @if (state.cartMinStayError(); as minStayError) {
+      <p-message severity="warn" [text]="minStayError" styleClass="rr-cart__warning" />
+    }
+
     @if (state.selectionError(); as selectionError) {
       <p-message severity="warn" [text]="selectionError" styleClass="rr-cart__warning" />
     }
@@ -81,9 +93,11 @@
           (onClick)="continueToCheckout()"
         />
 
-        <p class="rr-cart__note">
-          Checkout opens the Bookingmood cart. Add every cabin there to pay once through Stripe.
-        </p>
+        @if (!state.reservationsOff()) {
+          <p class="rr-cart__note">
+            Checkout opens the Bookingmood cart. Add every cabin there to pay once through Stripe.
+          </p>
+        }
       </div>
     }
   }

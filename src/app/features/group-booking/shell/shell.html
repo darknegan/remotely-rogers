@@ -1,4 +1,12 @@
 <div class="rr-group-booking" [class.rr-group-booking--embed]="compactLayout()" [class.rr-group-booking--cabins-embed]="embeddedInCabins()">
+  @if (reservationsOff()) {
+    <p-message
+      severity="info"
+      text="Reservations are temporarily unavailable. Browse dates and pricing, but checkout is disabled."
+      styleClass="rr-group-booking__browse-banner"
+    />
+  }
+
   @if (!compactLayout()) {
     <header class="rr-group-booking__header">
       <p class="rr-kicker">Group booking</p>

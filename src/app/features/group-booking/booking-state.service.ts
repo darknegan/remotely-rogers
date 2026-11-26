@@ -136,9 +136,26 @@ export class BookingStateService {
     this.cartItems().reduce((sum, item) => sum + item.totalPrice, 0),
   );
 
+  readonly cartMinStayError = computed(() => {
+    const min = this.config.minNights;
+    for (const item of this.cartItems()) {
+      if (item.nights < min) {
+        return `Minimum stay is ${min} nights per cabin.`;
+      }
+    }
+    return null;
+  });
+
+  readonly reservationsOff = computed(() => !this.bookingEnabled());
+
   /** Open the checkout page. Payment itself still requires booking writes. */
   readonly canContinue = computed(
-    () => this.cartItems().length > 0 && !this.loading() && !this.dateError(),
+    () =>
+      this.bookingEnabled() &&
+      this.cartItems().length > 0 &&
+      !this.loading() &&
+      !this.dateError() &&
+      !this.cartMinStayError(),
   );
 
   readonly canCheckout = computed(
@@ -677,7 +694,14 @@ export class BookingStateService {
             departure: parseDateKey(selection.departure),
           };
         }
-        this.cabinSelections.set(next);
+        const min = this.config.minNights;
+        const filtered: Record<number, CabinSelection> = {};
+        for (const selection of Object.values(next)) {
+          if (nightCount(selection.arrival, selection.departure) >= min) {
+            filtered[selection.cabinId] = selection;
+          }
+        }
+        this.cabinSelections.set(filtered);
       }
     } catch {
       sessionStorage.removeItem(CART_STORAGE_KEY);

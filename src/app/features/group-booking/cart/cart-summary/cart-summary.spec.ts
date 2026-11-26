@@ -59,7 +59,7 @@ describe('CartSummary checkout entry', () => {
     vi.spyOn(router, 'navigate').mockResolvedValue(true);
   });
 
-  it('opens checkout when the cart has cabins even if booking writes are disabled', () => {
+  it('shows browse-only UI when booking writes are disabled', () => {
     const state = TestBed.inject(BookingStateService);
     state.availabilityMap.set({ 1: sampleQuote(1) });
     state.cabinSelections.set({
@@ -70,16 +70,21 @@ describe('CartSummary checkout entry', () => {
       },
     });
     expect(state.bookingEnabled()).toBe(false);
-    expect(state.canContinue()).toBe(true);
+    expect(state.canContinue()).toBe(false);
 
     const fixture = TestBed.createComponent(CartSummary);
     fixture.detectChanges();
+    const root: HTMLElement = fixture.nativeElement;
+
+    expect(root.textContent).toContain('Reservations are temporarily unavailable');
+    expect(root.textContent).not.toContain('Stripe');
+    const checkoutButton: HTMLButtonElement | null = root.querySelector(
+      '.rr-cart__checkout',
+    );
+    expect(checkoutButton?.disabled).toBe(true);
 
     fixture.componentInstance.continueToCheckout();
-
-    expect(router.navigate).toHaveBeenCalledWith(['/group-booking/checkout'], {
-      queryParamsHandling: 'preserve',
-    });
+    expect(router.navigate).not.toHaveBeenCalled();
   });
 
   it('does not navigate to checkout when the cart is empty', () => {
