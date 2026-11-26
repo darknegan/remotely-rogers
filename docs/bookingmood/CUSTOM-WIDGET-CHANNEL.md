@@ -6,7 +6,7 @@ Dev channel id: `b36240bc-5dae-404e-b55d-f51efb502d73` (Custom widget interactio
 
 | Flag | Default in this repo | Purpose |
 |------|----------------------|---------|
-| `useCustomBookingComponents` | `false` | When `true`, cabin detail and `/group-booking/checkout` use native Angular components instead of the timeline iframe. |
+| `useCustomBookingComponents` | `false` in prod; **`true` only in `environment.booking-test-worker.ts`** (built via `--configuration=booking-test-worker`) | When `true`, cabin detail and `/group-booking/checkout` use native Angular components instead of the timeline iframe. |
 | `bookingmoodChannelBookingEnabled` | `false` | When `false`, `POST …/cart/checkout` throws before any network call; UI shows reservations-off. |
 | `bookingmoodChannelId` | dev channel uuid | Public channel id for `GET /channels/:id` (allowlisted). |
 
