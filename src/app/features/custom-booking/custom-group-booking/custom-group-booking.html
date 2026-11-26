@@ -38,7 +38,7 @@
                   />
                   <span>
                     <strong>{{ cabin.name }}</strong>
-                    <small>Sleeps {{ cabin.guests }}</small>
+                    <small>Sleeps {{ sleepsMax(cabin.id) }}</small>
                   </span>
                 </label>
                 @if (isSelected(cabin.id)) {

@@ -74,10 +74,22 @@ export function syncGroupFromChannelBooking(
     return false;
   }
 
-  const guestTotal = channel.totalSelectedGuests();
+  const guestByCabin: Record<number, number> = {};
+  let guestTotal = 0;
+  for (const productId of channel.selectedProductIds()) {
+    const cabinId = cabinIdForProduct(productId);
+    if (cabinId == null) {
+      continue;
+    }
+    const count = channel.totalGuestsForProduct(productId);
+    guestByCabin[cabinId] = count;
+    guestTotal += count;
+  }
+
   if (guestTotal > 0) {
     group.setGuestCount(guestTotal);
   }
+  group.cabinGuestCounts.set(guestByCabin);
 
   group.cabinSelections.set(selections);
   return true;

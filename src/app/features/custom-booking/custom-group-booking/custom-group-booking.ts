@@ -38,6 +38,11 @@ export class CustomGroupBooking implements OnInit {
     return this.cabins.find((c) => c.id === cabinId)?.name ?? 'Cabin';
   }
 
+  sleepsMax(cabinId: number): number {
+    const productId = this.productIdForCabin(cabinId);
+    return productId ? this.state.maxGuestsForProduct(productId) : 2;
+  }
+
   guestSummary(): string {
     return formatGuestCount(this.state.totalSelectedGuests());
   }

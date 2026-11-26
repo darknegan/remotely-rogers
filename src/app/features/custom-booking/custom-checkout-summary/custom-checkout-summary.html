@@ -15,7 +15,7 @@
           {{ group.cartItems()[0].nights }}
           {{ group.cartItems()[0].nights === 1 ? 'night' : 'nights' }}
           ·
-          {{ formatGuestCount(group.guestCount()) }}
+          {{ formatGuestCount(group.cartItems().reduce((n, item) => n + item.guests, 0)) }}
         </p>
 
         <ul class="rr-custom-checkout__cabins">
@@ -24,7 +24,7 @@
               <strong>{{ shortName(item.cabin.name) }}</strong>
               <span>
                 {{ formatDateRangeLabel(item.selection.arrival, item.selection.departure) }} ·
-                {{ formatGuestCount(group.guestCount()) }} ·
+                {{ formatGuestCount(item.guests) }} ·
                 {{ item.totalPrice | currency: item.currency : 'symbol' : '1.0-0' }}
               </span>
             </li>

@@ -167,7 +167,7 @@ export class BookingChannelStateService {
   }
 
   seedOccupancy(productId: string): void {
-    const groupId = this.primaryCapacityGroupId();
+    const groupId = this.capacityGroupIdForProduct(productId);
     if (!groupId) {
       return;
     }

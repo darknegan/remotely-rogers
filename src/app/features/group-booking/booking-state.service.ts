@@ -39,6 +39,7 @@ interface PendingCellSelection {
 
 interface PersistedCart {
   guestCount: number;
+  cabinGuestCounts?: Record<string, number>;
   cabinSelections: Record<string, { cabinId: number; arrival: string; departure: string }>;
   availabilityMap: Record<number, CabinAvailability>;
 }
@@ -55,6 +56,8 @@ export class BookingStateService {
   readonly viewStartDate = signal<Date | null>(null);
   readonly viewDayCount = signal(DEFAULT_VIEW_DAYS);
   readonly guestCount = signal(2);
+  /** Per-cabin guest counts from custom channel occupancy (falls back to shared guestCount). */
+  readonly cabinGuestCounts = signal<Record<number, number>>({});
   readonly availabilityMap = signal<Record<number, CabinAvailability>>({});
   readonly cabinSelections = signal<Record<number, CabinSelection>>({});
   readonly pendingSelection = signal<PendingCellSelection | null>(null);
@@ -127,6 +130,7 @@ export class BookingStateService {
           cabin,
           selection,
           nights,
+          guests: this.cabinGuestCounts()[cabin.id] ?? this.guestCount(),
           totalPrice: nightsTotal + (quote?.cleaningFee ?? 0),
           currency: quote?.currency ?? 'USD',
         };
@@ -701,6 +705,17 @@ export class BookingStateService {
         this.guestCount.set(parsed.guestCount);
       }
 
+      if (parsed.cabinGuestCounts && typeof parsed.cabinGuestCounts === 'object') {
+        const counts: Record<number, number> = {};
+        for (const [id, count] of Object.entries(parsed.cabinGuestCounts)) {
+          const cabinId = Number(id);
+          if (Number.isFinite(cabinId) && typeof count === 'number') {
+            counts[cabinId] = count;
+          }
+        }
+        this.cabinGuestCounts.set(counts);
+      }
+
       if (parsed.availabilityMap && typeof parsed.availabilityMap === 'object') {
         this.availabilityMap.set(parsed.availabilityMap);
       }
@@ -739,6 +754,9 @@ export class BookingStateService {
 
     const payload: PersistedCart = {
       guestCount: this.guestCount(),
+      cabinGuestCounts: Object.fromEntries(
+        Object.entries(this.cabinGuestCounts()).map(([id, count]) => [String(id), count]),
+      ),
       availabilityMap: this.availabilityMap(),
       cabinSelections: Object.fromEntries(
         Object.entries(this.cabinSelections()).map(([id, selection]) => [

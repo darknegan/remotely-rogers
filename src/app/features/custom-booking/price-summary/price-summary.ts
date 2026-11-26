@@ -3,6 +3,7 @@ import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/c
 
 import { BookingChannelStateService } from '../../../core/booking/channel/booking-channel-state.service';
 import { BookingmoodCartValidateItem } from '../../../core/booking/channel/bookingmood-channel.types';
+import { formatGuestCount } from '../../../core/utils/guest-label';
 
 @Component({
   selector: 'app-price-summary',
@@ -13,6 +14,7 @@ import { BookingmoodCartValidateItem } from '../../../core/booking/channel/booki
 })
 export class PriceSummary {
   protected readonly state = inject(BookingChannelStateService);
+  readonly formatGuestCount = formatGuestCount;
 
   readonly subtotalCents = computed(() =>
     this.state.cartLineItems().reduce((sum, row) => sum + (row.price?.subtotal ?? 0), 0),
@@ -37,5 +39,11 @@ export class PriceSummary {
     const productId = this.state.selectedProductIds()[index];
     const product = this.state.products().find((row) => row.id === productId);
     return product ? this.state.productName(product) : `Cabin ${index + 1}`;
+  }
+
+  lineGuests(line: BookingmoodCartValidateItem): number {
+    const index = Number(line.id.replace(/^item-/, '')) - 1;
+    const productId = this.state.selectedProductIds()[index];
+    return productId ? this.state.totalGuestsForProduct(productId) : 0;
   }
 }
