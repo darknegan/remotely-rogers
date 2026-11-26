@@ -80,9 +80,10 @@ describe('buildAvailabilityResponse', () => {
     expect(cabin.dayRates['2026-07-02']?.price).toBe(132);
     expect(client.search).toHaveBeenCalledWith(
       expect.objectContaining({
-        occupancy: { [CAPACITY]: 2 },
+        occupancy: {},
       }),
     );
+    expect(client.cartValidate).not.toHaveBeenCalled();
   });
 
   it('falls back to cart-validate when search returns no price', async () => {
@@ -129,6 +130,51 @@ describe('buildAvailabilityResponse', () => {
     const cabin = result.cabins.find((c) => c.cabinId === 1)!;
     expect(cabin.nightlyRate).toBe(132);
     expect(cabin.totalPrice).toBe(264);
+    expect(client.cartValidate).toHaveBeenCalledWith(
+      expect.objectContaining({
+        items: expect.arrayContaining([
+          expect.objectContaining({
+            occupancy: { [CAPACITY]: 2 },
+          }),
+        ]),
+      }),
+    );
+  });
+
+  it('uses cart occupancy on validate even when search sends an empty occupancy map', async () => {
+    const client = {
+      getAvailability: vi.fn().mockResolvedValue([
+        {
+          product_id: PRODUCT,
+          intervals: [{ start: '2026-12-07', end: '2026-12-10', status: 'available' }],
+        },
+      ]),
+      search: vi.fn().mockResolvedValue([]),
+      listCapacityGroups: vi.fn().mockResolvedValue([{ id: CAPACITY }]),
+      cartValidate: vi.fn().mockResolvedValue([
+        {
+          id: 'quote-1',
+          valid: true,
+          availabilityMatch: true,
+          occupancyMatch: true,
+          price: { currency: 'USD', subtotal: 26_400, tax: 0, total: 26_400, deposit: 0 },
+        },
+      ]),
+    } as unknown as BookingmoodClient;
+
+    await buildAvailabilityResponse(
+      { arrival: '2026-12-07', departure: '2026-12-09', adults: 2 },
+      client,
+      {
+        ASSETS: {} as Fetcher,
+        BOOKINGMOOD_API_KEY: 'test',
+        BOOKINGMOOD_PRODUCT_MAP: JSON.stringify({ 1: PRODUCT }),
+        BOOKINGMOOD_CAPACITY_GROUP_ID: CAPACITY,
+      },
+      'https://example.com',
+    );
+
+    expect(client.search).toHaveBeenCalledWith(expect.objectContaining({ occupancy: {} }));
     expect(client.cartValidate).toHaveBeenCalled();
   });
 });

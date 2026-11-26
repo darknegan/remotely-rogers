@@ -6,15 +6,29 @@ const UUID =
 
 let cachedCapacityGroupId: string | null | undefined;
 
+/**
+ * POST /search occupancy filter. For Rentals by Hong Davis (manual capacity group), a
+ * non-empty map (e.g. `{ [capacityGroupId]: 1|2 }`) returns `[]` from Bookingmood; `{}`
+ * returns full priced results with `occupancyMatches: true`.
+ */
+export function occupancyForSearch(): Record<string, number> {
+  return {};
+}
+
 export function occupancyForCapacityGroup(
   capacityGroupId: string | null | undefined,
   adults: number,
+  options: { maxGuests?: number } = {},
 ): Record<string, number> {
   const groupId = capacityGroupId?.trim();
   if (!groupId || !UUID.test(groupId)) {
     return {};
   }
-  return { [groupId]: Math.max(1, adults) };
+  const capped =
+    options.maxGuests != null
+      ? Math.min(options.maxGuests, Math.max(1, adults))
+      : Math.max(1, adults);
+  return { [groupId]: capped };
 }
 
 export async function resolveOccupancyForAdults(

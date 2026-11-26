@@ -2,6 +2,7 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import {
   occupancyForCapacityGroup,
+  occupancyForSearch,
   resetCapacityGroupCacheForTests,
   resolveOccupancyForAdults,
 } from './bookingmood-occupancy';
@@ -34,5 +35,11 @@ describe('resolveOccupancyForAdults', () => {
 describe('occupancyForCapacityGroup', () => {
   it('returns an empty object without a valid group id', () => {
     expect(occupancyForCapacityGroup('', 2)).toEqual({});
+  });
+});
+
+describe('occupancyForSearch', () => {
+  it('always sends an empty map so Bookingmood returns priced search rows', () => {
+    expect(occupancyForSearch()).toEqual({});
   });
 });

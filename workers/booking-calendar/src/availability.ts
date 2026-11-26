@@ -18,7 +18,7 @@ import {
   applySubtotalCentsPricing,
   quoteStaySubtotalsViaCartValidate,
 } from './availability-pricing';
-import { resolveOccupancyForAdults } from './bookingmood-occupancy';
+import { occupancyForSearch, resolveOccupancyForAdults } from './bookingmood-occupancy';
 import {
   airbnbStatusesForCabin,
   blockNightsAirbnbMarksUnavailable,
@@ -91,13 +91,14 @@ export async function buildAvailabilityResponse(
   }
 
   let searchResults: Awaited<ReturnType<BookingmoodClient['search']>> = [];
-  const occupancy = await resolveOccupancyForAdults(client, env, request.adults);
+  const cartOccupancy = await resolveOccupancyForAdults(client, env, request.adults);
+  const searchOccupancy = occupancyForSearch();
   if (nights.length > 0 && !availabilityError) {
     try {
       searchResults = await client.search({
         interval: { start: toDateKey(arrival), end: toDateKey(departure) },
         productIds: allowlisted,
-        occupancy,
+        occupancy: searchOccupancy,
       });
     } catch (error) {
       console.error('bookingmood_search_failed', {
@@ -148,7 +149,7 @@ export async function buildAvailabilityResponse(
     if (
       search &&
       !search.price &&
-      Object.keys(occupancy).length > 0 &&
+      Object.keys(cartOccupancy).length > 0 &&
       stayAvailable
     ) {
       console.info('bookingmood_search_no_price', {
@@ -189,7 +190,7 @@ export async function buildAvailabilityResponse(
       env,
       request.arrival,
       request.departure,
-      occupancy,
+      cartOccupancy,
       cabinsWithoutPrice,
     );
 
