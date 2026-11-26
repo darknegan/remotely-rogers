@@ -10,7 +10,7 @@
     "export:content-snippets": "node tools/export-content-snippets.mjs",
     "build:booking-worker": "ng build --configuration=booking-worker && node tools/prepare-booking-worker-assets.mjs",
     "deploy:booking-worker": "npm run build:booking-worker && wrangler deploy",
-    "build:booking-worker-test": "ng build --configuration=booking-worker && node tools/prepare-booking-worker-assets.mjs",
+    "build:booking-worker-test": "ng build --configuration=booking-test-worker && node tools/prepare-booking-worker-assets.mjs",
     "dry-run:booking-worker-test": "npm run build:booking-worker-test && wrangler deploy --dry-run -c wrangler.booking-test.jsonc",
     "test:booking-safety-ui": "ng test --watch=false --ts-config=tsconfig.booking-safety.spec.json --exclude='**/work-stays.spec.ts' --exclude='**/activities.spec.ts' --filter='BookingStateService|GuestDetailsForm|CartSummary checkout|CheckoutPage direct|CabinDetail single-cabin|Cabin catalog'",
     "test:booking-worker": "vitest run workers/booking-calendar/src",

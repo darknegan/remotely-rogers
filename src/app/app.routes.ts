@@ -1,6 +1,8 @@
 import { inject } from '@angular/core';
 import { Router, Routes, UrlTree } from '@angular/router';
 
+import { channelCheckoutStepsGuard } from './core/booking/channel/channel-checkout-steps.guard';
+
 function redirectToCabinsGroup(): UrlTree {
   return inject(Router).createUrlTree(['/cabins'], { fragment: 'group' });
 }
@@ -75,6 +77,7 @@ export const routes: Routes = [
       },
       {
         path: 'checkout/guest',
+        canActivate: [channelCheckoutStepsGuard],
         loadComponent: () =>
           import('./features/custom-booking/channel-guest-form/channel-guest-form').then(
             (m) => m.ChannelGuestForm,
@@ -82,6 +85,7 @@ export const routes: Routes = [
       },
       {
         path: 'checkout/review',
+        canActivate: [channelCheckoutStepsGuard],
         loadComponent: () =>
           import('./features/custom-booking/channel-review/channel-review').then(
             (m) => m.ChannelReview,
