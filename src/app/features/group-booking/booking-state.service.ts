@@ -66,7 +66,8 @@ export class BookingStateService {
   readonly checkoutLoading = signal(false);
   readonly checkoutError = signal<string | null>(null);
   readonly checkoutReference = signal<string | null>(null);
-  readonly bookingEnabled = signal(false);
+  /** `true` / `false` only after an availability response; `null` while unknown (loading or never fetched). */
+  readonly bookingEnabled = signal<boolean | null>(null);
   readonly bookingStatus = signal<BookingStatusResponse | null>(null);
   readonly nextOpenLabels = signal<Record<number, string>>({});
   /** Stay dates from the cabins listing bar (checkout-exclusive). */
@@ -136,13 +137,29 @@ export class BookingStateService {
     this.cartItems().reduce((sum, item) => sum + item.totalPrice, 0),
   );
 
-  /** Open the checkout page. Payment itself still requires booking writes. */
+  readonly cartMinStayError = computed(() => {
+    const min = this.config.minNights;
+    for (const item of this.cartItems()) {
+      if (item.nights < min) {
+        return `Minimum stay is ${min} nights per cabin.`;
+      }
+    }
+    return null;
+  });
+
+  /** Mirrors Worker availability when writes are explicitly off (`bookingEnabled === false`). */
+  readonly reservationsOff = computed(() => this.bookingEnabled() === false);
+
+  readonly checkoutBlockedByWorker = computed(() => this.bookingEnabled() === false);
+
+  /** Cart is ready to open checkout (does not treat loading/error as write-disabled). */
   readonly canContinue = computed(
-    () => this.cartItems().length > 0 && !this.loading() && !this.dateError(),
+    () =>
+      this.cartItems().length > 0 && !this.dateError() && !this.cartMinStayError(),
   );
 
   readonly canCheckout = computed(
-    () => this.bookingEnabled() && this.canContinue(),
+    () => this.bookingEnabled() === true && this.canContinue(),
   );
 
   constructor() {
@@ -341,7 +358,11 @@ export class BookingStateService {
       .pipe(finalize(() => this.loading.set(false)))
       .subscribe({
         next: (response) => {
-          this.bookingEnabled.set(response.bookingEnabled === true);
+          if (response.bookingEnabled === true) {
+            this.bookingEnabled.set(true);
+          } else if (response.bookingEnabled === false) {
+            this.bookingEnabled.set(false);
+          }
           const map: Record<number, CabinAvailability> = {};
           for (const cabin of response.cabins) {
             map[cabin.cabinId] = cabin;
@@ -351,7 +372,6 @@ export class BookingStateService {
         },
         error: () => {
           this.error.set('Availability unavailable. Please try again later.');
-          this.bookingEnabled.set(false);
           this.availabilityMap.set({});
         },
       });
@@ -469,7 +489,7 @@ export class BookingStateService {
   }
 
   submitCheckout(guest: GuestDetails): void {
-    if (!this.bookingEnabled() || this.cartItems().length === 0 || this.checkoutLoading()) {
+    if (this.bookingEnabled() !== true || this.cartItems().length === 0 || this.checkoutLoading()) {
       return;
     }
 
@@ -677,7 +697,14 @@ export class BookingStateService {
             departure: parseDateKey(selection.departure),
           };
         }
-        this.cabinSelections.set(next);
+        const min = this.config.minNights;
+        const filtered: Record<number, CabinSelection> = {};
+        for (const selection of Object.values(next)) {
+          if (nightCount(selection.arrival, selection.departure) >= min) {
+            filtered[selection.cabinId] = selection;
+          }
+        }
+        this.cabinSelections.set(filtered);
       }
     } catch {
       sessionStorage.removeItem(CART_STORAGE_KEY);

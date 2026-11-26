@@ -1,6 +1,7 @@
 import { ChangeDetectionStrategy, Component, computed, inject, input } from '@angular/core';
 
 import { BookingChannelStateService } from '../../../core/booking/channel/booking-channel-state.service';
+import { formatGuestCount } from '../../../core/utils/guest-label';
 
 @Component({
   selector: 'app-guest-steppers',
@@ -13,6 +14,7 @@ export class GuestSteppers {
   readonly disabled = input(false);
 
   protected readonly state = inject(BookingChannelStateService);
+  readonly formatGuestCount = formatGuestCount;
 
   readonly groupId = computed(() => this.state.capacityGroupIdForProduct(this.productId()));
   readonly maxGuests = computed(() => this.state.maxGuestsForProduct(this.productId()));

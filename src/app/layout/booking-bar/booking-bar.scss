@@ -1,0 +1,10 @@
+:host.rr-booking-bar--on-hero .rr-book-bar .rr-field {
+  color: var(--rr-walnut);
+  font-weight: 600;
+  letter-spacing: 0.12em;
+}
+
+:host.rr-booking-bar--on-hero .rr-book-bar .p-datepicker-input,
+:host.rr-booking-bar--on-hero .rr-book-bar .p-button-label {
+  color: var(--rr-ink);
+}

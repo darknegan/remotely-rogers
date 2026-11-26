@@ -31,7 +31,7 @@
     <span>Guests</span>
     <p-button
       type="button"
-      [label]="search.partySize() + ' guests'"
+      [label]="partyLabel()"
       [outlined]="true"
       (onClick)="guests.toggle($event)"
     />

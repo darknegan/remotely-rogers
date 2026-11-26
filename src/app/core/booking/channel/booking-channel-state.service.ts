@@ -1,8 +1,9 @@
 import { Injectable, computed, inject, signal } from '@angular/core';
 
+import { CABIN_CONFIG } from '../../../../environments/cabin-config';
 import { environment } from '../../../../environments/environment';
 import { bookingmoodProductId } from '../bookingmood-products';
-import { nightCount, startOfDay, toDateKey } from '../../utils/date-utils';
+import { addDays, nightCount, startOfDay, toDateKey } from '../../utils/date-utils';
 import {
   assertAllowedPaymentUrl,
 } from './booking-payment-url';
@@ -87,6 +88,13 @@ export class BookingChannelStateService {
     return nightCount(start, end);
   });
 
+  readonly totalSelectedGuests = computed(() =>
+    this.selectedProductIds().reduce(
+      (sum, productId) => sum + this.totalGuestsForProduct(productId),
+      0,
+    ),
+  );
+
   readonly sharedRangeLabel = computed(() => {
     const start = this.checkIn();
     const end = this.checkOut();
@@ -121,10 +129,13 @@ export class BookingChannelStateService {
     const row = this.availabilityByProduct()[productId];
     const month = this.calendarMonth();
     const visibleEnd = new Date(month.getFullYear(), month.getMonth() + 1, 1);
-    const range =
-      this.checkIn() && this.checkOut()
-        ? { checkIn: this.checkIn()!, checkOut: this.checkOut()! }
-        : null;
+    const start = this.checkIn();
+    const end = this.checkOut();
+    const range = start
+      ? end
+        ? { checkIn: start, checkOut: end }
+        : { checkIn: start, checkOut: addDays(start, 1) }
+      : null;
     return buildDayKinds(row?.events, row?.price_calendar_entries, range, month, visibleEnd);
   });
 
@@ -207,6 +218,13 @@ export class BookingChannelStateService {
       .catch(() => {
         this.error.set('Could not refresh availability. Try again.');
       });
+  }
+
+  beginDateSelection(checkIn: Date): void {
+    this.checkIn.set(startOfDay(checkIn));
+    this.checkOut.set(null);
+    this.validatedItems.set(null);
+    this.validateError.set(null);
   }
 
   setDates(checkIn: Date, checkOut: Date): void {
@@ -318,8 +336,7 @@ export class BookingChannelStateService {
     if (groupId && product?.capacity?.[groupId]?.max != null) {
       return product.capacity[groupId].max!;
     }
-    const min = product?.capacity?.[groupId ?? '']?.min;
-    return typeof min === 'number' && min > 0 ? min : 1;
+    return CABIN_CONFIG.maxGuestsPerCabin;
   }
 
   validateCart(): void {

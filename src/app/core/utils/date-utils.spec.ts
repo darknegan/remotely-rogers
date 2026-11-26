@@ -1,6 +1,14 @@
 import { describe, expect, it } from 'vitest';
 
-import { nightCount, startOfDay, validateDateRange } from './date-utils';
+import { nightCount, parseDateKey, startOfDay, validateDateRange } from './date-utils';
+
+describe('nightCount', () => {
+  it('treats check-out as exclusive (Dec 7 → Dec 9 is 2 nights)', () => {
+    const arrival = parseDateKey('2026-12-07');
+    const departure = parseDateKey('2026-12-09');
+    expect(nightCount(arrival, departure)).toBe(2);
+  });
+});
 
 describe('validateDateRange', () => {
   it('requires both dates', () => {

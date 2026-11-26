@@ -33,7 +33,7 @@ export class CartSummary {
   }
 
   continueToCheckout(): void {
-    if (!this.state.canContinue()) {
+    if (!this.state.canContinue() || this.state.checkoutBlockedByWorker()) {
       return;
     }
 

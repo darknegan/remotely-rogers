@@ -1,4 +1,12 @@
 <div class="rr-group-booking" [class.rr-group-booking--embed]="compactLayout()" [class.rr-group-booking--cabins-embed]="embeddedInCabins()">
+  @if (reservationsOff()) {
+    <p-message
+      severity="info"
+      text="Reservations are temporarily unavailable. Browse dates and pricing, but checkout is disabled."
+      styleClass="rr-group-booking__browse-banner"
+    />
+  }
+
   @if (!compactLayout()) {
     <header class="rr-group-booking__header">
       <p class="rr-kicker">Group booking</p>
@@ -19,7 +27,13 @@
     <app-cart-summary class="rr-cart-desktop" />
   </div>
   <div class="rr-pane-toggle" style="margin-top: 16px">
-    <p-button type="button" label="Your group cart" (onClick)="cartOpen.set(true)" />
+    <p-button
+      type="button"
+      label="View cart summary"
+      [text]="true"
+      severity="secondary"
+      (onClick)="cartOpen.set(true)"
+    />
   </div>
   <p-drawer header="Your group cart" [visible]="cartOpen()" (visibleChange)="cartOpen.set($event)" position="bottom" [style]="{ height: '70vh' }">
     <app-cart-summary />

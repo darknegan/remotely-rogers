@@ -59,7 +59,7 @@ describe('CartSummary checkout entry', () => {
     vi.spyOn(router, 'navigate').mockResolvedValue(true);
   });
 
-  it('opens checkout when the cart has cabins even if booking writes are disabled', () => {
+  it('shows browse-only UI only when bookingEnabled is explicitly false', () => {
     const state = TestBed.inject(BookingStateService);
     state.availabilityMap.set({ 1: sampleQuote(1) });
     state.cabinSelections.set({
@@ -69,17 +69,41 @@ describe('CartSummary checkout entry', () => {
         departure: parseDateKey('2026-08-03'),
       },
     });
-    expect(state.bookingEnabled()).toBe(false);
-    expect(state.canContinue()).toBe(true);
+    state.bookingEnabled.set(false);
 
     const fixture = TestBed.createComponent(CartSummary);
     fixture.detectChanges();
+    const root: HTMLElement = fixture.nativeElement;
+
+    expect(root.textContent).toContain('Reservations are temporarily unavailable');
+    expect(root.textContent).not.toContain('Stripe');
+    const checkoutButton: HTMLButtonElement | null = root.querySelector(
+      '.rr-cart__checkout',
+    );
+    expect(checkoutButton?.disabled).toBe(true);
 
     fixture.componentInstance.continueToCheckout();
+    expect(router.navigate).not.toHaveBeenCalled();
+  });
 
-    expect(router.navigate).toHaveBeenCalledWith(['/group-booking/checkout'], {
-      queryParamsHandling: 'preserve',
+  it('keeps checkout enabled while bookingEnabled is still unknown', () => {
+    const state = TestBed.inject(BookingStateService);
+    state.availabilityMap.set({ 1: sampleQuote(1) });
+    state.cabinSelections.set({
+      1: {
+        cabinId: 1,
+        arrival: parseDateKey('2026-08-01'),
+        departure: parseDateKey('2026-08-03'),
+      },
     });
+    expect(state.bookingEnabled()).toBeNull();
+
+    const fixture = TestBed.createComponent(CartSummary);
+    fixture.detectChanges();
+    const checkoutButton: HTMLButtonElement | null = fixture.nativeElement.querySelector(
+      '.rr-cart__checkout',
+    );
+    expect(checkoutButton?.disabled).toBe(false);
   });
 
   it('does not navigate to checkout when the cart is empty', () => {
