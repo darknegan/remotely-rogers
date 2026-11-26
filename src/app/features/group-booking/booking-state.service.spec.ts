@@ -204,6 +204,16 @@ describe('BookingStateService booking write policy', () => {
     expect(service.timelineDates()).toHaveLength(7);
   });
 
+  it('does not add selections shorter than the minimum stay', () => {
+    const quote = sampleQuote(1);
+    quote.days = { '2026-12-07': 'available' };
+    service.availabilityMap.set({ 1: quote });
+
+    service.selectCell(1, parseDateKey('2026-12-07'));
+    expect(service.cabinSelections()[1]).toBeUndefined();
+    expect(service.selectionError()).toContain('Minimum stay');
+  });
+
   it('drops hydrated cart lines shorter than the minimum stay', () => {
     sessionStorage.setItem(
       'rr-group-booking-cart',

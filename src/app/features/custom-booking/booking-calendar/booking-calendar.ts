@@ -1,7 +1,8 @@
 import { ChangeDetectionStrategy, Component, computed, inject, input, output } from '@angular/core';
 
 import { BookingChannelStateService } from '../../../core/booking/channel/booking-channel-state.service';
-import { addDays, startOfDay, toDateKey } from '../../../core/utils/date-utils';
+import { CABIN_CONFIG } from '../../../../environments/cabin-config';
+import { addDays, nightCount, startOfDay, toDateKey } from '../../../core/utils/date-utils';
 import { CalendarDayKind } from '../../../core/booking/channel/bookingmood-channel.types';
 
 @Component({
@@ -64,6 +65,10 @@ export class BookingCalendar {
       return;
     }
 
+    if (nightCount(checkIn, normalized) < CABIN_CONFIG.minNights) {
+      this.state.setDates(checkIn, normalized);
+      return;
+    }
     this.state.setDates(checkIn, normalized);
     this.daySelected.emit(normalized);
   }

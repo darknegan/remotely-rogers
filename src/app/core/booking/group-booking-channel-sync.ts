@@ -1,4 +1,4 @@
-import { bookingmoodProductId } from './bookingmood-products';
+import { BOOKINGMOOD_PRODUCT_IDS, bookingmoodProductId } from './bookingmood-products';
 import { BookingChannelStateService } from './channel/booking-channel-state.service';
 import { BookingStateService } from '../../features/group-booking/booking-state.service';
 
@@ -38,5 +38,47 @@ export function syncChannelFromGroupBooking(
 
   channel.selectedProductIds.set(productIds);
   channel.occupancyByProduct.update((current) => ({ ...current, ...occupancy }));
+  return true;
+}
+
+function cabinIdForProduct(productId: string): number | null {
+  for (const [id, pid] of Object.entries(BOOKINGMOOD_PRODUCT_IDS)) {
+    if (pid === productId) {
+      return Number(id);
+    }
+  }
+  return null;
+}
+
+/** Mirror custom channel selections into legacy cart state for checkout routes. */
+export function syncGroupFromChannelBooking(
+  channel: BookingChannelStateService,
+  group: BookingStateService,
+): boolean {
+  const checkIn = channel.checkIn();
+  const checkOut = channel.checkOut();
+  if (!checkIn || !checkOut) {
+    return false;
+  }
+
+  const selections: Record<number, { cabinId: number; arrival: Date; departure: Date }> = {};
+  for (const productId of channel.selectedProductIds()) {
+    const cabinId = cabinIdForProduct(productId);
+    if (cabinId == null) {
+      continue;
+    }
+    selections[cabinId] = { cabinId, arrival: checkIn, departure: checkOut };
+  }
+
+  if (Object.keys(selections).length === 0) {
+    return false;
+  }
+
+  const guestTotal = channel.totalSelectedGuests();
+  if (guestTotal > 0) {
+    group.setGuestCount(guestTotal);
+  }
+
+  group.cabinSelections.set(selections);
   return true;
 }

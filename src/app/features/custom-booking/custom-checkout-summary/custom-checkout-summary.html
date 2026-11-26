@@ -7,39 +7,48 @@
 
   <div class="rr-custom-checkout__layout">
     <div class="rr-custom-checkout__main">
-      <p class="rr-custom-checkout__meta">
-        {{ state.selectedProductIds().length }}
-        {{ state.selectedProductIds().length === 1 ? 'cabin' : 'cabins' }}
-        ·
-        {{ state.nights() }}
-        {{ state.nights() === 1 ? 'night' : 'nights' }}
-        ·
-        {{ formatGuestCount(state.totalSelectedGuests()) }}
-      </p>
-      <p>{{ state.sharedRangeLabel() }}</p>
+      @if (group.cartItems().length > 0) {
+        <p class="rr-custom-checkout__meta">
+          {{ group.cartItems().length }}
+          {{ group.cartItems().length === 1 ? 'cabin' : 'cabins' }}
+          ·
+          {{ group.cartItems()[0].nights }}
+          {{ group.cartItems()[0].nights === 1 ? 'night' : 'nights' }}
+          ·
+          {{ formatGuestCount(group.guestCount()) }}
+        </p>
 
-      <ul class="rr-custom-checkout__cabins">
-        @for (productId of state.selectedProductIds(); track productId) {
-          <li>
-            <strong>{{ cabinLineLabel(productId) }}</strong>
-            <span>
-              {{ formatGuestCount(guestsForProduct(productId)) }} ·
-              {{ state.nights() }}
-              {{ state.nights() === 1 ? 'night' : 'nights' }}
-            </span>
-          </li>
-        }
-      </ul>
+        <ul class="rr-custom-checkout__cabins">
+          @for (item of group.cartItems(); track item.cabin.id) {
+            <li>
+              <strong>{{ shortName(item.cabin.name) }}</strong>
+              <span>
+                {{ formatDateRangeLabel(item.selection.arrival, item.selection.departure) }} ·
+                {{ formatGuestCount(group.guestCount()) }} ·
+                {{ item.totalPrice | currency: item.currency : 'symbol' : '1.0-0' }}
+              </span>
+            </li>
+          }
+        </ul>
+
+        <p class="rr-custom-checkout__total">
+          Estimated total
+          <strong>{{ group.selectedTotal() | currency: 'USD' : 'symbol' : '1.0-0' }}</strong>
+        </p>
+      } @else {
+        <p>Select dates and cabins on the group booking page to review your cart.</p>
+      }
 
       <div class="rr-custom-checkout__actions">
         <a routerLink="/group-booking" class="rr-btn rr-btn--ghost">Edit cabins</a>
-        <a routerLink="/group-booking/checkout/guest" class="rr-btn">Continue to guest details</a>
+        <a
+          routerLink="/group-booking/checkout/guest"
+          class="rr-btn"
+          [class.rr-btn--disabled]="group.cartItems().length === 0"
+        >
+          Continue to guest details
+        </a>
       </div>
     </div>
-
-    <aside>
-      <h3>Estimated total</h3>
-      <app-price-summary />
-    </aside>
   </div>
 </section>

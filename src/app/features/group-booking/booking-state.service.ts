@@ -602,6 +602,13 @@ export class BookingStateService {
       return;
     }
 
+    if (nightCount(arrival, departure) < this.config.minNights) {
+      this.selectionError.set(`Minimum stay is ${this.config.minNights} nights per cabin.`);
+      return;
+    }
+
+    this.selectionError.set(null);
+
     this.cabinSelections.update((current) => ({
       ...current,
       [cabinId]: { cabinId, arrival, departure },

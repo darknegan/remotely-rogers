@@ -18,24 +18,34 @@
     </header>
   }
 
-  @if (!embeddedInCabins()) {
-    <app-date-range-form />
-  }
+  @if (useCustomShell() && !embeddedInCabins()) {
+    <app-custom-group-booking />
+  } @else {
+    @if (!embeddedInCabins()) {
+      <app-date-range-form />
+    }
 
-  <div class="rr-group-booking__layout">
-    <app-cabin-grid />
-    <app-cart-summary class="rr-cart-desktop" />
-  </div>
-  <div class="rr-pane-toggle" style="margin-top: 16px">
-    <p-button
-      type="button"
-      label="View cart summary"
-      [text]="true"
-      severity="secondary"
-      (onClick)="cartOpen.set(true)"
-    />
-  </div>
-  <p-drawer header="Your group cart" [visible]="cartOpen()" (visibleChange)="cartOpen.set($event)" position="bottom" [style]="{ height: '70vh' }">
-    <app-cart-summary />
-  </p-drawer>
+    <div class="rr-group-booking__layout">
+      <app-cabin-grid />
+      <app-cart-summary class="rr-cart-desktop" />
+    </div>
+    <div class="rr-pane-toggle" style="margin-top: 16px">
+      <p-button
+        type="button"
+        label="View cart summary"
+        [text]="true"
+        severity="secondary"
+        (onClick)="cartOpen.set(true)"
+      />
+    </div>
+    <p-drawer
+      header="Your group cart"
+      [visible]="cartOpen()"
+      (visibleChange)="cartOpen.set($event)"
+      position="bottom"
+      [style]="{ height: '70vh' }"
+    >
+      <app-cart-summary />
+    </p-drawer>
+  }
 </div>

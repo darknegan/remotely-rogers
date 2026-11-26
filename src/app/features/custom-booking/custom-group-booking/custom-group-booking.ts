@@ -1,9 +1,11 @@
 import { ChangeDetectionStrategy, Component, OnInit, inject } from '@angular/core';
-import { RouterLink } from '@angular/router';
+import { Router } from '@angular/router';
 
 import { BOOKINGMOOD_PRODUCT_IDS } from '../../../core/booking/bookingmood-products';
 import { CABIN_LISTINGS } from '../../../core/content/cabin-catalog';
+import { syncGroupFromChannelBooking } from '../../../core/booking/group-booking-channel-sync';
 import { BookingChannelStateService } from '../../../core/booking/channel/booking-channel-state.service';
+import { BookingStateService } from '../../group-booking/booking-state.service';
 import { ReservationsOffBanner } from '../reservations-off-banner/reservations-off-banner';
 import { BookingCalendar } from '../booking-calendar/booking-calendar';
 import { GuestSteppers } from '../guest-steppers/guest-steppers';
@@ -13,11 +15,13 @@ import { PriceSummary } from '../price-summary/price-summary';
 @Component({
   selector: 'app-custom-group-booking',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [RouterLink, ReservationsOffBanner, BookingCalendar, GuestSteppers, PriceSummary],
+  imports: [ReservationsOffBanner, BookingCalendar, GuestSteppers, PriceSummary],
   templateUrl: './custom-group-booking.html',
   styleUrl: './custom-group-booking.scss',
 })
 export class CustomGroupBooking implements OnInit {
+  private readonly router = inject(Router);
+  private readonly group = inject(BookingStateService);
   protected readonly state = inject(BookingChannelStateService);
   readonly cabins = CABIN_LISTINGS;
 
@@ -50,5 +54,13 @@ export class CustomGroupBooking implements OnInit {
   isSelected(cabinId: number): boolean {
     const productId = this.productIdForCabin(cabinId);
     return productId ? this.state.selectedProductIds().includes(productId) : false;
+  }
+
+  continueToCheckout(): void {
+    if (this.state.minStayError() || this.state.selectedProductIds().length === 0) {
+      return;
+    }
+    syncGroupFromChannelBooking(this.state, this.group);
+    void this.router.navigate(['/group-booking/checkout']);
   }
 }

@@ -3,6 +3,7 @@ import { toSignal } from '@angular/core/rxjs-interop';
 import { NavigationEnd, Router, RouterOutlet } from '@angular/router';
 import { filter, map, startWith } from 'rxjs';
 
+import { useCustomGroupBookingShell } from './core/booking/booking-group-flow';
 import { SiteShell } from './layout/site-shell/site-shell';
 
 @Component({
@@ -29,6 +30,9 @@ export class App {
       return false;
     }
     const path = url.split('?')[0];
+    if (useCustomGroupBookingShell() && path.startsWith('/group-booking/checkout')) {
+      return true;
+    }
     return path !== '/group-booking' && !path.startsWith('/group-booking/');
   }
 }

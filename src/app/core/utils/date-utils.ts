@@ -62,14 +62,14 @@ export function formatWeekday(date: Date): string {
 }
 
 export function formatDateRangeLabel(arrival: Date, departure: Date): string {
-  const lastNight = addDays(departure, -1);
   const nights = nightCount(arrival, departure);
+  const nightsLabel = nights === 1 ? '1 night' : `${nights} nights`;
 
-  if (toDateKey(arrival) === toDateKey(lastNight)) {
-    return `${formatShortDate(arrival)} (${nights} night${nights === 1 ? '' : 's'})`;
+  if (nights <= 1) {
+    return `${formatShortDate(arrival)} (${nightsLabel})`;
   }
 
-  return `${formatShortDate(arrival)} – ${formatShortDate(lastNight)} (${nights} nights)`;
+  return `${formatShortDate(arrival)} – ${formatShortDate(departure)} (${nightsLabel})`;
 }
 
 export function validateDateRange(

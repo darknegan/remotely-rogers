@@ -51,16 +51,22 @@
           }
         </ul>
 
+        @if (state.minStayError(); as minStayError) {
+          <p class="rr-custom-group__error" role="alert">{{ minStayError }}</p>
+        }
+
         @if (state.reservationsOff()) {
           <span class="rr-btn rr-btn--disabled" aria-disabled="true">Booking unavailable</span>
         } @else {
           <button
             type="button"
             class="rr-btn"
-            [disabled]="state.selectedProductIds().length === 0"
-            [routerLink]="['/group-booking/checkout/guest']"
+            [disabled]="
+              state.selectedProductIds().length === 0 || !state.checkIn() || !state.checkOut()
+            "
+            (click)="continueToCheckout()"
           >
-            Continue to guest details
+            Continue to checkout
           </button>
         }
       </div>
