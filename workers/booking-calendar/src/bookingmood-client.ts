@@ -14,14 +14,9 @@ export interface BookingmoodAvailabilityRow {
   }>;
 }
 
-export interface BookingmoodSearchResult {
-  productId: string;
-  match: boolean;
-  availability: BookingmoodIntervalStatus | null;
-  occupancyMatches: boolean;
-  optionsMatch: boolean;
-  price: { min: number; max: number } | null;
-}
+import type { NormalizedSearchResult } from './bookingmood-search';
+
+export type BookingmoodSearchResult = NormalizedSearchResult;
 
 export interface BookingmoodCartValidateItem {
   id: string;
@@ -57,6 +52,8 @@ export type BookingmoodFetch = (
   input: RequestInfo | URL,
   init?: RequestInit,
 ) => Promise<Response>;
+
+import { normalizeSearchResults } from './bookingmood-search';
 
 const BASE = 'https://api.bookingmood.com/v1';
 
@@ -141,7 +138,32 @@ export class BookingmoodClient {
       throw new Error(`Bookingmood search failed (${response.status}): ${text.slice(0, 200)}`);
     }
 
-    return JSON.parse(text) as BookingmoodSearchResult[];
+    return normalizeSearchResults(JSON.parse(text));
+  }
+
+  async listCapacityGroups(): Promise<Array<{ id: string }>> {
+    const response = await this.request('/capacity_groups?select=id&order=order.asc&limit=1');
+    const text = await response.text();
+    if (!response.ok) {
+      throw new Error(
+        `Bookingmood capacity_groups failed (${response.status}): ${text.slice(0, 200)}`,
+      );
+    }
+
+    const parsed = JSON.parse(text) as unknown;
+    if (!Array.isArray(parsed)) {
+      return [];
+    }
+
+    return parsed
+      .map((row) => {
+        if (!row || typeof row !== 'object') {
+          return null;
+        }
+        const id = String((row as { id?: unknown }).id ?? '').trim();
+        return id ? { id } : null;
+      })
+      .filter((row): row is { id: string } => row != null);
   }
 
   async cartValidate(body: {

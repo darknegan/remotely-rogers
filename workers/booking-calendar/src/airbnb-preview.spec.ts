@@ -78,6 +78,8 @@ function bookingmoodClient(): BookingmoodClient {
   return {
     getAvailability: vi.fn().mockResolvedValue([]),
     search: vi.fn().mockResolvedValue([]),
+    listCapacityGroups: vi.fn().mockResolvedValue([]),
+    cartValidate: vi.fn(),
   } as unknown as BookingmoodClient;
 }
 

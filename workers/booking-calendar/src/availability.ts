@@ -11,9 +11,14 @@ import {
   hasBookingmoodApiKey,
   isAirbnbPreviewEnabled,
   isBookingWriteEnabled,
-  occupancyForAdults,
   resolveCabinProducts,
 } from './booking-config';
+import {
+  applySearchPricing,
+  applySubtotalCentsPricing,
+  quoteStaySubtotalsViaCartValidate,
+} from './availability-pricing';
+import { resolveOccupancyForAdults } from './bookingmood-occupancy';
 import {
   airbnbStatusesForCabin,
   blockNightsAirbnbMarksUnavailable,
@@ -86,12 +91,13 @@ export async function buildAvailabilityResponse(
   }
 
   let searchResults: Awaited<ReturnType<BookingmoodClient['search']>> = [];
+  const occupancy = await resolveOccupancyForAdults(client, env, request.adults);
   if (nights.length > 0 && !availabilityError) {
     try {
       searchResults = await client.search({
         interval: { start: toDateKey(arrival), end: toDateKey(departure) },
         productIds: allowlisted,
-        occupancy: occupancyForAdults(env, request.adults),
+        occupancy,
       });
     } catch (error) {
       console.error('bookingmood_search_failed', {
@@ -120,6 +126,8 @@ export async function buildAvailabilityResponse(
     );
   }
 
+  const cabinsWithoutPrice: Array<{ cabinId: number; productId: string }> = [];
+
   const cabins = products.map((cabin) => {
     if (!cabin.productId) {
       return unavailableCabin(cabin.cabinId, windowNights, origin, cabin.slug, 'unconfigured');
@@ -137,18 +145,29 @@ export async function buildAvailabilityResponse(
         : bookingmoodDays;
     const stayAvailable = isStayAvailable(days, request.arrival, request.departure);
     const search = searchResults.find((item) => item.productId === cabin.productId);
-    const currency = 'USD';
-    let totalPrice = 0;
-    let nightlyRate = 0;
-
-    const dayRates: CabinAvailability['dayRates'] = {};
-    if (search?.price && nights.length > 0) {
-      totalPrice = (search.price.min + search.price.max) / 2 / 100;
-      nightlyRate = totalPrice / nights.length;
-      for (const night of nights) {
-        dayRates[toDateKey(night)] = { price: nightlyRate };
-      }
+    if (
+      search &&
+      !search.price &&
+      Object.keys(occupancy).length > 0 &&
+      stayAvailable
+    ) {
+      console.info('bookingmood_search_no_price', {
+        productId: cabin.productId,
+        match: search.match,
+        occupancyMatches: search.occupancyMatches,
+      });
     }
+
+    const searchPricing = applySearchPricing(search, arrival, departure);
+    let nightlyRate = searchPricing.nightlyRate;
+    let totalPrice = searchPricing.totalPrice;
+    let dayRates = searchPricing.dayRates;
+
+    if (stayAvailable && nightlyRate <= 0 && cabin.productId) {
+      cabinsWithoutPrice.push({ cabinId: cabin.cabinId, productId: cabin.productId });
+    }
+
+    const currency = 'USD';
 
     return {
       cabinId: cabin.cabinId,
@@ -163,6 +182,28 @@ export async function buildAvailabilityResponse(
       bookingUrl: `${origin}/cabins/${cabin.slug}`,
     } satisfies CabinAvailability;
   });
+
+  if (cabinsWithoutPrice.length > 0) {
+    const quotes = await quoteStaySubtotalsViaCartValidate(
+      client,
+      env,
+      request.arrival,
+      request.departure,
+      occupancy,
+      cabinsWithoutPrice,
+    );
+
+    for (const cabin of cabins) {
+      const subtotal = quotes.get(cabin.cabinId);
+      if (subtotal == null || cabin.nightlyRate > 0) {
+        continue;
+      }
+      const priced = applySubtotalCentsPricing(subtotal, request.arrival, request.departure);
+      cabin.nightlyRate = priced.nightlyRate;
+      cabin.totalPrice = priced.totalPrice;
+      cabin.dayRates = priced.dayRates;
+    }
+  }
 
   return {
     cabins,
