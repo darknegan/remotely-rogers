@@ -113,6 +113,8 @@ describe('BOOKINGMOOD_BOOKING_ENABLED write gate', () => {
     const client = {
       getAvailability: vi.fn().mockResolvedValue([]),
       search: vi.fn().mockResolvedValue([]),
+      listCapacityGroups: vi.fn().mockResolvedValue([]),
+      cartValidate: vi.fn(),
     } as unknown as BookingmoodClient;
 
     const result = await buildAvailabilityResponse(
