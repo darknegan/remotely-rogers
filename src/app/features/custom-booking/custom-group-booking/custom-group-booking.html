@@ -42,7 +42,7 @@
                   </span>
                 </label>
                 @if (isSelected(cabin.id)) {
-                  <app-guest-steppers [productId]="pid" [disabled]="state.reservationsOff()" />
+                  <app-guest-steppers [productId]="pid" />
                 } @else if (!state.isProductSelectable(pid) && state.checkIn() && state.checkOut()) {
                   <p class="rr-cabin-unavailable">Not available for these dates.</p>
                 }
@@ -77,8 +77,7 @@
           {{ state.selectedProductIds().length }}
           {{ state.selectedProductIds().length === 1 ? 'cabin' : 'cabins' }}
           ·
-          {{ state.nights() }}
-          {{ state.nights() === 1 ? 'night' : 'nights' }}
+          {{ state.summaryNightsLabel() }}
           ·
           {{ guestSummary() }}
         </p>

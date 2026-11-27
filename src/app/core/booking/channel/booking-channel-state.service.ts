@@ -120,6 +120,19 @@ export class BookingChannelStateService {
     return null;
   });
 
+  /** Nights line in summaries; flags min-stay violations alongside selected night count. */
+  readonly summaryNightsLabel = computed(() => {
+    const nights = this.nights();
+    if (nights <= 0) {
+      return '0 nights';
+    }
+    const nightsWord = nights === 1 ? '1 night' : `${nights} nights`;
+    if (this.minStayError()) {
+      return `${nightsWord} (minimum ${CABIN_CONFIG.minNights} nights)`;
+    }
+    return nightsWord;
+  });
+
   readonly cartLineItems = computed(() => this.validatedItems() ?? []);
 
   readonly cartTotalCents = computed(() =>
