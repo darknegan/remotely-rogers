@@ -54,6 +54,10 @@ export async function buildAvailabilityResponse(
   const windowNights = eachNight(windowStart, windowEnd);
 
   if (isAirbnbPreviewEnabled(env)) {
+    console.warn('availability_airbnb_preview_path', {
+      arrival: request.arrival,
+      departure: request.departure,
+    });
     return {
       bookingEnabled: false,
       cabins: await buildAirbnbPreviewCabins(
