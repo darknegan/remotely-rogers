@@ -1,6 +1,9 @@
 import { TestBed } from '@angular/core/testing';
-import { describe, expect, it, beforeEach } from 'vitest';
+import { describe, expect, it, beforeEach, vi } from 'vitest';
+import { of } from 'rxjs';
 
+import { CABIN_CONFIG } from '../../../../environments/cabin-config';
+import { BookingApiService } from '../../../core/services/booking-api.service';
 import { BookingChannelStateService } from '../../../core/booking/channel/booking-channel-state.service';
 import { DEV_BOOKINGMOOD_CHANNEL_ID } from '../../../core/booking/channel/bookingmood-channel-allowlist';
 import { PriceSummary } from './price-summary';
@@ -15,7 +18,34 @@ describe('PriceSummary cart rows', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [PriceSummary],
-      providers: [BookingChannelStateService],
+      providers: [
+        BookingChannelStateService,
+        {
+          provide: BookingApiService,
+          useValue: {
+            getConfig: () => CABIN_CONFIG,
+            fetchAvailability: vi.fn(() =>
+              of({
+                cabins: [
+                  {
+                    cabinId: 1,
+                    totalPrice: 264,
+                    nightlyRate: 88,
+                    currency: 'USD',
+                    available: true,
+                    days: {},
+                    dayRates: {},
+                    cleaningFee: 75,
+                  },
+                ],
+                bookingEnabled: false,
+              }),
+            ),
+            createCheckout: vi.fn(),
+            getBookingStatus: vi.fn(),
+          },
+        },
+      ],
     });
     state = TestBed.inject(BookingChannelStateService);
     state.channelPayload.set({
@@ -30,27 +60,34 @@ describe('PriceSummary cart rows', () => {
         },
       ],
     });
+    state.setDates(new Date(2026, 11, 7), new Date(2026, 11, 10));
     state.selectedProductIds.set([PRODUCT_ID]);
     state.seedOccupancy(PRODUCT_ID);
     state.changeOccupancy(PRODUCT_ID, GROUP_ID, 1);
-    state.validatedItems.set([
-      {
-        id: 'item-1',
-        valid: true,
-        availabilityMatch: true,
-        occupancyMatch: true,
-        price: { currency: 'USD', subtotal: 26_400, tax: 0, total: 26_400, deposit: 0 },
+    state.workerQuotesByProduct.set({
+      [PRODUCT_ID]: {
+        cabinId: 1,
+        totalPrice: 264,
+        nightlyRate: 88,
+        currency: 'USD',
+        available: true,
+        days: {},
+        dayRates: {},
+        cleaningFee: 75,
       },
-    ]);
+    });
 
     const fixture = TestBed.createComponent(PriceSummary);
     summary = fixture.componentInstance;
   });
 
   it('includes guest count when labeling each cart line', () => {
-    const line = state.validatedItems()![0];
-    expect(summary.lineLabel(line)).toBe('Black Gum Getaway');
-    expect(summary.lineGuests(line)).toBe(2);
-    expect(summary.formatGuestCount(summary.lineGuests(line))).toBe('2 guests');
+    expect(summary.lineLabelForProduct(PRODUCT_ID)).toBe('Black Gum Getaway');
+    expect(summary.guestsForProduct(PRODUCT_ID)).toBe(2);
+    expect(summary.formatGuestCount(summary.guestsForProduct(PRODUCT_ID))).toBe('2 guests');
+  });
+
+  it('reads worker quote dollars for each line', () => {
+    expect(state.workerTotalDollars()).toBe(264);
   });
 });

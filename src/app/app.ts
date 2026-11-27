@@ -30,7 +30,7 @@ export class App {
       return false;
     }
     const path = url.split('?')[0];
-    if (useCustomGroupBookingShell() && path.startsWith('/group-booking/checkout')) {
+    if (useCustomGroupBookingShell() && path.startsWith('/group-booking')) {
       return true;
     }
     return path !== '/group-booking' && !path.startsWith('/group-booking/');

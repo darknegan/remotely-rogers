@@ -41,13 +41,18 @@
 
       <div class="rr-custom-checkout__actions">
         <a routerLink="/group-booking" class="rr-btn rr-btn--ghost">Edit cabins</a>
-        <a
-          routerLink="/group-booking/checkout/guest"
-          class="rr-btn"
-          [class.rr-btn--disabled]="group.cartItems().length === 0"
-        >
-          Continue to guest details
-        </a>
+        @if (bookingOff()) {
+          <span class="rr-btn rr-btn--disabled" aria-disabled="true">Continue to guest details</span>
+        } @else {
+          <a
+            routerLink="/group-booking/checkout/guest"
+            class="rr-btn"
+            [class.rr-btn--disabled]="group.cartItems().length === 0"
+            [attr.aria-disabled]="group.cartItems().length === 0 ? 'true' : null"
+          >
+            Continue to guest details
+          </a>
+        }
       </div>
     </div>
   </div>

@@ -12,17 +12,22 @@
     </p>
   </header>
 
-  @if (state.loading()) {
-    <p>Loading channel…</p>
-  } @else if (state.error()) {
+  @if (state.error()) {
     <div class="rr-custom-group__error">
       <p>{{ state.error() }}</p>
       <button type="button" class="rr-btn rr-btn--ghost" (click)="state.loadChannel()">Retry</button>
     </div>
   } @else {
-    <div class="rr-custom-group__layout">
+    <div class="rr-custom-group__layout" [class.rr-custom-group__layout--loading]="state.loading()">
       <div class="rr-custom-group__main">
-        <app-booking-calendar (daySelected)="state.validateCart()" />
+        @if (state.loading()) {
+          <div class="rr-custom-group__skeleton" aria-busy="true" aria-live="polite">
+            <div class="rr-custom-group__skeleton-spinner"></div>
+            <p class="rr-custom-group__skeleton-title">Loading availability…</p>
+            <p class="rr-custom-group__skeleton-copy">Checking cabins and calendar data.</p>
+          </div>
+        }
+        <app-booking-calendar [disabled]="state.loading()" (daySelected)="state.refreshWorkerQuotes()" />
 
         <h3>Select cabins</h3>
         <ul class="rr-cabin-pick-list">
@@ -33,7 +38,12 @@
                   <input
                     type="checkbox"
                     [checked]="isSelected(cabin.id)"
-                    [disabled]="!state.checkIn() || !state.checkOut() || !state.isProductSelectable(pid)"
+                    [disabled]="
+                      state.loading() ||
+                      !state.checkIn() ||
+                      !state.checkOut() ||
+                      !state.isProductSelectable(pid)
+                    "
                     (change)="toggle(cabin.id)"
                   />
                   <span>
@@ -51,6 +61,10 @@
           }
         </ul>
 
+        @if (state.rangeConflictError(); as rangeConflict) {
+          <p class="rr-custom-group__notice" role="alert">{{ rangeConflict }}</p>
+        }
+
         @if (state.minStayError(); as minStayError) {
           <p class="rr-custom-group__error" role="alert">{{ minStayError }}</p>
         }
@@ -62,7 +76,10 @@
             type="button"
             class="rr-btn"
             [disabled]="
-              state.selectedProductIds().length === 0 || !state.checkIn() || !state.checkOut()
+              state.selectedProductIds().length === 0 ||
+              !state.checkIn() ||
+              !state.checkOut() ||
+              state.rangeConflictError() !== null
             "
             (click)="continueToCheckout()"
           >

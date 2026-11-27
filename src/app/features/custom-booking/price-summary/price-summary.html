@@ -1,33 +1,29 @@
-@if (state.validating()) {
+@if (state.quoteLoading()) {
   <p class="rr-price-summary__loading">Calculating price…</p>
-} @else if (state.validateError()) {
-  <p class="rr-price-summary__error">{{ state.validateError() }}</p>
-} @else if (state.cartLineItems().length === 0) {
+} @else if (state.quoteError()) {
+  <p class="rr-price-summary__muted">{{ state.quoteError() }}</p>
+} @else if (state.workerPriceLines().length === 0) {
   <p class="rr-price-summary__muted">Select dates and cabins to see pricing.</p>
 } @else {
   <dl class="rr-price-summary">
-    @for (line of state.cartLineItems(); track line.id) {
+    @for (line of state.workerPriceLines(); track line.productId) {
       <div class="rr-price-row">
         <dt>
-          {{ lineLabel(line) }} · {{ formatGuestCount(lineGuests(line)) }}
+          {{ lineLabelForProduct(line.productId) }} · {{ formatGuestCount(guestsForProduct(line.productId)) }}
         </dt>
-        <dd>{{ toDollars(line.price?.subtotal ?? 0) | currency: 'USD' }}</dd>
+        <dd>
+          @if (line.available) {
+            {{ line.subtotalDollars | currency: 'USD' : 'symbol' : '1.0-0' }}
+          } @else {
+            <span class="rr-price-summary__muted">Unavailable</span>
+          }
+        </dd>
       </div>
     }
-    <div class="rr-price-row">
-      <dt>Taxes &amp; fees</dt>
-      <dd>{{ toDollars(taxCents()) | currency: 'USD' }}</dd>
-    </div>
     <div class="rr-price-row rr-price-row--total">
-      <dt>Total</dt>
-      <dd>{{ toDollars(totalCents()) | currency: 'USD' }}</dd>
+      <dt>Estimated total</dt>
+      <dd>{{ state.workerTotalDollars() | currency: 'USD' : 'symbol' : '1.0-0' }}</dd>
     </div>
-    @if (depositCents() > 0) {
-      <div class="rr-price-row">
-        <dt>Due at reservation (deposit)</dt>
-        <dd>{{ toDollars(depositCents()) | currency: 'USD' }}</dd>
-      </div>
-    }
     <p class="rr-price-summary__note">Plus a $250 security pre-authorization, held and not charged.</p>
   </dl>
 }
