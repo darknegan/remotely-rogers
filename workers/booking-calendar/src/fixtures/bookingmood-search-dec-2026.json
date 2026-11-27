@@ -1,0 +1,15 @@
+{
+  "interval": { "start": "2026-12-07", "end": "2026-12-09" },
+  "capacityGroupId": "f8558449-6548-4559-8f5d-31448942969d",
+  "searchWithoutOccupancyFilter": [
+    {
+      "productId": "936c1ff7-2900-410b-9ced-cc2cf6ec3b65",
+      "availability": "available",
+      "match": true,
+      "occupancyMatches": true,
+      "optionsMatch": true,
+      "price": { "min": 26400, "max": 26400 }
+    }
+  ],
+  "searchWithCapacityGroupOccupancy": []
+}
