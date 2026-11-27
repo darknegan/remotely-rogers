@@ -54,6 +54,10 @@ export async function buildAvailabilityResponse(
   const windowNights = eachNight(windowStart, windowEnd);
 
   if (isAirbnbPreviewEnabled(env)) {
+    console.warn('availability_airbnb_preview_path', {
+      arrival: request.arrival,
+      departure: request.departure,
+    });
     return {
       bookingEnabled: false,
       cabins: await buildAirbnbPreviewCabins(
@@ -128,6 +132,7 @@ export async function buildAvailabilityResponse(
   }
 
   const cabinsWithoutPrice: Array<{ cabinId: number; productId: string }> = [];
+  let searchUnmatchedStayAvailableCount = 0;
 
   const cabins = products.map((cabin) => {
     if (!cabin.productId) {
@@ -146,6 +151,9 @@ export async function buildAvailabilityResponse(
         : bookingmoodDays;
     const stayAvailable = isStayAvailable(days, request.arrival, request.departure);
     const search = searchResults.find((item) => item.productId === cabin.productId);
+    if (stayAvailable && cabin.productId && (!search || !search.productId)) {
+      searchUnmatchedStayAvailableCount += 1;
+    }
     if (
       search &&
       !search.price &&
@@ -183,6 +191,19 @@ export async function buildAvailabilityResponse(
       bookingUrl: `${origin}/cabins/${cabin.slug}`,
     } satisfies CabinAvailability;
   });
+
+  if (
+    cabinsWithoutPrice.length > 0 &&
+    (searchResults.length === 0 || searchUnmatchedStayAvailableCount > 0)
+  ) {
+    console.info('bookingmood_search_unmatched', {
+      searchRowCount: searchResults.length,
+      searchRowsWithoutProductId: searchResults.filter((row) => !row.productId).length,
+      unmatchedStayAvailableCabinCount: searchUnmatchedStayAvailableCount,
+      cabinsWithoutPriceCount: cabinsWithoutPrice.length,
+      noSearchRows: searchResults.length === 0,
+    });
+  }
 
   if (cabinsWithoutPrice.length > 0) {
     const quotes = await quoteStaySubtotalsViaCartValidate(

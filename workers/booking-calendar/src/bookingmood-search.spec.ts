@@ -2,6 +2,8 @@ import { describe, expect, it } from 'vitest';
 
 import { normalizeSearchResults, stayTotalDollarsFromSearch } from './bookingmood-search';
 
+const PRODUCT_ID = '936c1ff7-2900-410b-9ced-cc2cf6ec3b65';
+
 describe('normalizeSearchResults', () => {
   it('accepts camelCase productId and price in cents', () => {
     const rows = normalizeSearchResults([
@@ -17,6 +19,20 @@ describe('normalizeSearchResults', () => {
 
     expect(rows[0]?.productId).toBe('936c1ff7-2900-410b-9ced-cc2cf6ec3b65');
     expect(rows[0]?.price).toEqual({ min: 26_400, max: 26_400 });
+  });
+
+  it('unwraps a results envelope into rows', () => {
+    const rows = normalizeSearchResults({
+      results: [
+        {
+          productId: PRODUCT_ID,
+          match: true,
+          price: { min: 26_400, max: 26_400 },
+        },
+      ],
+    });
+    expect(rows).toHaveLength(1);
+    expect(rows[0]?.productId).toBe(PRODUCT_ID);
   });
 
   it('maps snake_case product_id from PostgREST payloads', () => {

@@ -1,0 +1,49 @@
+{
+  "capturedAt": "2026-11-27T16:20:42.774Z",
+  "endpoint": "POST https://api.bookingmood.com/v1/cart-validate",
+  "requestBody": {
+    "coupon_codes": [],
+    "items": [
+      {
+        "id": "quote-1",
+        "product_id": "936c1ff7-2900-410b-9ced-cc2cf6ec3b65",
+        "interval": {
+          "start": "2026-12-07",
+          "end": "2026-12-09"
+        },
+        "occupancy": {
+          "f8558449-6548-4559-8f5d-31448942969d": 2
+        },
+        "form_values": {}
+      }
+    ]
+  },
+  "responseBody": [
+    {
+      "availabilityMatch": true,
+      "id": "quote-1",
+      "occupancyMatch": true,
+      "price": {
+        "currency": "USD",
+        "deposit": 0,
+        "lines": [
+          {
+            "amount": 13200,
+            "fee_type": "fee",
+            "item_type": "rent",
+            "name": {
+              "default": "Rent"
+            },
+            "quantity": 2
+          }
+        ],
+        "subtotal": 26400,
+        "tax": 0,
+        "total": 26400
+      },
+      "valid": true
+    }
+  ],
+  "responseIsArray": true,
+  "captureNote": "responseBody from read-only live /cart-validate (quote-1); requestBody from BookingmoodClient.buildCartValidateRequestBody"
+}

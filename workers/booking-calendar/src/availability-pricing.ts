@@ -5,6 +5,8 @@ import {
   BookingWorkerEnv,
   parseGuestFormServices,
 } from './booking-config';
+import { diagnoseCapacityGroupEnv } from './bookingmood-capacity-env';
+import { readCartValidateItemId, readCartValidateSubtotalCents } from './bookingmood-cart-validate';
 import { BookingmoodClient } from './bookingmood-client';
 import { BookingmoodSearchResult } from './bookingmood-client';
 import { stayTotalDollarsFromSearch } from './bookingmood-search';
@@ -45,7 +47,15 @@ export async function quoteStaySubtotalsViaCartValidate(
   occupancy: Record<string, number>,
   lines: CabinQuoteTarget[],
 ): Promise<Map<number, number>> {
-  if (lines.length === 0 || Object.keys(occupancy).length === 0) {
+  if (lines.length === 0) {
+    return new Map();
+  }
+
+  if (Object.keys(occupancy).length === 0) {
+    console.info('bookingmood_quote_skipped_no_occupancy', {
+      ...diagnoseCapacityGroupEnv(env.BOOKINGMOOD_CAPACITY_GROUP_ID),
+      lineCount: lines.length,
+    });
     return new Map();
   }
 
@@ -62,16 +72,32 @@ export async function quoteStaySubtotalsViaCartValidate(
     occupancy,
     form_values: formValues,
   }));
+  const productIdByQuoteId = new Map(items.map((item) => [item.id, item.product_id]));
 
   try {
     const validated = await client.cartValidate({ items });
     const map = new Map<number, number>();
     for (const row of validated) {
-      const subtotal = row.price?.subtotal;
-      if (typeof subtotal !== 'number' || !Number.isFinite(subtotal) || subtotal <= 0) {
+      const subtotal = readCartValidateSubtotalCents(row);
+      if (subtotal == null) {
+        const itemId = readCartValidateItemId(row);
+        const record = row && typeof row === 'object' ? (row as Record<string, unknown>) : null;
+        const priceField = record?.price;
+        console.info('bookingmood_quote_no_subtotal', {
+          productId: itemId ? (productIdByQuoteId.get(itemId) ?? null) : null,
+          responseKeys: record ? Object.keys(record) : [],
+          priceKeys:
+            priceField && typeof priceField === 'object'
+              ? Object.keys(priceField as Record<string, unknown>)
+              : [],
+        });
         continue;
       }
-      const cabinId = Number(String(row.id).replace(/^quote-/, ''));
+      const itemId = readCartValidateItemId(row);
+      if (!itemId) {
+        continue;
+      }
+      const cabinId = Number(itemId.replace(/^quote-/, ''));
       if (Number.isFinite(cabinId)) {
         map.set(cabinId, subtotal);
       }

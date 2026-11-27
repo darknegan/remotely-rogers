@@ -15,6 +15,16 @@ describe('resolveOccupancyForAdults', () => {
     resetCapacityGroupCacheForTests();
   });
 
+  it('strips surrounding quotes and whitespace from BOOKINGMOOD_CAPACITY_GROUP_ID', async () => {
+    const client = { listCapacityGroups: vi.fn() } as unknown as BookingmoodClient;
+    const occupancy = await resolveOccupancyForAdults(
+      client,
+      { BOOKINGMOOD_CAPACITY_GROUP_ID: `  "${CAPACITY}"  `, ASSETS: {} as Fetcher },
+      2,
+    );
+    expect(occupancy).toEqual({ [CAPACITY]: 2 });
+  });
+
   it('uses BOOKINGMOOD_CAPACITY_GROUP_ID when configured', async () => {
     const client = { listCapacityGroups: vi.fn() } as unknown as BookingmoodClient;
     const occupancy = await resolveOccupancyForAdults(client, { BOOKINGMOOD_CAPACITY_GROUP_ID: CAPACITY, ASSETS: {} as Fetcher }, 2);

@@ -136,6 +136,24 @@ describe('monthSpan', () => {
 });
 
 describe('buildAvailabilityResponse with the Airbnb preview', () => {
+  it('logs availability_airbnb_preview_path when the preview branch answers', async () => {
+    const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
+    stubFetch(Response.json(FIXTURE));
+
+    await buildAvailabilityResponse(
+      { arrival: '2026-11-09', departure: '2026-11-12', adults: 2 },
+      bookingmoodClient(),
+      previewEnv(),
+      'https://example.com',
+    );
+
+    expect(warn).toHaveBeenCalledWith('availability_airbnb_preview_path', {
+      arrival: '2026-11-09',
+      departure: '2026-11-12',
+    });
+    warn.mockRestore();
+  });
+
   it('sends the web key header and persisted query to the default upstream', async () => {
     const fetchMock = stubFetch(Response.json(FIXTURE));
 
