@@ -1,7 +1,25 @@
-@if (state.quoteLoading()) {
+@if (state.quoteLoading() && state.pricingReady()) {
   <p class="rr-price-summary__loading">Calculating price…</p>
 } @else if (state.quoteError()) {
   <p class="rr-price-summary__muted">{{ state.quoteError() }}</p>
+} @else if (
+  state.selectedProductIds().length > 0 && state.checkIn() && state.checkOut() && !state.pricingReady()
+) {
+  <dl class="rr-price-summary">
+    @for (productId of state.selectedProductIds(); track productId) {
+      <div class="rr-price-row">
+        <dt>
+          {{ lineLabelForProduct(productId) }} · {{ formatGuestCount(guestsForProduct(productId)) }}
+        </dt>
+        <dd><span class="rr-price-summary__dash" aria-hidden="true">—</span></dd>
+      </div>
+    }
+    <div class="rr-price-row rr-price-row--total">
+      <dt>Estimated total</dt>
+      <dd><span class="rr-price-summary__dash" aria-hidden="true">—</span></dd>
+    </div>
+    <p class="rr-price-summary__note">Plus a $250 security pre-authorization, held and not charged.</p>
+  </dl>
 } @else if (state.workerPriceLines().length === 0) {
   <p class="rr-price-summary__muted">Select dates and cabins to see pricing.</p>
 } @else {
@@ -17,14 +35,20 @@
           } @else if (!line.available) {
             <span class="rr-price-summary__muted">Unavailable</span>
           } @else {
-            <span class="rr-price-summary__muted">Pricing unavailable</span>
+            <span class="rr-price-summary__dash" aria-hidden="true">—</span>
           }
         </dd>
       </div>
     }
     <div class="rr-price-row rr-price-row--total">
       <dt>Estimated total</dt>
-      <dd>{{ state.workerTotalDollars() | currency: 'USD' : 'symbol' : '1.0-0' }}</dd>
+      <dd>
+        @if (state.workerTotalDollars() > 0) {
+          {{ state.workerTotalDollars() | currency: 'USD' : 'symbol' : '1.0-0' }}
+        } @else {
+          <span class="rr-price-summary__dash" aria-hidden="true">—</span>
+        }
+      </dd>
     </div>
     <p class="rr-price-summary__note">Plus a $250 security pre-authorization, held and not charged.</p>
   </dl>

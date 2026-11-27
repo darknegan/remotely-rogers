@@ -141,6 +141,15 @@ export class BookingChannelStateService {
   });
 
   /** Nights line in summaries; flags min-stay violations alongside selected night count. */
+  readonly pricingReady = computed(() => {
+    const start = this.checkIn();
+    const end = this.checkOut();
+    if (!start || !end) {
+      return false;
+    }
+    return !this.minStayError() && !this.rangeConflictError();
+  });
+
   readonly summaryNightsLabel = computed(() => {
     const nights = this.nights();
     if (nights <= 0) {
@@ -290,12 +299,19 @@ export class BookingChannelStateService {
   }
 
   beginDateSelection(checkIn: Date): void {
+    this.clearDateSelection();
     this.checkIn.set(startOfDay(checkIn));
+  }
+
+  clearDateSelection(): void {
+    this.checkIn.set(null);
     this.checkOut.set(null);
     this.validatedItems.set(null);
     this.validateError.set(null);
     this.rangeConflictError.set(null);
     this.workerQuotesByProduct.set({});
+    this.quoteLoading.set(false);
+    this.quoteError.set(null);
   }
 
   setDates(checkIn: Date, checkOut: Date): void {
@@ -321,10 +337,11 @@ export class BookingChannelStateService {
     }
     const normalizedOut = startOfDay(checkOut);
     if (!this.stayRangeAllowed(checkIn, normalizedOut)) {
-      this.rangeConflictError.set(RESERVED_STAY_RANGE_NOTICE);
+      this.checkIn.set(null);
       this.checkOut.set(null);
       this.workerQuotesByProduct.set({});
       this.quoteError.set(null);
+      this.rangeConflictError.set(RESERVED_STAY_RANGE_NOTICE);
       return false;
     }
     this.setDates(checkIn, normalizedOut);
@@ -335,7 +352,7 @@ export class BookingChannelStateService {
     const checkIn = this.checkIn();
     const checkOut = this.checkOut();
     const productIds = this.selectedProductIds();
-    if (!checkIn || !checkOut) {
+    if (!checkIn || !checkOut || !this.pricingReady()) {
       this.workerQuotesByProduct.set({});
       this.quoteLoading.set(false);
       this.quoteError.set(null);

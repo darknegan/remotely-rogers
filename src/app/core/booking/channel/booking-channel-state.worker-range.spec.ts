@@ -75,5 +75,7 @@ describe('BookingChannelStateService worker dayStatuses', () => {
     expect(state.isProductSelectable(BOOKINGMOOD_PRODUCT_IDS[1]!)).toBe(false);
     expect(state.completeStayRange(checkOut)).toBe(false);
     expect(state.rangeConflictError()).toBe(RESERVED_STAY_RANGE_NOTICE);
+    expect(state.checkIn()).toBeNull();
+    expect(state.checkOut()).toBeNull();
   });
 });

@@ -50,8 +50,19 @@ describe('booking-channel-calendar', () => {
         '2026-12-23': 'available',
         '2026-12-24': 'booked',
         '2026-12-25': 'booked',
+        '2026-12-26': 'booked',
       }),
     ).toBe(false);
+  });
+
+  it('allows check-out on the first reserved night when occupied nights are free', () => {
+    const days: Record<string, 'available' | 'booked'> = { '2026-12-24': 'booked' };
+    for (let day = 10; day <= 23; day++) {
+      days[`2026-12-${String(day).padStart(2, '0')}`] = 'available';
+    }
+    expect(stayRangeIsWorkerAvailable(new Date(2026, 11, 10), new Date(2026, 11, 24), days)).toBe(
+      true,
+    );
   });
 
   it('rejects stays that cross reserved nights', () => {

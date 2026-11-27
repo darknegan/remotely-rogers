@@ -55,7 +55,7 @@ export class BookingCalendar {
     const checkIn = this.state.checkIn();
     const checkOut = this.state.checkOut();
 
-    if (!checkIn || checkOut) {
+    if (this.state.rangeConflictError() || !checkIn || checkOut) {
       this.state.beginDateSelection(normalized);
       return;
     }
