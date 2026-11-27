@@ -41,7 +41,7 @@
     <app-booking-calendar (daySelected)="onDatesSet()" />
 
     @if (productId(); as pid) {
-      <app-guest-steppers [productId]="pid" [disabled]="state.reservationsOff()" />
+      <app-guest-steppers [productId]="pid" />
     }
 
     @if (state.reservationsOff()) {

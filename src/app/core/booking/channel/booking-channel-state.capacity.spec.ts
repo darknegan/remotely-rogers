@@ -1,6 +1,7 @@
 import { TestBed } from '@angular/core/testing';
 import { describe, expect, it, beforeEach } from 'vitest';
 
+import { parseDateKey } from '../../utils/date-utils';
 import { BookingChannelStateService } from './booking-channel-state.service';
 import { DEV_BOOKINGMOOD_CHANNEL_ID } from './bookingmood-channel-allowlist';
 import { BookingmoodChannelPayload } from './bookingmood-channel.types';
@@ -63,6 +64,22 @@ describe('BookingChannelStateService capacity', () => {
     expect(service.totalSelectedGuests()).toBe(1);
     service.changeOccupancy(PRODUCT_ID, GROUP_ID, 1);
     expect(service.totalSelectedGuests()).toBe(2);
+  });
+
+  it('allows guest stepper changes while channel checkout is disabled', () => {
+    service.channelPayload.set(payloadWithMax(4));
+    expect(service.reservationsOff()).toBe(true);
+    service.selectedProductIds.set([PRODUCT_ID]);
+    service.seedOccupancy(PRODUCT_ID);
+    service.changeOccupancy(PRODUCT_ID, GROUP_ID, 1);
+    expect(service.totalGuestsForProduct(PRODUCT_ID)).toBe(2);
+  });
+
+  it('summaryNightsLabel matches min-stay when selection is too short', () => {
+    service.setDates(parseDateKey('2026-12-07'), parseDateKey('2026-12-08'));
+    expect(service.nights()).toBe(1);
+    expect(service.minStayError()).toContain('Minimum stay');
+    expect(service.summaryNightsLabel()).toBe('1 night (minimum 2 nights)');
   });
 
   it('falls back to Bookingmood capacity max (2) when channel capacity is missing', () => {
