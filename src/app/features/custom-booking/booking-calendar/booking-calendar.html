@@ -15,7 +15,7 @@
           type="button"
           [class]="classFor(cell.kind, cell.inMonth)"
           (click)="pickDay(cell.date)"
-          [disabled]="disabled() || cell.kind === 'past' || cell.kind === 'reserved'"
+          [disabled]="dayIsDisabled(cell.kind, cell.date)"
         >
           {{ cell.date.getDate() }}
         </button>

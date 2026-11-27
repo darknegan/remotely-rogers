@@ -45,5 +45,6 @@ describe('BookingCalendar reserved ranges', () => {
     expect(ok).toBe(false);
     expect(channel.rangeConflictError()).toBe(RESERVED_STAY_RANGE_NOTICE);
     expect(channel.checkOut()).toBeNull();
+    expect(channel.checkIn()).toBeNull();
   });
 });

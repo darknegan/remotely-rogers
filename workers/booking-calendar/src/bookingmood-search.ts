@@ -98,8 +98,11 @@ export function stayTotalDollarsFromSearch(
     return null;
   }
 
-  const totalCents = (min + max) / 2;
-  const totalPrice = totalCents / 100;
+  if (min !== max) {
+    return null;
+  }
+
+  const totalPrice = min / 100;
   return {
     totalPrice,
     nightlyRate: totalPrice / nightCount,

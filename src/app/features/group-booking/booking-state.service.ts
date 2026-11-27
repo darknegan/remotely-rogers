@@ -73,6 +73,8 @@ export class BookingStateService {
   readonly bookingEnabled = signal<boolean | null>(null);
   readonly bookingStatus = signal<BookingStatusResponse | null>(null);
   readonly nextOpenLabels = signal<Record<number, string>>({});
+  /** Set when session cart lines were dropped or corrected after revalidation. */
+  readonly savedCartAdjusted = signal(false);
   /** Stay dates from the cabins listing bar (checkout-exclusive). */
   readonly listingStayRange = signal<DateRange | null>(null);
   private readonly listingQuotes = signal<Record<number, CabinAvailability>>({});
@@ -705,6 +707,7 @@ export class BookingStateService {
     }
 
     const min = this.config.minNights;
+    const initialGuestTotal = this.guestCount();
     this.api
       .fetchAvailability({
         arrival: toDateKey(first.arrival),
@@ -756,6 +759,13 @@ export class BookingStateService {
             this.guestCount.set(guestTotal);
           } else if (Object.keys(nextSelections).length === 0) {
             this.guestCount.set(2);
+          }
+
+          const trimmed =
+            Object.keys(nextSelections).length < cabinIds.length ||
+            (guestTotal > 0 && guestTotal !== initialGuestTotal && cabinIds.length > 0);
+          if (trimmed) {
+            this.savedCartAdjusted.set(true);
           }
           onComplete?.();
         },

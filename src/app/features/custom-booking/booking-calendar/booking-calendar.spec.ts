@@ -9,6 +9,7 @@ import { BookingCalendar } from './booking-calendar';
 class BookingChannelStateStub {
   readonly checkIn = signal<Date | null>(null);
   readonly checkOut = signal<Date | null>(null);
+  readonly rangeConflictError = signal<string | null>(null);
   readonly calendarMonth = signal(parseDateKey('2026-12-01'));
   calendarDayMap(): Record<string, string> {
     return {};

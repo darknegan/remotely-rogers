@@ -8,7 +8,7 @@ import { CabinAvailability } from '../../models/booking.models';
 /** Manual capacity group max from Bookingmood when channel capacity is not loaded yet. */
 const BOOKINGMOOD_CAPACITY_GROUP_MAX_FALLBACK = 2;
 import { environment } from '../../../../environments/environment';
-import { bookingmoodProductId } from '../bookingmood-products';
+import { BOOKINGMOOD_PRODUCT_IDS, bookingmoodProductId } from '../bookingmood-products';
 import { addDays, formatDateRangeLabel, nightCount, startOfDay, toDateKey } from '../../utils/date-utils';
 import {
   assertAllowedPaymentUrl,
@@ -22,8 +22,12 @@ import { DEV_BOOKINGMOOD_CHANNEL_ID } from './bookingmood-channel-allowlist';
 import {
   RESERVED_STAY_RANGE_NOTICE,
   buildDayKinds,
+  mergeScopedCalendarDayKinds,
+  mergeWorkerBlockedDays,
+  overlayWorkerDayStatuses,
   productLabel,
   stayRangeIsBookable,
+  stayRangeIsWorkerAvailable,
 } from './booking-channel-calendar';
 import {
   buildFormValuesForCart,
@@ -51,6 +55,7 @@ export interface WorkerPriceLine {
   productId: string;
   subtotalDollars: number;
   available: boolean;
+  hasPricedQuote: boolean;
 }
 
 @Injectable()
@@ -69,6 +74,7 @@ export class BookingChannelStateService {
   readonly quoteLoading = signal(false);
   readonly quoteError = signal<string | null>(null);
   readonly workerQuotesByProduct = signal<Record<string, CabinAvailability>>({});
+  readonly workerQuotesByCabinId = signal<Record<number, CabinAvailability>>({});
   readonly rangeConflictError = signal<string | null>(null);
 
   readonly checkIn = signal<Date | null>(null);
@@ -137,6 +143,15 @@ export class BookingChannelStateService {
   });
 
   /** Nights line in summaries; flags min-stay violations alongside selected night count. */
+  readonly pricingReady = computed(() => {
+    const start = this.checkIn();
+    const end = this.checkOut();
+    if (!start || !end) {
+      return false;
+    }
+    return !this.minStayError() && !this.rangeConflictError();
+  });
+
   readonly summaryNightsLabel = computed(() => {
     const nights = this.nights();
     if (nights <= 0) {
@@ -158,16 +173,21 @@ export class BookingChannelStateService {
   readonly workerPriceLines = computed((): WorkerPriceLine[] =>
     this.selectedProductIds().map((productId) => {
       const quote = this.workerQuotesByProduct()[productId];
+      const hasPricedQuote = Boolean(quote?.available && (quote.totalPrice ?? 0) > 0);
       return {
         productId,
-        subtotalDollars: quote?.totalPrice ?? 0,
+        subtotalDollars: hasPricedQuote ? quote!.totalPrice : 0,
         available: quote?.available ?? false,
+        hasPricedQuote,
       };
     }),
   );
 
   readonly workerTotalDollars = computed(() =>
-    this.workerPriceLines().reduce((sum, row) => sum + (row.available ? row.subtotalDollars : 0), 0),
+    this.workerPriceLines().reduce(
+      (sum, row) => sum + (row.hasPricedQuote ? row.subtotalDollars : 0),
+      0,
+    ),
   );
 
   readonly formServices = computed(() => {
@@ -176,11 +196,10 @@ export class BookingChannelStateService {
   });
 
   readonly calendarDayMap = computed((): Record<string, CalendarDayKind> => {
-    const productId = this.singleProductId();
-    if (!productId) {
+    const scopeIds = this.calendarScopeProductIds();
+    if (scopeIds.length === 0) {
       return {};
     }
-    const row = this.availabilityByProduct()[productId];
     const month = this.calendarMonth();
     const visibleEnd = new Date(month.getFullYear(), month.getMonth() + 1, 1);
     const start = this.checkIn();
@@ -190,7 +209,24 @@ export class BookingChannelStateService {
         ? { checkIn: start, checkOut: end }
         : { checkIn: start, checkOut: addDays(start, 1) }
       : null;
-    return buildDayKinds(row?.events, row?.price_calendar_entries, range, month, visibleEnd);
+
+    const perProduct = scopeIds.map((productId) => {
+      const row = this.availabilityByProduct()[productId];
+      return buildDayKinds(row?.events, row?.price_calendar_entries, range, month, visibleEnd);
+    });
+    let kinds =
+      scopeIds.length === 1 ? perProduct[0]! : mergeScopedCalendarDayKinds(perProduct);
+
+    const workerMaps = scopeIds.map((productId) => {
+      const cabinId = this.cabinIdForProductId(productId);
+      return cabinId != null ? this.workerQuotesByCabinId()[cabinId]?.days : undefined;
+    });
+    const workerDays =
+      scopeIds.length === 1 ? workerMaps[0] : mergeWorkerBlockedDays(workerMaps);
+    if (workerDays) {
+      kinds = overlayWorkerDayStatuses(kinds, workerDays);
+    }
+    return kinds;
   });
 
   private channelBookable(): boolean {
@@ -208,6 +244,7 @@ export class BookingChannelStateService {
     }
     this.selectedProductIds.set([productId]);
     this.seedOccupancy(productId);
+    this.revalidateSelectedStayRange();
   }
 
   seedOccupancy(productId: string): void {
@@ -246,6 +283,7 @@ export class BookingChannelStateService {
         }
         this.availabilityByProduct.set(map);
         this.loading.set(false);
+        this.refreshWorkerCalendarWindow();
       })
       .catch((err: unknown) => {
         this.loading.set(false);
@@ -275,12 +313,19 @@ export class BookingChannelStateService {
   }
 
   beginDateSelection(checkIn: Date): void {
+    this.clearDateSelection();
     this.checkIn.set(startOfDay(checkIn));
+  }
+
+  clearDateSelection(): void {
+    this.checkIn.set(null);
     this.checkOut.set(null);
     this.validatedItems.set(null);
     this.validateError.set(null);
     this.rangeConflictError.set(null);
     this.workerQuotesByProduct.set({});
+    this.quoteLoading.set(false);
+    this.quoteError.set(null);
   }
 
   setDates(checkIn: Date, checkOut: Date): void {
@@ -291,6 +336,9 @@ export class BookingChannelStateService {
     this.rangeConflictError.set(null);
     if (this.minStayError()) {
       this.validateError.set(this.minStayError());
+    }
+    if (!this.stayRangeAllowed(checkIn, checkOut)) {
+      this.rangeConflictError.set(RESERVED_STAY_RANGE_NOTICE);
     }
     this.refreshWorkerQuotes();
   }
@@ -303,10 +351,11 @@ export class BookingChannelStateService {
     }
     const normalizedOut = startOfDay(checkOut);
     if (!this.stayRangeAllowed(checkIn, normalizedOut)) {
-      this.rangeConflictError.set(RESERVED_STAY_RANGE_NOTICE);
+      this.checkIn.set(null);
       this.checkOut.set(null);
       this.workerQuotesByProduct.set({});
       this.quoteError.set(null);
+      this.rangeConflictError.set(RESERVED_STAY_RANGE_NOTICE);
       return false;
     }
     this.setDates(checkIn, normalizedOut);
@@ -317,17 +366,20 @@ export class BookingChannelStateService {
     const checkIn = this.checkIn();
     const checkOut = this.checkOut();
     const productIds = this.selectedProductIds();
-    if (!checkIn || !checkOut || productIds.length === 0) {
+    if (!checkIn || !checkOut || !this.pricingReady()) {
       this.workerQuotesByProduct.set({});
       this.quoteLoading.set(false);
       this.quoteError.set(null);
       return;
     }
 
-    this.quoteLoading.set(true);
-    this.quoteError.set(null);
+    const pricingRequest = productIds.length > 0;
+    if (pricingRequest) {
+      this.quoteLoading.set(true);
+      this.quoteError.set(null);
+    }
 
-    const adults = Math.max(1, this.totalSelectedGuests());
+    const adults = Math.max(1, productIds.length > 0 ? this.totalSelectedGuests() : 2);
     this.api
       .fetchAvailability({
         arrival: toDateKey(checkIn),
@@ -337,23 +389,65 @@ export class BookingChannelStateService {
       .pipe(take(1))
       .subscribe({
         next: (response) => {
+          this.storeWorkerCabins(response.cabins);
           const byProduct: Record<string, CabinAvailability> = {};
-          for (const row of response.cabins) {
-            const productId = bookingmoodProductId(row.cabinId);
-            if (productId && productIds.includes(productId)) {
+          for (const productId of productIds) {
+            const cabinId = this.cabinIdForProductId(productId);
+            if (cabinId == null) {
+              continue;
+            }
+            const row = this.workerQuotesByCabinId()[cabinId];
+            if (row) {
               byProduct[productId] = row;
             }
           }
           this.workerQuotesByProduct.set(byProduct);
-          this.quoteLoading.set(false);
+          if (pricingRequest) {
+            this.quoteLoading.set(false);
+          }
         },
         error: () => {
-          this.quoteLoading.set(false);
-          this.quoteError.set(
-            'We could not load pricing right now. Your dates are saved — try again in a moment.',
-          );
+          if (pricingRequest) {
+            this.quoteLoading.set(false);
+            this.quoteError.set(
+              'We could not load pricing right now. Your dates are saved — try again in a moment.',
+            );
+          }
         },
       });
+  }
+
+  refreshWorkerCalendarWindow(): void {
+    const month = this.calendarMonth();
+    const windowStart = startOfDay(month);
+    const windowEnd = new Date(month.getFullYear(), month.getMonth() + 1, 1);
+    const adults = Math.max(1, this.totalSelectedGuests() || 2);
+
+    this.api
+      .fetchAvailability({
+        arrival: toDateKey(windowStart),
+        departure: toDateKey(windowEnd),
+        adults,
+      })
+      .pipe(take(1))
+      .subscribe({
+        next: (response) => {
+          this.storeWorkerCabins(response.cabins);
+        },
+        error: () => {
+          /* calendar still works from channel events */
+        },
+      });
+  }
+
+  private storeWorkerCabins(cabins: CabinAvailability[]): void {
+    this.workerQuotesByCabinId.update((current) => {
+      const next = { ...current };
+      for (const row of cabins) {
+        next[row.cabinId] = row;
+      }
+      return next;
+    });
   }
 
   shiftMonth(delta: number): void {
@@ -363,6 +457,7 @@ export class BookingChannelStateService {
       ? this.selectedProductIds()
       : this.products().map((p) => p.id);
     this.refreshAvailability(ids);
+    this.refreshWorkerCalendarWindow();
   }
 
   toggleProductSelection(productId: string): void {
@@ -375,6 +470,7 @@ export class BookingChannelStateService {
     }
     this.selectedProductIds.set([...selected]);
     this.validatedItems.set(null);
+    this.revalidateSelectedStayRange();
     this.refreshWorkerQuotes();
   }
 
@@ -404,31 +500,74 @@ export class BookingChannelStateService {
   }
 
   isProductSelectable(productId: string): boolean {
-    const checkIn = this.checkIn();
-    const checkOut = this.checkOut();
-    if (!checkIn || !checkOut) {
-      return false;
-    }
-    const row = this.availabilityByProduct()[productId];
-    return stayRangeIsBookable(checkIn, checkOut, row?.events, row?.price_calendar_entries);
+    return this.productStayAllowed(productId, this.checkIn(), this.checkOut());
   }
 
   stayRangeAllowed(checkIn: Date, checkOut: Date): boolean {
     const selected = this.selectedProductIds();
+    const scopeIds = selected.length > 0 ? selected : this.calendarScopeProductIds();
+    if (scopeIds.length === 0) {
+      return false;
+    }
     if (selected.length > 0) {
-      return selected.every((productId) => {
-        const row = this.availabilityByProduct()[productId];
-        return stayRangeIsBookable(checkIn, checkOut, row?.events, row?.price_calendar_entries);
-      });
+      return selected.every((productId) => this.productStayAllowed(productId, checkIn, checkOut));
     }
+    return scopeIds.some((productId) => this.productStayAllowed(productId, checkIn, checkOut));
+  }
 
-    const productId = this.singleProductId();
-    if (productId) {
-      const row = this.availabilityByProduct()[productId];
-      return stayRangeIsBookable(checkIn, checkOut, row?.events, row?.price_calendar_entries);
+  /** Cabins whose channel + Worker data feed the group calendar when pickers have no selection yet. */
+  private calendarScopeProductIds(): string[] {
+    const selected = this.selectedProductIds();
+    if (selected.length > 0) {
+      return selected;
     }
+    const fromChannel = this.products().map((product) => product.id);
+    if (fromChannel.length > 0) {
+      return fromChannel;
+    }
+    return Object.values(BOOKINGMOOD_PRODUCT_IDS);
+  }
 
-    return true;
+  private revalidateSelectedStayRange(): void {
+    const checkIn = this.checkIn();
+    const checkOut = this.checkOut();
+    if (!checkIn || !checkOut) {
+      return;
+    }
+    if (!this.stayRangeAllowed(checkIn, checkOut)) {
+      this.rangeConflictError.set(RESERVED_STAY_RANGE_NOTICE);
+    } else {
+      this.rangeConflictError.set(null);
+    }
+  }
+
+  private productStayAllowed(
+    productId: string,
+    checkIn: Date | null,
+    checkOut: Date | null,
+  ): boolean {
+    if (!checkIn || !checkOut) {
+      return false;
+    }
+    const row = this.availabilityByProduct()[productId];
+    if (!stayRangeIsBookable(checkIn, checkOut, row?.events, row?.price_calendar_entries)) {
+      return false;
+    }
+    const cabinId = this.cabinIdForProductId(productId);
+    if (cabinId == null) {
+      return false;
+    }
+    const workerDays = this.workerQuotesByCabinId()[cabinId]?.days;
+    return stayRangeIsWorkerAvailable(checkIn, checkOut, workerDays);
+  }
+
+  private cabinIdForProductId(productId: string): number | null {
+    for (const [id, pid] of Object.entries(BOOKINGMOOD_PRODUCT_IDS)) {
+      if (pid === productId) {
+        return Number(id);
+      }
+    }
+    return null;
   }
 
   buildCartItems(): BookingmoodCartItemRequest[] {

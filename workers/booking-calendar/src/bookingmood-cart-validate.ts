@@ -34,11 +34,6 @@ export function readCartValidateSubtotalCents(row: unknown): number | null {
     return subtotal;
   }
 
-  const total = Number(price.total);
-  if (Number.isFinite(total) && total > 0) {
-    return total;
-  }
-
   const lines = price.lines;
   if (Array.isArray(lines) && lines.length > 0) {
     let sum = 0;

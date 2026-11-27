@@ -46,9 +46,32 @@ describe('BookingChannelStateService worker quotes', () => {
       ],
     });
     state = TestBed.inject(BookingChannelStateService);
+    state.workerQuotesByCabinId.set({
+      1: {
+        cabinId: 1,
+        totalPrice: 312,
+        nightlyRate: 104,
+        currency: 'USD',
+        available: true,
+        days: {
+          '2026-12-07': 'available',
+          '2026-12-08': 'available',
+          '2026-12-09': 'available',
+        },
+        dayRates: {},
+        cleaningFee: 75,
+      },
+    });
     state.setDates(new Date(2026, 11, 7), new Date(2026, 11, 10));
     state.selectedProductIds.set([BOOKINGMOOD_PRODUCT_IDS[1]!]);
     state.seedOccupancy(BOOKINGMOOD_PRODUCT_IDS[1]!);
+  });
+
+  it('changeOccupancy re-runs worker quote refresh', () => {
+    const GROUP_ID = 'f8558449-6548-4559-8f5d-31448942969d';
+    fetchAvailability.mockClear();
+    state.changeOccupancy(BOOKINGMOOD_PRODUCT_IDS[1]!, GROUP_ID, 1);
+    expect(fetchAvailability).toHaveBeenCalled();
   });
 
   it('loads display pricing from Worker /api/availability', () => {

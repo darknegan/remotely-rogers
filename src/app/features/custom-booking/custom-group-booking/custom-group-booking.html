@@ -3,6 +3,12 @@
     <app-reservations-off-banner />
   }
 
+  @if (group.savedCartAdjusted()) {
+    <p class="rr-custom-group__notice" role="status">
+      Your saved cart was updated to match current dates, guests, and availability.
+    </p>
+  }
+
   <header>
     <p class="rr-kicker">Step 1</p>
     <h2>Pick shared dates and guests per cabin</h2>
@@ -17,17 +23,24 @@
       <p>{{ state.error() }}</p>
       <button type="button" class="rr-btn rr-btn--ghost" (click)="state.loadChannel()">Retry</button>
     </div>
+  } @else if (state.loading()) {
+    <div class="rr-custom-group__skeleton-page" aria-busy="true" aria-live="polite">
+      <div class="rr-custom-group__skeleton-page-inner">
+        <div class="rr-custom-group__skeleton-spinner"></div>
+        <p class="rr-custom-group__skeleton-title">Loading availability…</p>
+        <p class="rr-custom-group__skeleton-copy">Checking cabins and calendar data.</p>
+        <div class="rr-custom-group__skeleton-calendar" aria-hidden="true"></div>
+        <ul class="rr-custom-group__skeleton-cabins" aria-hidden="true">
+          @for (cabin of cabins; track cabin.id) {
+            <li></li>
+          }
+        </ul>
+      </div>
+    </div>
   } @else {
-    <div class="rr-custom-group__layout" [class.rr-custom-group__layout--loading]="state.loading()">
+    <div class="rr-custom-group__layout">
       <div class="rr-custom-group__main">
-        @if (state.loading()) {
-          <div class="rr-custom-group__skeleton" aria-busy="true" aria-live="polite">
-            <div class="rr-custom-group__skeleton-spinner"></div>
-            <p class="rr-custom-group__skeleton-title">Loading availability…</p>
-            <p class="rr-custom-group__skeleton-copy">Checking cabins and calendar data.</p>
-          </div>
-        }
-        <app-booking-calendar [disabled]="state.loading()" (daySelected)="state.refreshWorkerQuotes()" />
+        <app-booking-calendar (daySelected)="state.refreshWorkerQuotes()" />
 
         <h3>Select cabins</h3>
         <ul class="rr-cabin-pick-list">
@@ -39,10 +52,7 @@
                     type="checkbox"
                     [checked]="isSelected(cabin.id)"
                     [disabled]="
-                      state.loading() ||
-                      !state.checkIn() ||
-                      !state.checkOut() ||
-                      !state.isProductSelectable(pid)
+                      !state.checkIn() || !state.checkOut() || !state.isProductSelectable(pid)
                     "
                     (change)="toggle(cabin.id)"
                   />

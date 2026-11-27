@@ -46,6 +46,49 @@ export class BookingCalendar {
     return weeks;
   });
 
+  dayIsDisabled(kind: CalendarDayKind, date: Date): boolean {
+    if (this.disabled() || kind === 'past') {
+      return true;
+    }
+    if (kind !== 'reserved' && kind !== 'closed') {
+      return false;
+    }
+
+    const checkIn = this.state.checkIn();
+    const checkOut = this.state.checkOut();
+    if (!checkIn || checkOut) {
+      return true;
+    }
+
+    const normalized = startOfDay(date);
+    if (normalized <= checkIn) {
+      return true;
+    }
+
+    const firstBlocked = this.firstBlockedDayAfterCheckIn();
+    return !firstBlocked || firstBlocked.getTime() !== normalized.getTime();
+  }
+
+  private firstBlockedDayAfterCheckIn(): Date | null {
+    const checkIn = this.state.checkIn();
+    if (!checkIn) {
+      return null;
+    }
+
+    let cursor = addDays(checkIn, 1);
+    for (let step = 0; step < 400; step++) {
+      const kind = this.state.calendarDayMap()[toDateKey(cursor)];
+      if (kind === 'reserved' || kind === 'closed') {
+        return startOfDay(cursor);
+      }
+      if (kind === 'past') {
+        return null;
+      }
+      cursor = addDays(cursor, 1);
+    }
+    return null;
+  }
+
   pickDay(date: Date): void {
     if (this.disabled()) {
       return;
@@ -55,7 +98,7 @@ export class BookingCalendar {
     const checkIn = this.state.checkIn();
     const checkOut = this.state.checkOut();
 
-    if (!checkIn || checkOut) {
+    if (this.state.rangeConflictError() || !checkIn || checkOut) {
       this.state.beginDateSelection(normalized);
       return;
     }
