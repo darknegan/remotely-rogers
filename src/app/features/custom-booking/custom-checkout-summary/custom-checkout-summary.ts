@@ -1,5 +1,5 @@
 import { CurrencyPipe } from '@angular/common';
-import { ChangeDetectionStrategy, Component, OnInit, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit, computed, inject } from '@angular/core';
 import { RouterLink } from '@angular/router';
 
 import {
@@ -21,18 +21,21 @@ import { BookingStateService } from '../../group-booking/booking-state.service';
 })
 export class CustomCheckoutSummary implements OnInit {
   protected readonly group = inject(BookingStateService);
-  private readonly channel = inject(BookingChannelStateService);
+  protected readonly channel = inject(BookingChannelStateService);
   readonly formatGuestCount = formatGuestCount;
+  readonly bookingOff = computed(
+    () => this.group.reservationsOff() || this.channel.reservationsOff(),
+  );
   readonly formatDateRangeLabel = formatDateRangeLabel;
   readonly shortName = shortCabinName;
 
   ngOnInit(): void {
-    if (!syncChannelFromGroupBooking(this.channel, this.group)) {
-      syncGroupFromChannelBooking(this.channel, this.group);
-    }
-    void this.channel.loadChannel();
-    if (this.channel.selectedProductIds().length > 0) {
-      this.channel.validateCart();
-    }
+    this.group.revalidateSavedCart(() => {
+      if (!syncChannelFromGroupBooking(this.channel, this.group)) {
+        syncGroupFromChannelBooking(this.channel, this.group);
+      }
+      this.channel.loadChannel();
+      this.channel.refreshWorkerQuotes();
+    });
   }
 }

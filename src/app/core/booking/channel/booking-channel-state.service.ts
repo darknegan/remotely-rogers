@@ -1,6 +1,9 @@
 import { Injectable, computed, inject, signal } from '@angular/core';
+import { take } from 'rxjs';
 
 import { CABIN_CONFIG } from '../../../../environments/cabin-config';
+import { BookingApiService } from '../../services/booking-api.service';
+import { CabinAvailability } from '../../models/booking.models';
 
 /** Manual capacity group max from Bookingmood when channel capacity is not loaded yet. */
 const BOOKINGMOOD_CAPACITY_GROUP_MAX_FALLBACK = 2;
@@ -17,8 +20,10 @@ import {
 import { BOOKINGMOOD_CHANNEL_CHECKOUT_ENABLED } from './bookingmood-channel-checkout-gate';
 import { DEV_BOOKINGMOOD_CHANNEL_ID } from './bookingmood-channel-allowlist';
 import {
+  RESERVED_STAY_RANGE_NOTICE,
   buildDayKinds,
   productLabel,
+  stayRangeIsBookable,
 } from './booking-channel-calendar';
 import {
   buildFormValuesForCart,
@@ -42,9 +47,16 @@ export interface SelectedCabinOccupancy {
   occupancy: Record<string, number>;
 }
 
+export interface WorkerPriceLine {
+  productId: string;
+  subtotalDollars: number;
+  available: boolean;
+}
+
 @Injectable()
 export class BookingChannelStateService {
   private readonly client = new BookingmoodChannelClient();
+  private readonly api = inject(BookingApiService);
 
   readonly channelId = signal(environment.bookingmoodChannelId || DEV_BOOKINGMOOD_CHANNEL_ID);
   readonly channelPayload = signal<BookingmoodChannelPayload | null>(null);
@@ -54,6 +66,10 @@ export class BookingChannelStateService {
   readonly validating = signal(false);
   readonly validateError = signal<string | null>(null);
   readonly validatedItems = signal<BookingmoodCartValidateItem[] | null>(null);
+  readonly quoteLoading = signal(false);
+  readonly quoteError = signal<string | null>(null);
+  readonly workerQuotesByProduct = signal<Record<string, CabinAvailability>>({});
+  readonly rangeConflictError = signal<string | null>(null);
 
   readonly checkIn = signal<Date | null>(null);
   readonly checkOut = signal<Date | null>(null);
@@ -137,6 +153,21 @@ export class BookingChannelStateService {
 
   readonly cartTotalCents = computed(() =>
     this.cartLineItems().reduce((sum, row) => sum + (row.price?.total ?? 0), 0),
+  );
+
+  readonly workerPriceLines = computed((): WorkerPriceLine[] =>
+    this.selectedProductIds().map((productId) => {
+      const quote = this.workerQuotesByProduct()[productId];
+      return {
+        productId,
+        subtotalDollars: quote?.totalPrice ?? 0,
+        available: quote?.available ?? false,
+      };
+    }),
+  );
+
+  readonly workerTotalDollars = computed(() =>
+    this.workerPriceLines().reduce((sum, row) => sum + (row.available ? row.subtotalDollars : 0), 0),
   );
 
   readonly formServices = computed(() => {
@@ -248,6 +279,8 @@ export class BookingChannelStateService {
     this.checkOut.set(null);
     this.validatedItems.set(null);
     this.validateError.set(null);
+    this.rangeConflictError.set(null);
+    this.workerQuotesByProduct.set({});
   }
 
   setDates(checkIn: Date, checkOut: Date): void {
@@ -255,9 +288,72 @@ export class BookingChannelStateService {
     this.checkOut.set(startOfDay(checkOut));
     this.validatedItems.set(null);
     this.validateError.set(null);
+    this.rangeConflictError.set(null);
     if (this.minStayError()) {
       this.validateError.set(this.minStayError());
     }
+    this.refreshWorkerQuotes();
+  }
+
+  /** Complete a stay range; returns false when reserved/closed nights block the range (mock 03). */
+  completeStayRange(checkOut: Date): boolean {
+    const checkIn = this.checkIn();
+    if (!checkIn) {
+      return false;
+    }
+    const normalizedOut = startOfDay(checkOut);
+    if (!this.stayRangeAllowed(checkIn, normalizedOut)) {
+      this.rangeConflictError.set(RESERVED_STAY_RANGE_NOTICE);
+      this.checkOut.set(null);
+      this.workerQuotesByProduct.set({});
+      this.quoteError.set(null);
+      return false;
+    }
+    this.setDates(checkIn, normalizedOut);
+    return true;
+  }
+
+  refreshWorkerQuotes(): void {
+    const checkIn = this.checkIn();
+    const checkOut = this.checkOut();
+    const productIds = this.selectedProductIds();
+    if (!checkIn || !checkOut || productIds.length === 0) {
+      this.workerQuotesByProduct.set({});
+      this.quoteLoading.set(false);
+      this.quoteError.set(null);
+      return;
+    }
+
+    this.quoteLoading.set(true);
+    this.quoteError.set(null);
+
+    const adults = Math.max(1, this.totalSelectedGuests());
+    this.api
+      .fetchAvailability({
+        arrival: toDateKey(checkIn),
+        departure: toDateKey(checkOut),
+        adults,
+      })
+      .pipe(take(1))
+      .subscribe({
+        next: (response) => {
+          const byProduct: Record<string, CabinAvailability> = {};
+          for (const row of response.cabins) {
+            const productId = bookingmoodProductId(row.cabinId);
+            if (productId && productIds.includes(productId)) {
+              byProduct[productId] = row;
+            }
+          }
+          this.workerQuotesByProduct.set(byProduct);
+          this.quoteLoading.set(false);
+        },
+        error: () => {
+          this.quoteLoading.set(false);
+          this.quoteError.set(
+            'We could not load pricing right now. Your dates are saved — try again in a moment.',
+          );
+        },
+      });
   }
 
   shiftMonth(delta: number): void {
@@ -279,6 +375,7 @@ export class BookingChannelStateService {
     }
     this.selectedProductIds.set([...selected]);
     this.validatedItems.set(null);
+    this.refreshWorkerQuotes();
   }
 
   changeOccupancy(productId: string, groupId: string, delta: number): void {
@@ -293,6 +390,7 @@ export class BookingChannelStateService {
       return { ...current, [productId]: row };
     });
     this.validatedItems.set(null);
+    this.refreshWorkerQuotes();
   }
 
   totalGuestsForProduct(productId: string): number {
@@ -312,16 +410,25 @@ export class BookingChannelStateService {
       return false;
     }
     const row = this.availabilityByProduct()[productId];
-    const kinds = buildDayKinds(
-      row?.events,
-      row?.price_calendar_entries,
-      { checkIn, checkOut },
-      checkIn,
-      checkOut,
-    );
-    return Object.entries(kinds)
-      .filter(([key]) => key >= toDateKey(checkIn) && key < toDateKey(checkOut))
-      .every(([, kind]) => kind === 'available' || kind === 'in-stay' || kind === 'selected-endpoint');
+    return stayRangeIsBookable(checkIn, checkOut, row?.events, row?.price_calendar_entries);
+  }
+
+  stayRangeAllowed(checkIn: Date, checkOut: Date): boolean {
+    const selected = this.selectedProductIds();
+    if (selected.length > 0) {
+      return selected.every((productId) => {
+        const row = this.availabilityByProduct()[productId];
+        return stayRangeIsBookable(checkIn, checkOut, row?.events, row?.price_calendar_entries);
+      });
+    }
+
+    const productId = this.singleProductId();
+    if (productId) {
+      const row = this.availabilityByProduct()[productId];
+      return stayRangeIsBookable(checkIn, checkOut, row?.events, row?.price_calendar_entries);
+    }
+
+    return true;
   }
 
   buildCartItems(): BookingmoodCartItemRequest[] {
@@ -433,10 +540,10 @@ export class BookingChannelStateService {
     });
   }
 
-  readableError(err: unknown): string {
+  guestFacingChannelError(err: unknown): string {
     if (err instanceof BookingmoodChannelError) {
       if (err.code === 'channel_not_bookable') {
-        return err.message;
+        return 'Online pricing is unavailable right now. You can still review dates and cabins.';
       }
       if (err.status === 429) {
         return 'Too many requests. Please wait a moment and try again.';
@@ -447,6 +554,10 @@ export class BookingChannelStateService {
       return err.message;
     }
     return 'Something went wrong. Please try again.';
+  }
+
+  readableError(err: unknown): string {
+    return this.guestFacingChannelError(err);
   }
 
   guestStepperLabel(): string {

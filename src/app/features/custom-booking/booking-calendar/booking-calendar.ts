@@ -61,16 +61,22 @@ export class BookingCalendar {
     }
 
     if (normalized <= checkIn) {
-      this.state.setDates(normalized, addDays(checkIn, 1));
+      if (this.state.stayRangeAllowed(checkIn, addDays(checkIn, 1))) {
+        this.state.setDates(normalized, addDays(checkIn, 1));
+      } else {
+        this.state.beginDateSelection(normalized);
+      }
       return;
     }
 
-    if (nightCount(checkIn, normalized) < CABIN_CONFIG.minNights) {
-      this.state.setDates(checkIn, normalized);
+    const minNights = CABIN_CONFIG.minNights;
+    if (nightCount(checkIn, normalized) < minNights) {
+      this.state.completeStayRange(normalized);
       return;
     }
-    this.state.setDates(checkIn, normalized);
-    this.daySelected.emit(normalized);
+    if (this.state.completeStayRange(normalized)) {
+      this.daySelected.emit(normalized);
+    }
   }
 
   classFor(kind: CalendarDayKind, inMonth: boolean): string {

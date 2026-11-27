@@ -53,7 +53,7 @@ export class CustomGroupBooking implements OnInit {
       return;
     }
     this.state.toggleProductSelection(productId);
-    this.state.validateCart();
+    this.state.refreshWorkerQuotes();
   }
 
   isSelected(cabinId: number): boolean {
@@ -62,7 +62,11 @@ export class CustomGroupBooking implements OnInit {
   }
 
   continueToCheckout(): void {
-    if (this.state.minStayError() || this.state.selectedProductIds().length === 0) {
+    if (
+      this.state.minStayError() ||
+      this.state.rangeConflictError() ||
+      this.state.selectedProductIds().length === 0
+    ) {
       return;
     }
     syncGroupFromChannelBooking(this.state, this.group);

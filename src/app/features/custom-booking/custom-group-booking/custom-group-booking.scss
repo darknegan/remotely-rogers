@@ -59,3 +59,57 @@
   padding: 1rem;
   background: var(--rr-ivory);
 }
+
+.rr-custom-group__layout--loading .rr-custom-group__main > :not(.rr-custom-group__skeleton) {
+  opacity: 0.45;
+  pointer-events: none;
+}
+
+.rr-custom-group__skeleton {
+  margin: 0 0 1rem;
+  padding: 1.25rem;
+  background: var(--rr-ivory);
+  border: 1px dashed var(--rr-brass-line);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  text-align: center;
+}
+
+.rr-custom-group__skeleton-spinner {
+  width: 2.75rem;
+  height: 2.75rem;
+  border-radius: 50%;
+  border: 3px solid rgba(176, 138, 74, 0.25);
+  border-top-color: var(--rr-brass);
+  animation: rr-spin 1s linear infinite;
+}
+
+.rr-custom-group__skeleton-title {
+  margin: 0;
+  font-family: var(--rr-font-display);
+  font-size: 1.15rem;
+}
+
+.rr-custom-group__skeleton-copy {
+  margin: 0;
+  font-size: 0.85rem;
+  color: var(--rr-sage);
+}
+
+.rr-custom-group__notice {
+  margin: 0.75rem 0 0;
+  padding: 0.75rem 0.85rem;
+  background: #f7e7e1;
+  border-left: 3px solid #9c2b1b;
+  font-size: 0.85rem;
+  line-height: 1.5;
+  color: #7a2415;
+}
+
+@keyframes rr-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}

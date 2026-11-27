@@ -10,6 +10,10 @@ export interface StayRange {
   checkOut: Date;
 }
 
+/** F-07c mock 03 — reserved / unavailable nights inside a picked range. */
+export const RESERVED_STAY_RANGE_NOTICE =
+  'Those dates include reserved or unavailable nights. Pick a different check-in and check-out.';
+
 export function productLabel(name: { default?: string } | string): string {
   if (typeof name === 'string') {
     return name;
@@ -56,26 +60,26 @@ export function buildDayKinds(
       if (!(key in days)) {
         continue;
       }
-      if (key === checkInKey || key === checkOutKey) {
-        days[key] = 'selected-endpoint';
-      } else if (cursor > range.checkIn && cursor < range.checkOut) {
-        days[key] = 'in-stay';
+      const base = days[key];
+      if (base === 'reserved' || base === 'closed' || base === 'past') {
+        continue;
       }
+      days[key] = key === checkInKey ? 'selected-endpoint' : 'in-stay';
     }
-    if (days[checkInKey] && days[checkInKey] !== 'past') {
-      days[checkInKey] = 'selected-endpoint';
-    }
-    const lastNight = addDays(range.checkOut, -1);
-    const lastKey = toDateKey(lastNight);
-    if (days[lastKey] && days[lastKey] !== 'past') {
-      days[lastKey] = 'selected-endpoint';
+
+    const checkoutDay = startOfDay(range.checkOut);
+    if (checkoutDay >= visibleStart && checkoutDay < visibleEnd) {
+      const base = days[checkOutKey];
+      if (base !== 'past' && base !== 'reserved' && base !== 'closed') {
+        days[checkOutKey] = 'selected-endpoint';
+      }
     }
   }
 
   return days;
 }
 
-function isReservedNight(date: Date, events: BookingmoodChannelEvent[] | undefined): boolean {
+export function isReservedNight(date: Date, events: BookingmoodChannelEvent[] | undefined): boolean {
   if (!events?.length) {
     return false;
   }
@@ -94,7 +98,7 @@ function isReservedNight(date: Date, events: BookingmoodChannelEvent[] | undefin
   return false;
 }
 
-function isClosedNight(date: Date, entries: BookingmoodPriceCalendarEntry[] | undefined): boolean {
+export function isClosedNight(date: Date, entries: BookingmoodPriceCalendarEntry[] | undefined): boolean {
   if (!entries?.length) {
     return false;
   }
@@ -121,4 +125,18 @@ function isClosedNight(date: Date, entries: BookingmoodPriceCalendarEntry[] | un
 export function estimateCleaningCents(fee?: BookingmoodPriceCalendarEntry): number {
   void fee;
   return 0;
+}
+
+export function stayRangeIsBookable(
+  checkIn: Date,
+  checkOut: Date,
+  events: BookingmoodChannelEvent[] | undefined,
+  entries: BookingmoodPriceCalendarEntry[] | undefined,
+): boolean {
+  for (let cursor = startOfDay(checkIn); cursor < checkOut; cursor = addDays(cursor, 1)) {
+    if (isReservedNight(cursor, events) || isClosedNight(cursor, entries)) {
+      return false;
+    }
+  }
+  return true;
 }

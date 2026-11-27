@@ -7,6 +7,7 @@ import { CABIN_CONFIG } from '../../../environments/cabin-config';
 import { BookingApiService } from '../../core/services/booking-api.service';
 import { CabinAvailability, GuestDetails } from '../../core/models/booking.models';
 import {
+  addDays,
   formatDateRangeLabel,
   parseDateKey,
   startOfDay,
@@ -271,6 +272,30 @@ describe('BookingStateService booking write policy', () => {
     });
     const hydrated = TestBed.inject(BookingStateService);
     expect(hydrated.cabinSelections()).toEqual({});
+  });
+
+  it('revalidateSavedCart drops stale lines that fail min-stay or availability', () => {
+    const start = startOfDay(new Date());
+    start.setDate(start.getDate() + 14);
+    const departure = addDays(start, 3);
+    service.cabinSelections.set({
+      1: { cabinId: 1, arrival: start, departure },
+    });
+    service.guestCount.set(4);
+    service.cabinGuestCounts.set({ 1: 4 });
+
+    fetchAvailability.mockReturnValue(
+      of({
+        cabins: [{ ...sampleQuote(1), available: false }],
+        bookingEnabled: false,
+      }),
+    );
+
+    const done = vi.fn();
+    service.revalidateSavedCart(done);
+    expect(done).toHaveBeenCalled();
+    expect(service.cabinSelections()).toEqual({});
+    expect(service.guestCount()).toBe(2);
   });
 
   it('calls createCheckout when API enabled booking and cart is ready', () => {

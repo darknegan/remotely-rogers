@@ -23,6 +23,19 @@ class BookingChannelStateStub {
     this.checkIn.set(checkIn);
     this.checkOut.set(checkOut);
   }
+
+  stayRangeAllowed(): boolean {
+    return true;
+  }
+
+  completeStayRange(checkOut: Date): boolean {
+    const checkIn = this.checkIn();
+    if (!checkIn) {
+      return false;
+    }
+    this.setDates(checkIn, checkOut);
+    return true;
+  }
 }
 
 describe('BookingCalendar pickDay', () => {

@@ -1,6 +1,6 @@
 import { Injectable, computed, effect, inject, signal } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { finalize } from 'rxjs';
+import { finalize, take } from 'rxjs';
 
 import { BookingApiService } from '../../core/services/booking-api.service';
 import {
@@ -687,6 +687,85 @@ export class BookingStateService {
       }
       return next;
     });
+  }
+
+  /** Drop or fix session cart lines that no longer match availability, guests, or min-stay. */
+  revalidateSavedCart(onComplete?: () => void): void {
+    const selections = this.cabinSelections();
+    const cabinIds = Object.keys(selections).map(Number).filter(Number.isFinite);
+    if (cabinIds.length === 0) {
+      onComplete?.();
+      return;
+    }
+
+    const first = selections[cabinIds[0]!];
+    if (!first) {
+      onComplete?.();
+      return;
+    }
+
+    const min = this.config.minNights;
+    this.api
+      .fetchAvailability({
+        arrival: toDateKey(first.arrival),
+        departure: toDateKey(first.departure),
+        adults: Math.max(1, this.guestCount()),
+      })
+      .pipe(take(1))
+      .subscribe({
+        next: (response) => {
+          this.bookingEnabled.set(response.bookingEnabled ?? null);
+          const quotes = Object.fromEntries(response.cabins.map((row) => [row.cabinId, row]));
+          this.availabilityMap.set(quotes);
+
+          const nextSelections: Record<number, CabinSelection> = {};
+          const nextGuestCounts: Record<number, number> = {};
+          let guestTotal = 0;
+
+          for (const cabinId of cabinIds) {
+            const selection = selections[cabinId];
+            if (!selection) {
+              continue;
+            }
+            if (nightCount(selection.arrival, selection.departure) < min) {
+              continue;
+            }
+            if (
+              selection.arrival.getTime() !== first.arrival.getTime() ||
+              selection.departure.getTime() !== first.departure.getTime()
+            ) {
+              continue;
+            }
+            if (!this.isRangeAvailable(cabinId, selection.arrival, selection.departure)) {
+              continue;
+            }
+            const quote = quotes[cabinId];
+            if (!quote?.available) {
+              continue;
+            }
+
+            nextSelections[cabinId] = selection;
+            const guests = Math.max(1, this.cabinGuestCounts()[cabinId] ?? this.guestCount());
+            nextGuestCounts[cabinId] = guests;
+            guestTotal += guests;
+          }
+
+          this.cabinSelections.set(nextSelections);
+          this.cabinGuestCounts.set(nextGuestCounts);
+          if (guestTotal > 0) {
+            this.guestCount.set(guestTotal);
+          } else if (Object.keys(nextSelections).length === 0) {
+            this.guestCount.set(2);
+          }
+          onComplete?.();
+        },
+        error: () => {
+          this.cabinSelections.set({});
+          this.cabinGuestCounts.set({});
+          this.guestCount.set(2);
+          onComplete?.();
+        },
+      });
   }
 
   private hydrateCart(): void {
