@@ -3,6 +3,8 @@ import { describe, expect, it } from 'vitest';
 import {
   RESERVED_STAY_RANGE_NOTICE,
   buildDayKinds,
+  mergeScopedCalendarDayKinds,
+  mergeWorkerBlockedDays,
   overlayWorkerDayStatuses,
   stayRangeIsBookable,
   stayRangeIsWorkerAvailable,
@@ -32,6 +34,49 @@ describe('booking-channel-calendar', () => {
     expect(kinds['2026-12-24']).toBe('in-stay');
     expect(kinds['2026-12-25']).toBe('in-stay');
     expect(kinds['2026-12-26']).toBe('selected-endpoint');
+  });
+
+  it('paints check-out on a reserved morning as a selected endpoint', () => {
+    const checkInOnly = new Date(2026, 11, 10);
+    const checkOutMorning = new Date(2026, 11, 24);
+    const kinds = buildDayKinds(
+      [{ type: 'booking' as const, start_date: '2026-12-24', end_date: '2026-12-26', status: 'confirmed' }],
+      [],
+      { checkIn: checkInOnly, checkOut: checkOutMorning },
+      month,
+      visibleEnd,
+    );
+    expect(kinds['2026-12-24']).toBe('selected-endpoint');
+  });
+
+  it('merges worker days as booked only when every cabin is blocked', () => {
+    expect(
+      mergeWorkerBlockedDays([
+        { '2026-12-24': 'booked' },
+        { '2026-12-24': 'available' },
+      ])?.['2026-12-24'],
+    ).toBe('available');
+    expect(
+      mergeWorkerBlockedDays([
+        { '2026-12-24': 'booked' },
+        { '2026-12-24': 'booked' },
+      ])?.['2026-12-24'],
+    ).toBe('booked');
+  });
+
+  it('merges channel day kinds as blocked only when every product blocks the night', () => {
+    const reserved = buildDayKinds(
+      [{ type: 'booking' as const, start_date: '2026-12-24', end_date: '2026-12-26', status: 'confirmed' }],
+      [],
+      null,
+      month,
+      visibleEnd,
+    );
+    const open = buildDayKinds([], [], null, month, visibleEnd);
+    const merged = mergeScopedCalendarDayKinds([reserved, open]);
+    expect(merged['2026-12-24']).toBe('available');
+    const allReserved = mergeScopedCalendarDayKinds([reserved, reserved]);
+    expect(allReserved['2026-12-24']).toBe('reserved');
   });
 
   it('flags booked Worker dayStatuses as reserved on the calendar', () => {

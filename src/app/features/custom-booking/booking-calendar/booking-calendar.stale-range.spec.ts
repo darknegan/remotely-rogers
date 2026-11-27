@@ -30,6 +30,7 @@ describe('BookingCalendar after refused range', () => {
     }).compileComponents();
 
     state = TestBed.inject(BookingChannelStateService);
+    state.calendarMonth.set(new Date(2026, 11, 1));
     state.workerQuotesByCabinId.set({
       1: {
         cabinId: 1,
@@ -57,6 +58,7 @@ describe('BookingCalendar after refused range', () => {
 
     const fixture = TestBed.createComponent(BookingCalendar);
     calendar = fixture.componentInstance;
+    fixture.detectChanges();
   });
 
   it('clears selection after a refused range and starts fresh on the next click', () => {
@@ -74,6 +76,18 @@ describe('BookingCalendar after refused range', () => {
     state.beginDateSelection(new Date(2026, 11, 10));
     calendar.pickDay(new Date(2026, 11, 24));
     expect(state.checkOut()?.getDate()).toBe(24);
+    expect(state.rangeConflictError()).toBeNull();
+  });
+
+  it('lets guests click the first reserved day as check-out after check-in', () => {
+    state.beginDateSelection(new Date(2026, 11, 10));
+    expect(calendar.dayIsDisabled('reserved', new Date(2026, 11, 24))).toBe(false);
+    expect(calendar.dayIsDisabled('reserved', new Date(2026, 11, 25))).toBe(true);
+    expect(calendar.dayIsDisabled('reserved', new Date(2026, 11, 10))).toBe(true);
+
+    calendar.pickDay(new Date(2026, 11, 24));
+    expect(state.checkOut()?.getDate()).toBe(24);
+    expect(state.checkIn()?.getDate()).toBe(10);
     expect(state.rangeConflictError()).toBeNull();
   });
 });

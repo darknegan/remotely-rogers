@@ -46,6 +46,22 @@ describe('BookingChannelStateService worker quotes', () => {
       ],
     });
     state = TestBed.inject(BookingChannelStateService);
+    state.workerQuotesByCabinId.set({
+      1: {
+        cabinId: 1,
+        totalPrice: 312,
+        nightlyRate: 104,
+        currency: 'USD',
+        available: true,
+        days: {
+          '2026-12-07': 'available',
+          '2026-12-08': 'available',
+          '2026-12-09': 'available',
+        },
+        dayRates: {},
+        cleaningFee: 75,
+      },
+    });
     state.setDates(new Date(2026, 11, 7), new Date(2026, 11, 10));
     state.selectedProductIds.set([BOOKINGMOOD_PRODUCT_IDS[1]!]);
     state.seedOccupancy(BOOKINGMOOD_PRODUCT_IDS[1]!);

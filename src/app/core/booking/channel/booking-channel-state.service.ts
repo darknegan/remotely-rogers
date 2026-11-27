@@ -22,6 +22,8 @@ import { DEV_BOOKINGMOOD_CHANNEL_ID } from './bookingmood-channel-allowlist';
 import {
   RESERVED_STAY_RANGE_NOTICE,
   buildDayKinds,
+  mergeScopedCalendarDayKinds,
+  mergeWorkerBlockedDays,
   overlayWorkerDayStatuses,
   productLabel,
   stayRangeIsBookable,
@@ -194,11 +196,10 @@ export class BookingChannelStateService {
   });
 
   readonly calendarDayMap = computed((): Record<string, CalendarDayKind> => {
-    const productId = this.singleProductId();
-    if (!productId) {
+    const scopeIds = this.calendarScopeProductIds();
+    if (scopeIds.length === 0) {
       return {};
     }
-    const row = this.availabilityByProduct()[productId];
     const month = this.calendarMonth();
     const visibleEnd = new Date(month.getFullYear(), month.getMonth() + 1, 1);
     const start = this.checkIn();
@@ -208,12 +209,24 @@ export class BookingChannelStateService {
         ? { checkIn: start, checkOut: end }
         : { checkIn: start, checkOut: addDays(start, 1) }
       : null;
-    const kinds = buildDayKinds(row?.events, row?.price_calendar_entries, range, month, visibleEnd);
-    const cabinId = this.cabinIdForProductId(productId);
-    if (cabinId == null) {
-      return kinds;
+
+    const perProduct = scopeIds.map((productId) => {
+      const row = this.availabilityByProduct()[productId];
+      return buildDayKinds(row?.events, row?.price_calendar_entries, range, month, visibleEnd);
+    });
+    let kinds =
+      scopeIds.length === 1 ? perProduct[0]! : mergeScopedCalendarDayKinds(perProduct);
+
+    const workerMaps = scopeIds.map((productId) => {
+      const cabinId = this.cabinIdForProductId(productId);
+      return cabinId != null ? this.workerQuotesByCabinId()[cabinId]?.days : undefined;
+    });
+    const workerDays =
+      scopeIds.length === 1 ? workerMaps[0] : mergeWorkerBlockedDays(workerMaps);
+    if (workerDays) {
+      kinds = overlayWorkerDayStatuses(kinds, workerDays);
     }
-    return overlayWorkerDayStatuses(kinds, this.workerQuotesByCabinId()[cabinId]?.days);
+    return kinds;
   });
 
   private channelBookable(): boolean {
@@ -231,6 +244,7 @@ export class BookingChannelStateService {
     }
     this.selectedProductIds.set([productId]);
     this.seedOccupancy(productId);
+    this.revalidateSelectedStayRange();
   }
 
   seedOccupancy(productId: string): void {
@@ -456,6 +470,7 @@ export class BookingChannelStateService {
     }
     this.selectedProductIds.set([...selected]);
     this.validatedItems.set(null);
+    this.revalidateSelectedStayRange();
     this.refreshWorkerQuotes();
   }
 
@@ -490,16 +505,40 @@ export class BookingChannelStateService {
 
   stayRangeAllowed(checkIn: Date, checkOut: Date): boolean {
     const selected = this.selectedProductIds();
+    const scopeIds = selected.length > 0 ? selected : this.calendarScopeProductIds();
+    if (scopeIds.length === 0) {
+      return false;
+    }
     if (selected.length > 0) {
       return selected.every((productId) => this.productStayAllowed(productId, checkIn, checkOut));
     }
+    return scopeIds.some((productId) => this.productStayAllowed(productId, checkIn, checkOut));
+  }
 
-    const productId = this.singleProductId();
-    if (productId) {
-      return this.productStayAllowed(productId, checkIn, checkOut);
+  /** Cabins whose channel + Worker data feed the group calendar when pickers have no selection yet. */
+  private calendarScopeProductIds(): string[] {
+    const selected = this.selectedProductIds();
+    if (selected.length > 0) {
+      return selected;
     }
+    const fromChannel = this.products().map((product) => product.id);
+    if (fromChannel.length > 0) {
+      return fromChannel;
+    }
+    return Object.values(BOOKINGMOOD_PRODUCT_IDS);
+  }
 
-    return true;
+  private revalidateSelectedStayRange(): void {
+    const checkIn = this.checkIn();
+    const checkOut = this.checkOut();
+    if (!checkIn || !checkOut) {
+      return;
+    }
+    if (!this.stayRangeAllowed(checkIn, checkOut)) {
+      this.rangeConflictError.set(RESERVED_STAY_RANGE_NOTICE);
+    } else {
+      this.rangeConflictError.set(null);
+    }
   }
 
   private productStayAllowed(
