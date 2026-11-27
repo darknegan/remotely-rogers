@@ -64,19 +64,15 @@ export function buildDayKinds(
       if (base === 'reserved' || base === 'closed' || base === 'past') {
         continue;
       }
-      if (key === checkInKey || key === checkOutKey) {
-        days[key] = 'selected-endpoint';
-      } else if (cursor > range.checkIn && cursor < range.checkOut) {
-        days[key] = 'in-stay';
+      days[key] = key === checkInKey ? 'selected-endpoint' : 'in-stay';
+    }
+
+    const checkoutDay = startOfDay(range.checkOut);
+    if (checkoutDay >= visibleStart && checkoutDay < visibleEnd) {
+      const base = days[checkOutKey];
+      if (base !== 'past' && base !== 'reserved' && base !== 'closed') {
+        days[checkOutKey] = 'selected-endpoint';
       }
-    }
-    if (days[checkInKey] && days[checkInKey] !== 'past' && days[checkInKey] !== 'reserved' && days[checkInKey] !== 'closed') {
-      days[checkInKey] = 'selected-endpoint';
-    }
-    const lastNight = addDays(range.checkOut, -1);
-    const lastKey = toDateKey(lastNight);
-    if (days[lastKey] && days[lastKey] !== 'past' && days[lastKey] !== 'reserved' && days[lastKey] !== 'closed') {
-      days[lastKey] = 'selected-endpoint';
     }
   }
 

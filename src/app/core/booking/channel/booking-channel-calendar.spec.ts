@@ -22,6 +22,16 @@ describe('booking-channel-calendar', () => {
     expect(kinds['2026-12-23']).toBe('selected-endpoint');
   });
 
+  it('paints check-in and check-out days as endpoints with in-stay between', () => {
+    const clearCheckIn = new Date(2026, 11, 23);
+    const clearCheckOut = new Date(2026, 11, 26);
+    const kinds = buildDayKinds([], [], { checkIn: clearCheckIn, checkOut: clearCheckOut }, month, visibleEnd);
+    expect(kinds['2026-12-23']).toBe('selected-endpoint');
+    expect(kinds['2026-12-24']).toBe('in-stay');
+    expect(kinds['2026-12-25']).toBe('in-stay');
+    expect(kinds['2026-12-26']).toBe('selected-endpoint');
+  });
+
   it('rejects stays that cross reserved nights', () => {
     expect(stayRangeIsBookable(checkIn, checkOut, events, [])).toBe(false);
     expect(RESERVED_STAY_RANGE_NOTICE).toMatch(/reserved/i);
