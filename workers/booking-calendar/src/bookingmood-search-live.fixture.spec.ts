@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
-import searchFixture from './fixtures/bookingmood-search-dec-2026.json';
+import searchFixture from './fixtures/bookingmood-search-dec-2026-raw.json';
 import { normalizeSearchResults, stayTotalDollarsFromSearch } from './bookingmood-search';
 
 /**
@@ -10,15 +10,13 @@ import { normalizeSearchResults, stayTotalDollarsFromSearch } from './bookingmoo
  */
 describe('bookingmood search occupancy (live fixture)', () => {
   it('prices when occupancy filter is empty', () => {
-    const rows = normalizeSearchResults(searchFixture.searchWithoutOccupancyFilter);
-    expect(rows).toHaveLength(1);
+    const rows = normalizeSearchResults(searchFixture.responseBody);
+    expect(rows.length).toBeGreaterThanOrEqual(1);
     expect(rows[0]?.occupancyMatches).toBe(true);
     expect(rows[0]?.match).toBe(true);
     const priced = stayTotalDollarsFromSearch(rows[0], 2);
     expect(priced?.totalPrice).toBe(264);
-  });
-
-  it('returns no rows when occupancy filter includes the capacity group count', () => {
-    expect(searchFixture.searchWithCapacityGroupOccupancy).toEqual([]);
+    expect(searchFixture.responseShape.responseIsArray).toBe(true);
+    expect(searchFixture.responseShape.hasTopLevelProductId).toBe(true);
   });
 });

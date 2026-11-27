@@ -114,6 +114,62 @@ export class BookingmoodClient {
     return JSON.parse(text) as BookingmoodAvailabilityRow[];
   }
 
+  buildSearchRequestBody(body: {
+    interval: { start: string; end: string };
+    productIds: string[];
+    occupancy: Record<string, number>;
+    showBookedAs?: 'booked' | 'unavailable';
+    showClosedAs?: 'closed' | 'unavailable';
+    showPendingAs?: 'CONFIRMED' | 'TENTATIVE' | 'CANCELLED';
+  }): Record<string, unknown> {
+    return {
+      interval: body.interval,
+      product_ids: body.productIds,
+      occupancy: body.occupancy,
+      option_ids: [],
+      show_booked_as: body.showBookedAs ?? 'booked',
+      show_closed_as: body.showClosedAs ?? 'closed',
+      show_pending_as: body.showPendingAs ?? 'TENTATIVE',
+    };
+  }
+
+  buildCartValidateRequestBody(body: {
+    items: Array<{
+      id: string;
+      product_id: string;
+      interval: { start: string; end: string };
+      occupancy: Record<string, number>;
+      form_values: Record<string, BookingmoodFormValue>;
+    }>;
+    couponCodes?: string[];
+  }): Record<string, unknown> {
+    return {
+      coupon_codes: body.couponCodes ?? [],
+      items: body.items,
+    };
+  }
+
+  /** Live `JSON.parse(response.text())` from POST /search before normalization. */
+  async searchRaw(body: {
+    interval: { start: string; end: string };
+    productIds: string[];
+    occupancy: Record<string, number>;
+    showBookedAs?: 'booked' | 'unavailable';
+    showClosedAs?: 'closed' | 'unavailable';
+    showPendingAs?: 'CONFIRMED' | 'TENTATIVE' | 'CANCELLED';
+  }): Promise<unknown> {
+    const response = await this.request('/search', {
+      method: 'POST',
+      body: JSON.stringify(this.buildSearchRequestBody(body)),
+    });
+    const text = await response.text();
+    if (!response.ok) {
+      throw new Error(`Bookingmood search failed (${response.status}): ${text.slice(0, 200)}`);
+    }
+
+    return JSON.parse(text) as unknown;
+  }
+
   async search(body: {
     interval: { start: string; end: string };
     productIds: string[];
@@ -122,24 +178,30 @@ export class BookingmoodClient {
     showClosedAs?: 'closed' | 'unavailable';
     showPendingAs?: 'CONFIRMED' | 'TENTATIVE' | 'CANCELLED';
   }): Promise<BookingmoodSearchResult[]> {
-    const response = await this.request('/search', {
+    return normalizeSearchResults(await this.searchRaw(body));
+  }
+
+  /** Live `JSON.parse(response.text())` from POST /cart-validate before coercion. */
+  async cartValidateRaw(body: {
+    items: Array<{
+      id: string;
+      product_id: string;
+      interval: { start: string; end: string };
+      occupancy: Record<string, number>;
+      form_values: Record<string, BookingmoodFormValue>;
+    }>;
+    couponCodes?: string[];
+  }): Promise<unknown> {
+    const response = await this.request('/cart-validate', {
       method: 'POST',
-      body: JSON.stringify({
-        interval: body.interval,
-        product_ids: body.productIds,
-        occupancy: body.occupancy,
-        option_ids: [],
-        show_booked_as: body.showBookedAs ?? 'booked',
-        show_closed_as: body.showClosedAs ?? 'closed',
-        show_pending_as: body.showPendingAs ?? 'TENTATIVE',
-      }),
+      body: JSON.stringify(this.buildCartValidateRequestBody(body)),
     });
     const text = await response.text();
     if (!response.ok) {
-      throw new Error(`Bookingmood search failed (${response.status}): ${text.slice(0, 200)}`);
+      throw new Error(`Bookingmood cart-validate failed (${response.status}): ${text.slice(0, 200)}`);
     }
 
-    return normalizeSearchResults(JSON.parse(text));
+    return JSON.parse(text) as unknown;
   }
 
   async listCapacityGroups(): Promise<Array<{ id: string }>> {
@@ -177,19 +239,7 @@ export class BookingmoodClient {
     }>;
     couponCodes?: string[];
   }): Promise<BookingmoodCartValidateItem[]> {
-    const response = await this.request('/cart-validate', {
-      method: 'POST',
-      body: JSON.stringify({
-        coupon_codes: body.couponCodes ?? [],
-        items: body.items,
-      }),
-    });
-    const text = await response.text();
-    if (!response.ok) {
-      throw new Error(`Bookingmood cart-validate failed (${response.status}): ${text.slice(0, 200)}`);
-    }
-
-    const parsed = JSON.parse(text) as unknown;
+    const parsed = await this.cartValidateRaw(body);
     return coerceCartValidateRows(parsed) as BookingmoodCartValidateItem[];
   }
 

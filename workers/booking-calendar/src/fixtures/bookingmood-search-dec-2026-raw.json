@@ -1,0 +1,1540 @@
+{
+  "capturedAt": "2026-11-27T16:20:42.774Z",
+  "endpoint": "POST https://api.bookingmood.com/v1/search",
+  "requestBody": {
+    "interval": {
+      "start": "2026-12-07",
+      "end": "2026-12-09"
+    },
+    "product_ids": [
+      "936c1ff7-2900-410b-9ced-cc2cf6ec3b65",
+      "c7f5ee68-02db-49b5-ae79-85445daa73bf",
+      "6fae95f0-7d51-4919-8a66-c097cb9e42bf",
+      "1766c9dd-23da-4e30-95ba-c9ef9c8e89ca",
+      "39fdf060-b2e7-47c1-9891-3fc6fcbf8804",
+      "25557f1a-5582-4258-9eba-b08a7233e463"
+    ],
+    "occupancy": {},
+    "option_ids": [],
+    "show_booked_as": "booked",
+    "show_closed_as": "closed",
+    "show_pending_as": "TENTATIVE"
+  },
+  "responseBody": [
+    {
+      "availability": "available",
+      "match": true,
+      "occupancyMatches": true,
+      "optionsMatch": true,
+      "price": {
+        "min": 26400,
+        "max": 26400
+      },
+      "product": {
+        "address": "",
+        "confirmation_message": {
+          "default": ""
+        },
+        "coordinates": null,
+        "cooldown_time": 0,
+        "currency": "USD",
+        "deposit": null,
+        "description": {
+          "default": ""
+        },
+        "fee": {
+          "name": {
+            "default": "Rent"
+          },
+          "price": {
+            "type": "absolute",
+            "value": [
+              {
+                "value": 13200,
+                "period": {
+                  "start": null,
+                  "duration": 1
+                },
+                "occupancy_group_id": null
+              }
+            ],
+            "restrictions": []
+          },
+          "tax_ids": [],
+          "discounts": [],
+          "installments": [
+            {
+              "id": "484712b5-d793-4762-8753-4ee4ae788f82",
+              "value": {
+                "type": "relative",
+                "value": 100,
+                "restrictions": []
+              },
+              "moment": {
+                "type": "request",
+                "offset": 0
+              }
+            }
+          ]
+        },
+        "hide_exact_address": false,
+        "id": "c7f5ee68-02db-49b5-ae79-85445daa73bf",
+        "images": [
+          {
+            "alt": {
+              "default": ""
+            },
+            "src": "https://ksxynoprjyugtwuaqdho.supabase.co/storage/v1/object/public/public/c7f5ee68-02db-49b5-ae79-85445daa73bf/image-bacb3d02-9ccc-4f51-b46e-3c31743426cd.jpg",
+            "size": "1x1"
+          }
+        ],
+        "interaction": "book",
+        "latest_arrival_time": null,
+        "name": {
+          "default": "Dogwood Den"
+        },
+        "organization_id": "93b30c41-a77b-4042-b197-09347a8a540e",
+        "payment_expiration_duration": 86400,
+        "price_breakdown_specificity": "combined",
+        "rent_period": "nightly",
+        "rent_pricing_definition": "service",
+        "request_status": "TENTATIVE",
+        "tentative_interaction": "request",
+        "timezone": "America/Chicago",
+        "fts": "'den':2 'dogwood':1",
+        "updated_at": "2026-11-26T06:47:33.400833+00:00",
+        "created_at": "2026-11-06T02:58:05.702818+00:00",
+        "option_ids": [],
+        "price_calendar_entries": [
+          {
+            "id": "0686c981-a006-48d1-90aa-2f9e5cad14c3",
+            "fts": "'configuration':2 'default':1",
+            "name": {
+              "default": "Default configuration"
+            },
+            "color": "#FACC15",
+            "order": 0,
+            "rates": [
+              {
+                "rate": 100,
+                "duration": 1,
+                "occupancy": 1
+              }
+            ],
+            "intervals": "{[2026-11-06,2032-01-01)}",
+            "created_at": "2026-11-06T02:58:05.702818+00:00",
+            "product_id": "c7f5ee68-02db-49b5-ae79-85445daa73bf",
+            "updated_at": "2026-11-06T02:58:05.77644+00:00",
+            "max_advance": 365,
+            "min_advance": 0,
+            "max_duration": 30,
+            "min_duration": 1,
+            "check_in_days": [
+              true,
+              true,
+              true,
+              true,
+              true,
+              true,
+              true
+            ],
+            "checkout_days": [
+              true,
+              true,
+              true,
+              true,
+              true,
+              true,
+              true
+            ]
+          }
+        ],
+        "capacities": [
+          {
+            "id": "2e278e9a-216c-46bf-8759-bb22f0425582",
+            "max": 2,
+            "min": 1,
+            "created_at": "2026-11-06T02:58:08.55333+00:00",
+            "product_id": "c7f5ee68-02db-49b5-ae79-85445daa73bf",
+            "updated_at": "2026-11-06T02:58:08.55333+00:00",
+            "capacity_group_id": "f8558449-6548-4559-8f5d-31448942969d"
+          }
+        ],
+        "pricelabs_pricing": null,
+        "services": [
+          {
+            "id": "5e3a1d68-c1ce-4778-8868-72e031877323",
+            "fee": null,
+            "fts": "'name':1",
+            "meta": {},
+            "type": "name",
+            "label": {
+              "default": "Name"
+            },
+            "order": 0,
+            "deposit": null,
+            "options": [],
+            "parent_id": null,
+            "attachment": null,
+            "created_at": "2026-10-15T14:51:56.973921+00:00",
+            "updated_at": "2026-10-15T14:51:56.973921+00:00",
+            "description": {
+              "default": ""
+            },
+            "cooldown_time": null,
+            "organization_id": "93b30c41-a77b-4042-b197-09347a8a540e",
+            "preparation_time": null
+          },
+          {
+            "id": "e125546b-40bd-4bbb-98ba-a4c0e8c28fb2",
+            "fee": null,
+            "fts": "'email':1",
+            "meta": {},
+            "type": "email",
+            "label": {
+              "default": "Email"
+            },
+            "order": 0,
+            "deposit": null,
+            "options": [],
+            "parent_id": null,
+            "attachment": null,
+            "created_at": "2026-10-15T14:51:56.973921+00:00",
+            "updated_at": "2026-10-15T14:51:56.973921+00:00",
+            "description": {
+              "default": ""
+            },
+            "cooldown_time": null,
+            "organization_id": "93b30c41-a77b-4042-b197-09347a8a540e",
+            "preparation_time": null
+          },
+          {
+            "id": "c6685a28-76da-4618-8fd7-a4998c10f5cd",
+            "fee": null,
+            "fts": "'phone':1",
+            "meta": {},
+            "type": "phone",
+            "label": {
+              "default": "Phone"
+            },
+            "order": 0,
+            "deposit": null,
+            "options": [],
+            "parent_id": null,
+            "attachment": null,
+            "created_at": "2026-10-15T14:51:56.973921+00:00",
+            "updated_at": "2026-10-15T14:51:56.973921+00:00",
+            "description": {
+              "default": ""
+            },
+            "cooldown_time": null,
+            "organization_id": "93b30c41-a77b-4042-b197-09347a8a540e",
+            "preparation_time": null
+          },
+          {
+            "id": "c79c2a9b-27a9-46ce-b357-4d992c7d14e8",
+            "fee": null,
+            "fts": "'address':1",
+            "meta": {},
+            "type": "address",
+            "label": {
+              "default": "Address"
+            },
+            "order": 0,
+            "deposit": null,
+            "options": [],
+            "parent_id": null,
+            "attachment": null,
+            "created_at": "2026-10-15T14:51:56.973921+00:00",
+            "updated_at": "2026-10-15T14:51:56.973921+00:00",
+            "description": {
+              "default": ""
+            },
+            "cooldown_time": null,
+            "organization_id": "93b30c41-a77b-4042-b197-09347a8a540e",
+            "preparation_time": null
+          }
+        ],
+        "url": {},
+        "avg_rating": null,
+        "number_of_reviews": 0,
+        "capacity": {
+          "f8558449-6548-4559-8f5d-31448942969d": {
+            "max": 2,
+            "min": 1
+          }
+        },
+        "attributes": {},
+        "free_cancellation_days": null,
+        "preparation_time": 0
+      },
+      "productId": "c7f5ee68-02db-49b5-ae79-85445daa73bf"
+    },
+    {
+      "availability": "available",
+      "match": true,
+      "occupancyMatches": true,
+      "optionsMatch": true,
+      "price": {
+        "min": 26400,
+        "max": 26400
+      },
+      "product": {
+        "address": "",
+        "confirmation_message": {
+          "default": ""
+        },
+        "coordinates": {
+          "lat": -0.0013087409094652003,
+          "lng": 0.0006171632566065455
+        },
+        "cooldown_time": 0,
+        "currency": "USD",
+        "deposit": null,
+        "description": {
+          "default": ""
+        },
+        "fee": {
+          "name": {
+            "default": "Rent"
+          },
+          "price": {
+            "type": "absolute",
+            "value": [
+              {
+                "value": 13200,
+                "period": {
+                  "start": null,
+                  "duration": 1
+                },
+                "occupancy_group_id": null
+              }
+            ],
+            "restrictions": []
+          },
+          "tax_ids": [],
+          "discounts": [],
+          "installments": [
+            {
+              "id": "b4814f1f-f123-4e77-994a-b0849784dee0",
+              "value": {
+                "type": "relative",
+                "value": 100,
+                "restrictions": []
+              },
+              "moment": {
+                "type": "request",
+                "offset": 0
+              }
+            }
+          ]
+        },
+        "hide_exact_address": false,
+        "id": "936c1ff7-2900-410b-9ced-cc2cf6ec3b65",
+        "images": [
+          {
+            "alt": {
+              "default": ""
+            },
+            "src": "https://ksxynoprjyugtwuaqdho.supabase.co/storage/v1/object/public/public/936c1ff7-2900-410b-9ced-cc2cf6ec3b65/image-8cf62105-80e0-49d6-b93a-09ce525fb67f.jpg",
+            "size": "1x1"
+          }
+        ],
+        "interaction": "book",
+        "latest_arrival_time": null,
+        "name": {
+          "default": "Black Gum Getaway"
+        },
+        "organization_id": "93b30c41-a77b-4042-b197-09347a8a540e",
+        "payment_expiration_duration": 86400,
+        "price_breakdown_specificity": "combined",
+        "rent_period": "nightly",
+        "rent_pricing_definition": "service",
+        "request_status": "CONFIRMED",
+        "tentative_interaction": "request",
+        "timezone": "America/Chicago",
+        "fts": "'black':1 'getaway':3 'gum':2",
+        "updated_at": "2026-11-26T06:47:01.897066+00:00",
+        "created_at": "2026-10-15T14:56:08.573742+00:00",
+        "option_ids": [],
+        "price_calendar_entries": [
+          {
+            "id": "a4a94034-581d-44ef-9fdf-6076ec48f46c",
+            "fts": "'configuration':2 'default':1",
+            "name": {
+              "default": "Default configuration"
+            },
+            "color": "#FACC15",
+            "order": 0,
+            "rates": [
+              {
+                "rate": 100,
+                "duration": 1,
+                "occupancy": 1
+              }
+            ],
+            "intervals": "{[2026-10-15,2032-01-01)}",
+            "created_at": "2026-10-15T14:56:08.573742+00:00",
+            "product_id": "936c1ff7-2900-410b-9ced-cc2cf6ec3b65",
+            "updated_at": "2026-10-15T14:56:08.636719+00:00",
+            "max_advance": 365,
+            "min_advance": 0,
+            "max_duration": 30,
+            "min_duration": 1,
+            "check_in_days": [
+              true,
+              true,
+              true,
+              true,
+              true,
+              true,
+              true
+            ],
+            "checkout_days": [
+              true,
+              true,
+              true,
+              true,
+              true,
+              true,
+              true
+            ]
+          }
+        ],
+        "capacities": [
+          {
+            "id": "d14c15a4-9e2c-4db7-833e-0b2ee0250f61",
+            "max": 2,
+            "min": 1,
+            "created_at": "2026-10-15T14:56:08.905036+00:00",
+            "product_id": "936c1ff7-2900-410b-9ced-cc2cf6ec3b65",
+            "updated_at": "2026-10-15T14:56:08.905036+00:00",
+            "capacity_group_id": "f8558449-6548-4559-8f5d-31448942969d"
+          }
+        ],
+        "pricelabs_pricing": null,
+        "services": [
+          {
+            "id": "5e3a1d68-c1ce-4778-8868-72e031877323",
+            "fee": null,
+            "fts": "'name':1",
+            "meta": {},
+            "type": "name",
+            "label": {
+              "default": "Name"
+            },
+            "order": 0,
+            "deposit": null,
+            "options": [],
+            "parent_id": null,
+            "attachment": null,
+            "created_at": "2026-10-15T14:51:56.973921+00:00",
+            "updated_at": "2026-10-15T14:51:56.973921+00:00",
+            "description": {
+              "default": ""
+            },
+            "cooldown_time": null,
+            "organization_id": "93b30c41-a77b-4042-b197-09347a8a540e",
+            "preparation_time": null
+          },
+          {
+            "id": "e125546b-40bd-4bbb-98ba-a4c0e8c28fb2",
+            "fee": null,
+            "fts": "'email':1",
+            "meta": {},
+            "type": "email",
+            "label": {
+              "default": "Email"
+            },
+            "order": 0,
+            "deposit": null,
+            "options": [],
+            "parent_id": null,
+            "attachment": null,
+            "created_at": "2026-10-15T14:51:56.973921+00:00",
+            "updated_at": "2026-10-15T14:51:56.973921+00:00",
+            "description": {
+              "default": ""
+            },
+            "cooldown_time": null,
+            "organization_id": "93b30c41-a77b-4042-b197-09347a8a540e",
+            "preparation_time": null
+          },
+          {
+            "id": "c6685a28-76da-4618-8fd7-a4998c10f5cd",
+            "fee": null,
+            "fts": "'phone':1",
+            "meta": {},
+            "type": "phone",
+            "label": {
+              "default": "Phone"
+            },
+            "order": 0,
+            "deposit": null,
+            "options": [],
+            "parent_id": null,
+            "attachment": null,
+            "created_at": "2026-10-15T14:51:56.973921+00:00",
+            "updated_at": "2026-10-15T14:51:56.973921+00:00",
+            "description": {
+              "default": ""
+            },
+            "cooldown_time": null,
+            "organization_id": "93b30c41-a77b-4042-b197-09347a8a540e",
+            "preparation_time": null
+          },
+          {
+            "id": "c79c2a9b-27a9-46ce-b357-4d992c7d14e8",
+            "fee": null,
+            "fts": "'address':1",
+            "meta": {},
+            "type": "address",
+            "label": {
+              "default": "Address"
+            },
+            "order": 0,
+            "deposit": null,
+            "options": [],
+            "parent_id": null,
+            "attachment": null,
+            "created_at": "2026-10-15T14:51:56.973921+00:00",
+            "updated_at": "2026-10-15T14:51:56.973921+00:00",
+            "description": {
+              "default": ""
+            },
+            "cooldown_time": null,
+            "organization_id": "93b30c41-a77b-4042-b197-09347a8a540e",
+            "preparation_time": null
+          }
+        ],
+        "url": {},
+        "avg_rating": null,
+        "number_of_reviews": 0,
+        "capacity": {
+          "f8558449-6548-4559-8f5d-31448942969d": {
+            "max": 2,
+            "min": 1
+          }
+        },
+        "attributes": {},
+        "free_cancellation_days": null,
+        "preparation_time": 0
+      },
+      "productId": "936c1ff7-2900-410b-9ced-cc2cf6ec3b65"
+    },
+    {
+      "availability": "available",
+      "match": true,
+      "occupancyMatches": true,
+      "optionsMatch": true,
+      "price": {
+        "min": 26400,
+        "max": 26400
+      },
+      "product": {
+        "address": "",
+        "confirmation_message": {
+          "default": ""
+        },
+        "coordinates": null,
+        "cooldown_time": 0,
+        "currency": "USD",
+        "deposit": null,
+        "description": {
+          "default": ""
+        },
+        "fee": {
+          "name": {
+            "default": "Rent"
+          },
+          "price": {
+            "type": "absolute",
+            "value": [
+              {
+                "value": 13200,
+                "period": {
+                  "start": null,
+                  "duration": 1
+                },
+                "occupancy_group_id": null
+              }
+            ],
+            "restrictions": []
+          },
+          "tax_ids": [],
+          "discounts": [],
+          "installments": [
+            {
+              "id": "eaae949b-731d-4c3c-9c34-431bc8d0fa8d",
+              "value": {
+                "type": "relative",
+                "value": 100,
+                "restrictions": []
+              },
+              "moment": {
+                "type": "request",
+                "offset": 0
+              }
+            }
+          ]
+        },
+        "hide_exact_address": false,
+        "id": "6fae95f0-7d51-4919-8a66-c097cb9e42bf",
+        "images": [
+          {
+            "alt": {
+              "default": ""
+            },
+            "src": "https://ksxynoprjyugtwuaqdho.supabase.co/storage/v1/object/public/public/6fae95f0-7d51-4919-8a66-c097cb9e42bf/image-4867b636-54f1-4960-b235-75699657dc42.jpg",
+            "size": "1x1"
+          }
+        ],
+        "interaction": "book",
+        "latest_arrival_time": null,
+        "name": {
+          "default": "Running Spring Retreat"
+        },
+        "organization_id": "93b30c41-a77b-4042-b197-09347a8a540e",
+        "payment_expiration_duration": 86400,
+        "price_breakdown_specificity": "combined",
+        "rent_period": "nightly",
+        "rent_pricing_definition": "service",
+        "request_status": "TENTATIVE",
+        "tentative_interaction": "request",
+        "timezone": "America/Chicago",
+        "fts": "'retreat':3 'running':1 'spring':2",
+        "updated_at": "2026-11-26T06:47:48.381325+00:00",
+        "created_at": "2026-11-06T02:58:39.784736+00:00",
+        "option_ids": [],
+        "price_calendar_entries": [
+          {
+            "id": "d5615067-14c3-44f2-895a-6fa39fafe54a",
+            "fts": "'configuration':2 'default':1",
+            "name": {
+              "default": "Default configuration"
+            },
+            "color": "#FACC15",
+            "order": 0,
+            "rates": [
+              {
+                "rate": 100,
+                "duration": 1,
+                "occupancy": 1
+              }
+            ],
+            "intervals": "{[2026-11-06,2032-01-01)}",
+            "created_at": "2026-11-06T02:58:39.784736+00:00",
+            "product_id": "6fae95f0-7d51-4919-8a66-c097cb9e42bf",
+            "updated_at": "2026-11-06T02:58:39.856606+00:00",
+            "max_advance": 365,
+            "min_advance": 0,
+            "max_duration": 30,
+            "min_duration": 1,
+            "check_in_days": [
+              true,
+              true,
+              true,
+              true,
+              true,
+              true,
+              true
+            ],
+            "checkout_days": [
+              true,
+              true,
+              true,
+              true,
+              true,
+              true,
+              true
+            ]
+          }
+        ],
+        "capacities": [
+          {
+            "id": "834840e6-bf17-4a67-8f0b-284fed5b9963",
+            "max": 2,
+            "min": 1,
+            "created_at": "2026-11-06T02:58:41.888978+00:00",
+            "product_id": "6fae95f0-7d51-4919-8a66-c097cb9e42bf",
+            "updated_at": "2026-11-06T02:58:41.888978+00:00",
+            "capacity_group_id": "f8558449-6548-4559-8f5d-31448942969d"
+          }
+        ],
+        "pricelabs_pricing": null,
+        "services": [
+          {
+            "id": "5e3a1d68-c1ce-4778-8868-72e031877323",
+            "fee": null,
+            "fts": "'name':1",
+            "meta": {},
+            "type": "name",
+            "label": {
+              "default": "Name"
+            },
+            "order": 0,
+            "deposit": null,
+            "options": [],
+            "parent_id": null,
+            "attachment": null,
+            "created_at": "2026-10-15T14:51:56.973921+00:00",
+            "updated_at": "2026-10-15T14:51:56.973921+00:00",
+            "description": {
+              "default": ""
+            },
+            "cooldown_time": null,
+            "organization_id": "93b30c41-a77b-4042-b197-09347a8a540e",
+            "preparation_time": null
+          },
+          {
+            "id": "e125546b-40bd-4bbb-98ba-a4c0e8c28fb2",
+            "fee": null,
+            "fts": "'email':1",
+            "meta": {},
+            "type": "email",
+            "label": {
+              "default": "Email"
+            },
+            "order": 0,
+            "deposit": null,
+            "options": [],
+            "parent_id": null,
+            "attachment": null,
+            "created_at": "2026-10-15T14:51:56.973921+00:00",
+            "updated_at": "2026-10-15T14:51:56.973921+00:00",
+            "description": {
+              "default": ""
+            },
+            "cooldown_time": null,
+            "organization_id": "93b30c41-a77b-4042-b197-09347a8a540e",
+            "preparation_time": null
+          },
+          {
+            "id": "c6685a28-76da-4618-8fd7-a4998c10f5cd",
+            "fee": null,
+            "fts": "'phone':1",
+            "meta": {},
+            "type": "phone",
+            "label": {
+              "default": "Phone"
+            },
+            "order": 0,
+            "deposit": null,
+            "options": [],
+            "parent_id": null,
+            "attachment": null,
+            "created_at": "2026-10-15T14:51:56.973921+00:00",
+            "updated_at": "2026-10-15T14:51:56.973921+00:00",
+            "description": {
+              "default": ""
+            },
+            "cooldown_time": null,
+            "organization_id": "93b30c41-a77b-4042-b197-09347a8a540e",
+            "preparation_time": null
+          },
+          {
+            "id": "c79c2a9b-27a9-46ce-b357-4d992c7d14e8",
+            "fee": null,
+            "fts": "'address':1",
+            "meta": {},
+            "type": "address",
+            "label": {
+              "default": "Address"
+            },
+            "order": 0,
+            "deposit": null,
+            "options": [],
+            "parent_id": null,
+            "attachment": null,
+            "created_at": "2026-10-15T14:51:56.973921+00:00",
+            "updated_at": "2026-10-15T14:51:56.973921+00:00",
+            "description": {
+              "default": ""
+            },
+            "cooldown_time": null,
+            "organization_id": "93b30c41-a77b-4042-b197-09347a8a540e",
+            "preparation_time": null
+          }
+        ],
+        "url": {},
+        "avg_rating": null,
+        "number_of_reviews": 0,
+        "capacity": {
+          "f8558449-6548-4559-8f5d-31448942969d": {
+            "max": 2,
+            "min": 1
+          }
+        },
+        "attributes": {},
+        "free_cancellation_days": null,
+        "preparation_time": 0
+      },
+      "productId": "6fae95f0-7d51-4919-8a66-c097cb9e42bf"
+    },
+    {
+      "availability": "available",
+      "match": true,
+      "occupancyMatches": true,
+      "optionsMatch": true,
+      "price": {
+        "min": 26400,
+        "max": 26400
+      },
+      "product": {
+        "address": "",
+        "confirmation_message": {
+          "default": ""
+        },
+        "coordinates": null,
+        "cooldown_time": 0,
+        "currency": "USD",
+        "deposit": null,
+        "description": {
+          "default": ""
+        },
+        "fee": {
+          "name": {
+            "default": "Rent"
+          },
+          "price": {
+            "type": "absolute",
+            "value": [
+              {
+                "value": 13200,
+                "period": {
+                  "start": null,
+                  "duration": 1
+                },
+                "occupancy_group_id": null
+              }
+            ],
+            "restrictions": []
+          },
+          "tax_ids": [],
+          "discounts": [],
+          "installments": [
+            {
+              "id": "06a39f67-004e-4db5-8d74-f8178aa1e4fe",
+              "value": {
+                "type": "relative",
+                "value": 100,
+                "restrictions": []
+              },
+              "moment": {
+                "type": "request",
+                "offset": 0
+              }
+            }
+          ]
+        },
+        "hide_exact_address": false,
+        "id": "39fdf060-b2e7-47c1-9891-3fc6fcbf8804",
+        "images": [
+          {
+            "alt": {
+              "default": ""
+            },
+            "src": "https://ksxynoprjyugtwuaqdho.supabase.co/storage/v1/object/public/public/39fdf060-b2e7-47c1-9891-3fc6fcbf8804/image-719901bf-f0df-466c-8a5a-0942b3da72ab.jpg",
+            "size": "1x1"
+          }
+        ],
+        "interaction": "book",
+        "latest_arrival_time": null,
+        "name": {
+          "default": "White Oak Haven"
+        },
+        "organization_id": "93b30c41-a77b-4042-b197-09347a8a540e",
+        "payment_expiration_duration": 86400,
+        "price_breakdown_specificity": "combined",
+        "rent_period": "nightly",
+        "rent_pricing_definition": "service",
+        "request_status": "TENTATIVE",
+        "tentative_interaction": "request",
+        "timezone": "America/Chicago",
+        "fts": "'haven':3 'oak':2 'white':1",
+        "updated_at": "2026-11-26T06:47:56.323646+00:00",
+        "created_at": "2026-11-06T02:58:51.845813+00:00",
+        "option_ids": [],
+        "price_calendar_entries": [
+          {
+            "id": "a16f432f-8012-4187-913a-51c05e973c57",
+            "fts": "'configuration':2 'default':1",
+            "name": {
+              "default": "Default configuration"
+            },
+            "color": "#FACC15",
+            "order": 0,
+            "rates": [
+              {
+                "rate": 100,
+                "duration": 1,
+                "occupancy": 1
+              }
+            ],
+            "intervals": "{[2026-11-06,2032-01-01)}",
+            "created_at": "2026-11-06T02:58:51.845813+00:00",
+            "product_id": "39fdf060-b2e7-47c1-9891-3fc6fcbf8804",
+            "updated_at": "2026-11-06T02:58:51.889555+00:00",
+            "max_advance": 365,
+            "min_advance": 0,
+            "max_duration": 30,
+            "min_duration": 1,
+            "check_in_days": [
+              true,
+              true,
+              true,
+              true,
+              true,
+              true,
+              true
+            ],
+            "checkout_days": [
+              true,
+              true,
+              true,
+              true,
+              true,
+              true,
+              true
+            ]
+          }
+        ],
+        "capacities": [
+          {
+            "id": "9429e1f1-8f03-44ea-ba6f-f0319da753a8",
+            "max": 2,
+            "min": 1,
+            "created_at": "2026-11-06T02:58:54.139696+00:00",
+            "product_id": "39fdf060-b2e7-47c1-9891-3fc6fcbf8804",
+            "updated_at": "2026-11-06T02:58:54.139696+00:00",
+            "capacity_group_id": "f8558449-6548-4559-8f5d-31448942969d"
+          }
+        ],
+        "pricelabs_pricing": null,
+        "services": [
+          {
+            "id": "5e3a1d68-c1ce-4778-8868-72e031877323",
+            "fee": null,
+            "fts": "'name':1",
+            "meta": {},
+            "type": "name",
+            "label": {
+              "default": "Name"
+            },
+            "order": 0,
+            "deposit": null,
+            "options": [],
+            "parent_id": null,
+            "attachment": null,
+            "created_at": "2026-10-15T14:51:56.973921+00:00",
+            "updated_at": "2026-10-15T14:51:56.973921+00:00",
+            "description": {
+              "default": ""
+            },
+            "cooldown_time": null,
+            "organization_id": "93b30c41-a77b-4042-b197-09347a8a540e",
+            "preparation_time": null
+          },
+          {
+            "id": "e125546b-40bd-4bbb-98ba-a4c0e8c28fb2",
+            "fee": null,
+            "fts": "'email':1",
+            "meta": {},
+            "type": "email",
+            "label": {
+              "default": "Email"
+            },
+            "order": 0,
+            "deposit": null,
+            "options": [],
+            "parent_id": null,
+            "attachment": null,
+            "created_at": "2026-10-15T14:51:56.973921+00:00",
+            "updated_at": "2026-10-15T14:51:56.973921+00:00",
+            "description": {
+              "default": ""
+            },
+            "cooldown_time": null,
+            "organization_id": "93b30c41-a77b-4042-b197-09347a8a540e",
+            "preparation_time": null
+          },
+          {
+            "id": "c6685a28-76da-4618-8fd7-a4998c10f5cd",
+            "fee": null,
+            "fts": "'phone':1",
+            "meta": {},
+            "type": "phone",
+            "label": {
+              "default": "Phone"
+            },
+            "order": 0,
+            "deposit": null,
+            "options": [],
+            "parent_id": null,
+            "attachment": null,
+            "created_at": "2026-10-15T14:51:56.973921+00:00",
+            "updated_at": "2026-10-15T14:51:56.973921+00:00",
+            "description": {
+              "default": ""
+            },
+            "cooldown_time": null,
+            "organization_id": "93b30c41-a77b-4042-b197-09347a8a540e",
+            "preparation_time": null
+          },
+          {
+            "id": "c79c2a9b-27a9-46ce-b357-4d992c7d14e8",
+            "fee": null,
+            "fts": "'address':1",
+            "meta": {},
+            "type": "address",
+            "label": {
+              "default": "Address"
+            },
+            "order": 0,
+            "deposit": null,
+            "options": [],
+            "parent_id": null,
+            "attachment": null,
+            "created_at": "2026-10-15T14:51:56.973921+00:00",
+            "updated_at": "2026-10-15T14:51:56.973921+00:00",
+            "description": {
+              "default": ""
+            },
+            "cooldown_time": null,
+            "organization_id": "93b30c41-a77b-4042-b197-09347a8a540e",
+            "preparation_time": null
+          }
+        ],
+        "url": {},
+        "avg_rating": null,
+        "number_of_reviews": 0,
+        "capacity": {
+          "f8558449-6548-4559-8f5d-31448942969d": {
+            "max": 2,
+            "min": 1
+          }
+        },
+        "attributes": {},
+        "free_cancellation_days": null,
+        "preparation_time": 0
+      },
+      "productId": "39fdf060-b2e7-47c1-9891-3fc6fcbf8804"
+    },
+    {
+      "availability": "available",
+      "match": true,
+      "occupancyMatches": true,
+      "optionsMatch": true,
+      "price": {
+        "min": 26400,
+        "max": 26400
+      },
+      "product": {
+        "address": "",
+        "confirmation_message": {
+          "default": ""
+        },
+        "coordinates": null,
+        "cooldown_time": 0,
+        "currency": "USD",
+        "deposit": null,
+        "description": {
+          "default": ""
+        },
+        "fee": {
+          "name": {
+            "default": "Rent"
+          },
+          "price": {
+            "type": "absolute",
+            "value": [
+              {
+                "value": 13200,
+                "period": {
+                  "start": null,
+                  "duration": 1
+                },
+                "occupancy_group_id": null
+              }
+            ],
+            "restrictions": []
+          },
+          "tax_ids": [],
+          "discounts": [],
+          "installments": [
+            {
+              "id": "a40abb0e-c677-4d1b-8a02-bc3680cbff04",
+              "value": {
+                "type": "relative",
+                "value": 100,
+                "restrictions": []
+              },
+              "moment": {
+                "type": "request",
+                "offset": 0
+              }
+            }
+          ]
+        },
+        "hide_exact_address": false,
+        "id": "25557f1a-5582-4258-9eba-b08a7233e463",
+        "images": [
+          {
+            "alt": {
+              "default": ""
+            },
+            "src": "https://ksxynoprjyugtwuaqdho.supabase.co/storage/v1/object/public/public/25557f1a-5582-4258-9eba-b08a7233e463/image-4148edf6-83a3-4a99-9ab6-a330a318bd35.jpg",
+            "size": "1x1"
+          }
+        ],
+        "interaction": "book",
+        "latest_arrival_time": null,
+        "name": {
+          "default": "Post Oak Perch"
+        },
+        "organization_id": "93b30c41-a77b-4042-b197-09347a8a540e",
+        "payment_expiration_duration": 86400,
+        "price_breakdown_specificity": "combined",
+        "rent_period": "nightly",
+        "rent_pricing_definition": "service",
+        "request_status": "TENTATIVE",
+        "tentative_interaction": "request",
+        "timezone": "America/Chicago",
+        "fts": "'oak':2 'perch':3 'post':1",
+        "updated_at": "2026-11-26T06:47:41.289275+00:00",
+        "created_at": "2026-11-06T02:58:25.127526+00:00",
+        "option_ids": [],
+        "price_calendar_entries": [
+          {
+            "id": "742b4828-0302-4207-b2ed-0a1d1da7f43b",
+            "fts": "'configuration':2 'default':1",
+            "name": {
+              "default": "Default configuration"
+            },
+            "color": "#FACC15",
+            "order": 0,
+            "rates": [
+              {
+                "rate": 100,
+                "duration": 1,
+                "occupancy": 1
+              }
+            ],
+            "intervals": "{[2026-11-06,2032-01-01)}",
+            "created_at": "2026-11-06T02:58:25.127526+00:00",
+            "product_id": "25557f1a-5582-4258-9eba-b08a7233e463",
+            "updated_at": "2026-11-06T02:58:25.177082+00:00",
+            "max_advance": 365,
+            "min_advance": 0,
+            "max_duration": 30,
+            "min_duration": 1,
+            "check_in_days": [
+              true,
+              true,
+              true,
+              true,
+              true,
+              true,
+              true
+            ],
+            "checkout_days": [
+              true,
+              true,
+              true,
+              true,
+              true,
+              true,
+              true
+            ]
+          }
+        ],
+        "capacities": [
+          {
+            "id": "1292dc41-148f-4848-aa48-80fceb270c68",
+            "max": 2,
+            "min": 1,
+            "created_at": "2026-11-06T02:58:27.199448+00:00",
+            "product_id": "25557f1a-5582-4258-9eba-b08a7233e463",
+            "updated_at": "2026-11-06T02:58:27.199448+00:00",
+            "capacity_group_id": "f8558449-6548-4559-8f5d-31448942969d"
+          }
+        ],
+        "pricelabs_pricing": null,
+        "services": [
+          {
+            "id": "5e3a1d68-c1ce-4778-8868-72e031877323",
+            "fee": null,
+            "fts": "'name':1",
+            "meta": {},
+            "type": "name",
+            "label": {
+              "default": "Name"
+            },
+            "order": 0,
+            "deposit": null,
+            "options": [],
+            "parent_id": null,
+            "attachment": null,
+            "created_at": "2026-10-15T14:51:56.973921+00:00",
+            "updated_at": "2026-10-15T14:51:56.973921+00:00",
+            "description": {
+              "default": ""
+            },
+            "cooldown_time": null,
+            "organization_id": "93b30c41-a77b-4042-b197-09347a8a540e",
+            "preparation_time": null
+          },
+          {
+            "id": "e125546b-40bd-4bbb-98ba-a4c0e8c28fb2",
+            "fee": null,
+            "fts": "'email':1",
+            "meta": {},
+            "type": "email",
+            "label": {
+              "default": "Email"
+            },
+            "order": 0,
+            "deposit": null,
+            "options": [],
+            "parent_id": null,
+            "attachment": null,
+            "created_at": "2026-10-15T14:51:56.973921+00:00",
+            "updated_at": "2026-10-15T14:51:56.973921+00:00",
+            "description": {
+              "default": ""
+            },
+            "cooldown_time": null,
+            "organization_id": "93b30c41-a77b-4042-b197-09347a8a540e",
+            "preparation_time": null
+          },
+          {
+            "id": "c6685a28-76da-4618-8fd7-a4998c10f5cd",
+            "fee": null,
+            "fts": "'phone':1",
+            "meta": {},
+            "type": "phone",
+            "label": {
+              "default": "Phone"
+            },
+            "order": 0,
+            "deposit": null,
+            "options": [],
+            "parent_id": null,
+            "attachment": null,
+            "created_at": "2026-10-15T14:51:56.973921+00:00",
+            "updated_at": "2026-10-15T14:51:56.973921+00:00",
+            "description": {
+              "default": ""
+            },
+            "cooldown_time": null,
+            "organization_id": "93b30c41-a77b-4042-b197-09347a8a540e",
+            "preparation_time": null
+          },
+          {
+            "id": "c79c2a9b-27a9-46ce-b357-4d992c7d14e8",
+            "fee": null,
+            "fts": "'address':1",
+            "meta": {},
+            "type": "address",
+            "label": {
+              "default": "Address"
+            },
+            "order": 0,
+            "deposit": null,
+            "options": [],
+            "parent_id": null,
+            "attachment": null,
+            "created_at": "2026-10-15T14:51:56.973921+00:00",
+            "updated_at": "2026-10-15T14:51:56.973921+00:00",
+            "description": {
+              "default": ""
+            },
+            "cooldown_time": null,
+            "organization_id": "93b30c41-a77b-4042-b197-09347a8a540e",
+            "preparation_time": null
+          }
+        ],
+        "url": {},
+        "avg_rating": null,
+        "number_of_reviews": 0,
+        "capacity": {
+          "f8558449-6548-4559-8f5d-31448942969d": {
+            "max": 2,
+            "min": 1
+          }
+        },
+        "attributes": {},
+        "free_cancellation_days": null,
+        "preparation_time": 0
+      },
+      "productId": "25557f1a-5582-4258-9eba-b08a7233e463"
+    },
+    {
+      "availability": "available",
+      "match": true,
+      "occupancyMatches": true,
+      "optionsMatch": true,
+      "price": {
+        "min": 26400,
+        "max": 26400
+      },
+      "product": {
+        "address": "",
+        "confirmation_message": {
+          "default": ""
+        },
+        "coordinates": null,
+        "cooldown_time": 0,
+        "currency": "USD",
+        "deposit": null,
+        "description": {
+          "default": ""
+        },
+        "fee": {
+          "name": {
+            "default": "Rent"
+          },
+          "price": {
+            "type": "absolute",
+            "value": [
+              {
+                "value": 13200,
+                "period": {
+                  "start": null,
+                  "duration": 1
+                },
+                "occupancy_group_id": null
+              }
+            ],
+            "restrictions": []
+          },
+          "tax_ids": [],
+          "discounts": [],
+          "installments": [
+            {
+              "id": "a4d31280-28c8-40f9-8f20-c3a608674ad9",
+              "value": {
+                "type": "relative",
+                "value": 100,
+                "restrictions": []
+              },
+              "moment": {
+                "type": "request",
+                "offset": 0
+              }
+            }
+          ]
+        },
+        "hide_exact_address": false,
+        "id": "1766c9dd-23da-4e30-95ba-c9ef9c8e89ca",
+        "images": [
+          {
+            "alt": {
+              "default": ""
+            },
+            "src": "https://ksxynoprjyugtwuaqdho.supabase.co/storage/v1/object/public/public/1766c9dd-23da-4e30-95ba-c9ef9c8e89ca/image-df774580-0827-47b4-983a-88b9ed6e440a.jpg",
+            "size": "1x1"
+          }
+        ],
+        "interaction": "book",
+        "latest_arrival_time": null,
+        "name": {
+          "default": "Black Walnut Bungalow"
+        },
+        "organization_id": "93b30c41-a77b-4042-b197-09347a8a540e",
+        "payment_expiration_duration": 86400,
+        "price_breakdown_specificity": "combined",
+        "rent_period": "nightly",
+        "rent_pricing_definition": "service",
+        "request_status": "TENTATIVE",
+        "tentative_interaction": "request",
+        "timezone": "America/Chicago",
+        "fts": "'black':1 'bungalow':3 'walnut':2",
+        "updated_at": "2026-11-26T06:47:26.023094+00:00",
+        "created_at": "2026-10-15T16:04:22.879985+00:00",
+        "option_ids": [],
+        "price_calendar_entries": [
+          {
+            "id": "6f8b3ad1-c2eb-4b8f-b56a-f333fb109277",
+            "fts": "'configuration':2 'default':1",
+            "name": {
+              "default": "Default configuration"
+            },
+            "color": "#FACC15",
+            "order": 0,
+            "rates": [
+              {
+                "rate": 100,
+                "duration": 1,
+                "occupancy": 1
+              }
+            ],
+            "intervals": "{[2026-10-15,2032-01-01)}",
+            "created_at": "2026-10-15T16:04:22.879985+00:00",
+            "product_id": "1766c9dd-23da-4e30-95ba-c9ef9c8e89ca",
+            "updated_at": "2026-10-15T16:04:22.923223+00:00",
+            "max_advance": 365,
+            "min_advance": 0,
+            "max_duration": 30,
+            "min_duration": 1,
+            "check_in_days": [
+              true,
+              true,
+              true,
+              true,
+              true,
+              true,
+              true
+            ],
+            "checkout_days": [
+              true,
+              true,
+              true,
+              true,
+              true,
+              true,
+              true
+            ]
+          }
+        ],
+        "capacities": [
+          {
+            "id": "e7f17586-fe9f-4d44-a51b-d27352501d0d",
+            "max": 2,
+            "min": 1,
+            "created_at": "2026-10-15T16:04:23.313618+00:00",
+            "product_id": "1766c9dd-23da-4e30-95ba-c9ef9c8e89ca",
+            "updated_at": "2026-10-15T16:04:23.313618+00:00",
+            "capacity_group_id": "f8558449-6548-4559-8f5d-31448942969d"
+          }
+        ],
+        "pricelabs_pricing": null,
+        "services": [
+          {
+            "id": "5e3a1d68-c1ce-4778-8868-72e031877323",
+            "fee": null,
+            "fts": "'name':1",
+            "meta": {},
+            "type": "name",
+            "label": {
+              "default": "Name"
+            },
+            "order": 0,
+            "deposit": null,
+            "options": [],
+            "parent_id": null,
+            "attachment": null,
+            "created_at": "2026-10-15T14:51:56.973921+00:00",
+            "updated_at": "2026-10-15T14:51:56.973921+00:00",
+            "description": {
+              "default": ""
+            },
+            "cooldown_time": null,
+            "organization_id": "93b30c41-a77b-4042-b197-09347a8a540e",
+            "preparation_time": null
+          },
+          {
+            "id": "e125546b-40bd-4bbb-98ba-a4c0e8c28fb2",
+            "fee": null,
+            "fts": "'email':1",
+            "meta": {},
+            "type": "email",
+            "label": {
+              "default": "Email"
+            },
+            "order": 0,
+            "deposit": null,
+            "options": [],
+            "parent_id": null,
+            "attachment": null,
+            "created_at": "2026-10-15T14:51:56.973921+00:00",
+            "updated_at": "2026-10-15T14:51:56.973921+00:00",
+            "description": {
+              "default": ""
+            },
+            "cooldown_time": null,
+            "organization_id": "93b30c41-a77b-4042-b197-09347a8a540e",
+            "preparation_time": null
+          },
+          {
+            "id": "c6685a28-76da-4618-8fd7-a4998c10f5cd",
+            "fee": null,
+            "fts": "'phone':1",
+            "meta": {},
+            "type": "phone",
+            "label": {
+              "default": "Phone"
+            },
+            "order": 0,
+            "deposit": null,
+            "options": [],
+            "parent_id": null,
+            "attachment": null,
+            "created_at": "2026-10-15T14:51:56.973921+00:00",
+            "updated_at": "2026-10-15T14:51:56.973921+00:00",
+            "description": {
+              "default": ""
+            },
+            "cooldown_time": null,
+            "organization_id": "93b30c41-a77b-4042-b197-09347a8a540e",
+            "preparation_time": null
+          },
+          {
+            "id": "c79c2a9b-27a9-46ce-b357-4d992c7d14e8",
+            "fee": null,
+            "fts": "'address':1",
+            "meta": {},
+            "type": "address",
+            "label": {
+              "default": "Address"
+            },
+            "order": 0,
+            "deposit": null,
+            "options": [],
+            "parent_id": null,
+            "attachment": null,
+            "created_at": "2026-10-15T14:51:56.973921+00:00",
+            "updated_at": "2026-10-15T14:51:56.973921+00:00",
+            "description": {
+              "default": ""
+            },
+            "cooldown_time": null,
+            "organization_id": "93b30c41-a77b-4042-b197-09347a8a540e",
+            "preparation_time": null
+          }
+        ],
+        "url": {},
+        "avg_rating": null,
+        "number_of_reviews": 0,
+        "capacity": {
+          "f8558449-6548-4559-8f5d-31448942969d": {
+            "max": 2,
+            "min": 1
+          }
+        },
+        "attributes": {},
+        "free_cancellation_days": null,
+        "preparation_time": 0
+      },
+      "productId": "1766c9dd-23da-4e30-95ba-c9ef9c8e89ca"
+    }
+  ],
+  "responseShape": {
+    "responseIsArray": true,
+    "wrappedIn": null,
+    "rowCount": 6,
+    "sampleRowKeys": [
+      "availability",
+      "match",
+      "occupancyMatches",
+      "optionsMatch",
+      "price",
+      "product",
+      "productId"
+    ],
+    "hasTopLevelProductId": true,
+    "hasTopLevelProduct_id": false,
+    "hasNestedProductId": true
+  },
+  "captureNote": "responseBody from read-only live /search (Dec 7–9 2026, six products, occupancy {}); requestBody from BookingmoodClient.buildSearchRequestBody"
+}

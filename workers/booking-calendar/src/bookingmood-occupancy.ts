@@ -1,19 +1,11 @@
 import { BookingWorkerEnv } from './booking-config';
+import { diagnoseCapacityGroupEnv, normalizeEnvUuid } from './bookingmood-capacity-env';
 import { BookingmoodClient } from './bookingmood-client';
 
 const UUID =
   /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
 
-function normalizeEnvUuid(value: string | undefined): string | null {
-  let trimmed = value?.trim() ?? '';
-  if (
-    (trimmed.startsWith('"') && trimmed.endsWith('"')) ||
-    (trimmed.startsWith("'") && trimmed.endsWith("'"))
-  ) {
-    trimmed = trimmed.slice(1, -1).trim();
-  }
-  return UUID.test(trimmed) ? trimmed : null;
-}
+export { diagnoseCapacityGroupEnv, normalizeEnvUuid };
 
 let cachedCapacityGroupId: string | null | undefined;
 

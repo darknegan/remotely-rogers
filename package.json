@@ -14,6 +14,7 @@
     "dry-run:booking-worker-test": "npm run build:booking-worker-test && wrangler deploy --dry-run -c wrangler.booking-test.jsonc",
     "test:booking-safety-ui": "ng test --watch=false --ts-config=tsconfig.booking-safety.spec.json --exclude='**/work-stays.spec.ts' --exclude='**/activities.spec.ts' --filter='BookingStateService|GuestDetailsForm|CartSummary checkout|CheckoutPage direct|CabinDetail single-cabin|Cabin catalog'",
     "test:booking-worker": "vitest run workers/booking-calendar/src",
+    "capture:bookingmood-worker-fixtures": "vitest run workers/booking-calendar/src/bookingmood-live-capture.integration.spec.ts",
     "scan:booking-bundle-secrets": "node tools/scan-booking-bundle-secrets.mjs",
     "build:site-worker": "ng build --configuration=site-worker && node tools/prepare-booking-worker-assets.mjs",
     "deploy:site-worker": "npm run build:site-worker && wrangler deploy -c wrangler.site.jsonc",
