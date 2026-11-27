@@ -5,6 +5,7 @@ import {
   BookingWorkerEnv,
   parseGuestFormServices,
 } from './booking-config';
+import { readCartValidateItemId, readCartValidateSubtotalCents } from './bookingmood-cart-validate';
 import { BookingmoodClient } from './bookingmood-client';
 import { BookingmoodSearchResult } from './bookingmood-client';
 import { stayTotalDollarsFromSearch } from './bookingmood-search';
@@ -67,11 +68,15 @@ export async function quoteStaySubtotalsViaCartValidate(
     const validated = await client.cartValidate({ items });
     const map = new Map<number, number>();
     for (const row of validated) {
-      const subtotal = row.price?.subtotal;
-      if (typeof subtotal !== 'number' || !Number.isFinite(subtotal) || subtotal <= 0) {
+      const subtotal = readCartValidateSubtotalCents(row);
+      if (subtotal == null) {
         continue;
       }
-      const cabinId = Number(String(row.id).replace(/^quote-/, ''));
+      const itemId = readCartValidateItemId(row);
+      if (!itemId) {
+        continue;
+      }
+      const cabinId = Number(itemId.replace(/^quote-/, ''));
       if (Number.isFinite(cabinId)) {
         map.set(cabinId, subtotal);
       }

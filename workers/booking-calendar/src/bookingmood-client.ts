@@ -53,6 +53,7 @@ export type BookingmoodFetch = (
   init?: RequestInit,
 ) => Promise<Response>;
 
+import { coerceCartValidateRows } from './bookingmood-cart-validate';
 import { normalizeSearchResults } from './bookingmood-search';
 
 const BASE = 'https://api.bookingmood.com/v1';
@@ -188,7 +189,8 @@ export class BookingmoodClient {
       throw new Error(`Bookingmood cart-validate failed (${response.status}): ${text.slice(0, 200)}`);
     }
 
-    return JSON.parse(text) as BookingmoodCartValidateItem[];
+    const parsed = JSON.parse(text) as unknown;
+    return coerceCartValidateRows(parsed) as BookingmoodCartValidateItem[];
   }
 
   async cartCheckout(body: {

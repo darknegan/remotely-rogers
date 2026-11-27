@@ -4,6 +4,17 @@ import { BookingmoodClient } from './bookingmood-client';
 const UUID =
   /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
 
+function normalizeEnvUuid(value: string | undefined): string | null {
+  let trimmed = value?.trim() ?? '';
+  if (
+    (trimmed.startsWith('"') && trimmed.endsWith('"')) ||
+    (trimmed.startsWith("'") && trimmed.endsWith("'"))
+  ) {
+    trimmed = trimmed.slice(1, -1).trim();
+  }
+  return UUID.test(trimmed) ? trimmed : null;
+}
+
 let cachedCapacityGroupId: string | null | undefined;
 
 /**
@@ -36,8 +47,8 @@ export async function resolveOccupancyForAdults(
   env: BookingWorkerEnv,
   adults: number,
 ): Promise<Record<string, number>> {
-  const fromEnv = env.BOOKINGMOOD_CAPACITY_GROUP_ID?.trim();
-  if (fromEnv && UUID.test(fromEnv)) {
+  const fromEnv = normalizeEnvUuid(env.BOOKINGMOOD_CAPACITY_GROUP_ID);
+  if (fromEnv) {
     return occupancyForCapacityGroup(fromEnv, adults);
   }
 
