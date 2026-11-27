@@ -65,6 +65,22 @@ describe('stayTotalDollarsFromSearch', () => {
     expect(priced?.nightlyRate).toBe(132);
   });
 
+  it('returns null when min and max differ (use cart validate for price)', () => {
+    expect(
+      stayTotalDollarsFromSearch(
+        {
+          productId: 'x',
+          match: true,
+          availability: 'available',
+          occupancyMatches: true,
+          optionsMatch: true,
+          price: { min: 20_000, max: 30_000 },
+        },
+        2,
+      ),
+    ).toBeNull();
+  });
+
   it('returns null when price is missing', () => {
     expect(
       stayTotalDollarsFromSearch(

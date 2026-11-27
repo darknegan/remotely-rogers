@@ -51,6 +51,13 @@ describe('BookingChannelStateService worker quotes', () => {
     state.seedOccupancy(BOOKINGMOOD_PRODUCT_IDS[1]!);
   });
 
+  it('changeOccupancy re-runs worker quote refresh', () => {
+    const GROUP_ID = 'f8558449-6548-4559-8f5d-31448942969d';
+    fetchAvailability.mockClear();
+    state.changeOccupancy(BOOKINGMOOD_PRODUCT_IDS[1]!, GROUP_ID, 1);
+    expect(fetchAvailability).toHaveBeenCalled();
+  });
+
   it('loads display pricing from Worker /api/availability', () => {
     state.refreshWorkerQuotes();
     expect(fetchAvailability).toHaveBeenCalled();

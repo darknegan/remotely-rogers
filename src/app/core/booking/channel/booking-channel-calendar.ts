@@ -3,7 +3,8 @@ import {
   BookingmoodPriceCalendarEntry,
   CalendarDayKind,
 } from './bookingmood-channel.types';
-import { addDays, startOfDay, toDateKey } from '../../utils/date-utils';
+import { DayStatus } from '../../models/booking.models';
+import { addDays, eachNight, startOfDay, toDateKey } from '../../utils/date-utils';
 
 export interface StayRange {
   checkIn: Date;
@@ -125,6 +126,36 @@ export function isClosedNight(date: Date, entries: BookingmoodPriceCalendarEntry
 export function estimateCleaningCents(fee?: BookingmoodPriceCalendarEntry): number {
   void fee;
   return 0;
+}
+
+export function stayRangeIsWorkerAvailable(
+  checkIn: Date,
+  checkOut: Date,
+  days: Record<string, DayStatus> | undefined,
+): boolean {
+  if (!days) {
+    return false;
+  }
+
+  return eachNight(checkIn, checkOut).every((night) => days[toDateKey(night)] === 'available');
+}
+
+export function overlayWorkerDayStatuses(
+  kinds: Record<string, CalendarDayKind>,
+  days: Record<string, DayStatus> | undefined,
+): Record<string, CalendarDayKind> {
+  if (!days) {
+    return kinds;
+  }
+
+  const next = { ...kinds };
+  for (const [key, status] of Object.entries(days)) {
+    if (status === 'available' || !(key in next) || next[key] === 'past') {
+      continue;
+    }
+    next[key] = 'reserved';
+  }
+  return next;
 }
 
 export function stayRangeIsBookable(

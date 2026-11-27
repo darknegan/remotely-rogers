@@ -12,10 +12,12 @@
           {{ lineLabelForProduct(line.productId) }} · {{ formatGuestCount(guestsForProduct(line.productId)) }}
         </dt>
         <dd>
-          @if (line.available) {
+          @if (line.hasPricedQuote) {
             {{ line.subtotalDollars | currency: 'USD' : 'symbol' : '1.0-0' }}
-          } @else {
+          } @else if (!line.available) {
             <span class="rr-price-summary__muted">Unavailable</span>
+          } @else {
+            <span class="rr-price-summary__muted">Pricing unavailable</span>
           }
         </dd>
       </div>

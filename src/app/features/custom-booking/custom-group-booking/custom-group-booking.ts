@@ -21,13 +21,15 @@ import { PriceSummary } from '../price-summary/price-summary';
 })
 export class CustomGroupBooking implements OnInit {
   private readonly router = inject(Router);
-  private readonly group = inject(BookingStateService);
+  protected readonly group = inject(BookingStateService);
   protected readonly state = inject(BookingChannelStateService);
   readonly cabins = CABIN_LISTINGS;
 
   ngOnInit(): void {
-    this.state.loadChannel();
-    this.state.refreshAvailability(Object.values(BOOKINGMOOD_PRODUCT_IDS));
+    this.group.revalidateSavedCart(() => {
+      this.state.loadChannel();
+      this.state.refreshAvailability(Object.values(BOOKINGMOOD_PRODUCT_IDS));
+    });
   }
 
   productIdForCabin(cabinId: number): string | null {

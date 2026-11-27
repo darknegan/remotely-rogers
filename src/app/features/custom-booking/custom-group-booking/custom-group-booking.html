@@ -3,6 +3,12 @@
     <app-reservations-off-banner />
   }
 
+  @if (group.savedCartAdjusted()) {
+    <p class="rr-custom-group__notice" role="status">
+      Your saved cart was updated to match current dates, guests, and availability.
+    </p>
+  }
+
   <header>
     <p class="rr-kicker">Step 1</p>
     <h2>Pick shared dates and guests per cabin</h2>

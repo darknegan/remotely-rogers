@@ -3,7 +3,9 @@ import { describe, expect, it } from 'vitest';
 import {
   RESERVED_STAY_RANGE_NOTICE,
   buildDayKinds,
+  overlayWorkerDayStatuses,
   stayRangeIsBookable,
+  stayRangeIsWorkerAvailable,
 } from './booking-channel-calendar';
 
 describe('booking-channel-calendar', () => {
@@ -30,6 +32,26 @@ describe('booking-channel-calendar', () => {
     expect(kinds['2026-12-24']).toBe('in-stay');
     expect(kinds['2026-12-25']).toBe('in-stay');
     expect(kinds['2026-12-26']).toBe('selected-endpoint');
+  });
+
+  it('flags booked Worker dayStatuses as reserved on the calendar', () => {
+    const kinds = buildDayKinds([], [], null, month, visibleEnd);
+    const overlaid = overlayWorkerDayStatuses(kinds, {
+      '2026-12-24': 'booked',
+      '2026-12-25': 'booked',
+    });
+    expect(overlaid['2026-12-24']).toBe('reserved');
+    expect(overlaid['2026-12-25']).toBe('reserved');
+  });
+
+  it('rejects ranges that overlap booked Worker nights', () => {
+    expect(
+      stayRangeIsWorkerAvailable(checkIn, checkOut, {
+        '2026-12-23': 'available',
+        '2026-12-24': 'booked',
+        '2026-12-25': 'booked',
+      }),
+    ).toBe(false);
   });
 
   it('rejects stays that cross reserved nights', () => {
