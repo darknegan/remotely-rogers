@@ -5,8 +5,9 @@ import { DatePicker } from 'primeng/datepicker';
 import { InputNumber } from 'primeng/inputnumber';
 import { Message } from 'primeng/message';
 
-import { BookingStateService } from '../../booking-state.service';
+import { formatGuestCount } from '../../../../core/utils/guest-label';
 import { startOfDay } from '../../../../core/utils/date-utils';
+import { BookingStateService } from '../../booking-state.service';
 
 @Component({
   selector: 'app-date-range-form',
@@ -16,9 +17,11 @@ import { startOfDay } from '../../../../core/utils/date-utils';
 })
 export class DateRangeForm {
   protected readonly state = inject(BookingStateService);
+  readonly formatGuestCount = formatGuestCount;
 
   readonly minDate = startOfDay(new Date());
   readonly startDate = computed(() => this.state.viewStartDate());
+  readonly guestLabel = computed(() => formatGuestCount(this.state.guestCount()));
 
   constructor() {
     this.state.initializeDefaultView();

@@ -1,9 +1,12 @@
 import { Injectable, computed, inject, signal } from '@angular/core';
 
 import { CABIN_CONFIG } from '../../../../environments/cabin-config';
+
+/** Manual capacity group max from Bookingmood when channel capacity is not loaded yet. */
+const BOOKINGMOOD_CAPACITY_GROUP_MAX_FALLBACK = 2;
 import { environment } from '../../../../environments/environment';
 import { bookingmoodProductId } from '../bookingmood-products';
-import { addDays, nightCount, startOfDay, toDateKey } from '../../utils/date-utils';
+import { addDays, formatDateRangeLabel, nightCount, startOfDay, toDateKey } from '../../utils/date-utils';
 import {
   assertAllowedPaymentUrl,
 } from './booking-payment-url';
@@ -101,13 +104,20 @@ export class BookingChannelStateService {
     if (!start || !end) {
       return '';
     }
-    const fmt = new Intl.DateTimeFormat('en-US', {
-      weekday: 'short',
-      month: 'short',
-      day: 'numeric',
-      year: 'numeric',
-    });
-    return `${fmt.format(start)} – ${fmt.format(end)}`;
+    return formatDateRangeLabel(start, end);
+  });
+
+  readonly minStayError = computed(() => {
+    const start = this.checkIn();
+    const end = this.checkOut();
+    if (!start || !end) {
+      return null;
+    }
+    const min = CABIN_CONFIG.minNights;
+    if (nightCount(start, end) < min) {
+      return `Minimum stay is ${min} nights.`;
+    }
+    return null;
   });
 
   readonly cartLineItems = computed(() => this.validatedItems() ?? []);
@@ -157,7 +167,7 @@ export class BookingChannelStateService {
   }
 
   seedOccupancy(productId: string): void {
-    const groupId = this.primaryCapacityGroupId();
+    const groupId = this.capacityGroupIdForProduct(productId);
     if (!groupId) {
       return;
     }
@@ -232,6 +242,9 @@ export class BookingChannelStateService {
     this.checkOut.set(startOfDay(checkOut));
     this.validatedItems.set(null);
     this.validateError.set(null);
+    if (this.minStayError()) {
+      this.validateError.set(this.minStayError());
+    }
   }
 
   shiftMonth(delta: number): void {
@@ -336,7 +349,7 @@ export class BookingChannelStateService {
     if (groupId && product?.capacity?.[groupId]?.max != null) {
       return product.capacity[groupId].max!;
     }
-    return CABIN_CONFIG.maxGuestsPerCabin;
+    return BOOKINGMOOD_CAPACITY_GROUP_MAX_FALLBACK;
   }
 
   validateCart(): void {

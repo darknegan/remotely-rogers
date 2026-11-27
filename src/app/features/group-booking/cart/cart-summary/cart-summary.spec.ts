@@ -86,6 +86,26 @@ describe('CartSummary checkout entry', () => {
     expect(router.navigate).not.toHaveBeenCalled();
   });
 
+  it('keeps checkout enabled while availability is loading (legacy build)', () => {
+    const state = TestBed.inject(BookingStateService);
+    state.availabilityMap.set({ 1: sampleQuote(1) });
+    state.cabinSelections.set({
+      1: {
+        cabinId: 1,
+        arrival: parseDateKey('2026-08-01'),
+        departure: parseDateKey('2026-08-03'),
+      },
+    });
+    state.loading.set(true);
+
+    const fixture = TestBed.createComponent(CartSummary);
+    fixture.detectChanges();
+    const checkoutButton: HTMLButtonElement | null = fixture.nativeElement.querySelector(
+      '.rr-cart__checkout',
+    );
+    expect(checkoutButton?.disabled).toBe(false);
+  });
+
   it('keeps checkout enabled while bookingEnabled is still unknown', () => {
     const state = TestBed.inject(BookingStateService);
     state.availabilityMap.set({ 1: sampleQuote(1) });

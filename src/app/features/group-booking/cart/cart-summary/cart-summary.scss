@@ -70,6 +70,19 @@
 
 .rr-cart__warning {
   margin-top: 0.85rem;
+  width: 100%;
+}
+
+:host ::ng-deep .rr-cart__warning {
+  width: 100%;
+  max-width: 100%;
+}
+
+:host ::ng-deep .rr-cart__warning .p-message-text {
+  color: #3e2c22;
+  line-height: 1.45;
+  white-space: normal;
+  overflow-wrap: anywhere;
 }
 
 .rr-cart__list {

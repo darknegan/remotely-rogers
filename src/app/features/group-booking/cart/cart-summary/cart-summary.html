@@ -67,7 +67,7 @@
               </div>
               <span class="rr-cart__item-dates">
                 {{ formatDateRangeLabel(item.selection.arrival, item.selection.departure) }} ·
-                check-out 11 AM
+                {{ formatGuestCount(state.guestCount()) }} per cabin · check-out 11 AM
               </span>
               <div class="rr-cart__item-price">
                 <span>{{ item.nights === 1 ? '1 night' : item.nights + ' nights' }}</span>
@@ -89,11 +89,11 @@
         <p-button
           label="Continue to checkout"
           styleClass="rr-cart__checkout rr-group-booking-cta"
-          [disabled]="!state.canContinue() || state.checkoutBlockedByWorker()"
+          [disabled]="continueDisabled()"
           (onClick)="continueToCheckout()"
         />
 
-        @if (!state.reservationsOff()) {
+        @if (showPaymentNote()) {
           <p class="rr-cart__note">
             Checkout opens the Bookingmood cart. Add every cabin there to pay once through Stripe.
           </p>

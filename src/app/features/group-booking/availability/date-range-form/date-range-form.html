@@ -18,7 +18,7 @@
     </div>
 
     <div class="rr-date-form__field rr-date-form__field--guests">
-      <label for="group-guests">Guests per cabin</label>
+      <label for="group-guests">{{ guestLabel() }} per cabin</label>
       <p-input-number
         inputId="group-guests"
         [ngModel]="state.guestCount()"
@@ -30,7 +30,6 @@
         buttonLayout="horizontal"
         incrementButtonIcon="pi pi-plus"
         decrementButtonIcon="pi pi-minus"
-        suffix=" guests"
       />
     </div>
 

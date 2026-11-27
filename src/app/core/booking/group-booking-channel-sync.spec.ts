@@ -9,7 +9,7 @@ import { CabinAvailability } from '../../core/models/booking.models';
 import { parseDateKey } from '../../core/utils/date-utils';
 import { BookingChannelStateService } from './channel/booking-channel-state.service';
 import { BookingmoodChannelPayload } from './channel/bookingmood-channel.types';
-import { syncChannelFromGroupBooking } from './group-booking-channel-sync';
+import { syncChannelFromGroupBooking, syncGroupFromChannelBooking } from './group-booking-channel-sync';
 import { BOOKINGMOOD_PRODUCT_IDS } from './bookingmood-products';
 
 const GROUP_ID = 'f8558449-6548-4559-8f5d-31448942969d';
@@ -86,5 +86,45 @@ describe('syncChannelFromGroupBooking', () => {
     expect(channel.nights()).toBe(2);
     expect(channel.selectedProductIds().length).toBe(1);
     expect(channel.totalGuestsForProduct(channel.selectedProductIds()[0])).toBe(3);
+  });
+});
+
+describe('syncGroupFromChannelBooking', () => {
+  let group: BookingStateService;
+  let channel: BookingChannelStateService;
+
+  beforeEach(() => {
+    TestBed.configureTestingModule({
+      providers: [
+        BookingStateService,
+        BookingChannelStateService,
+        provideRouter([]),
+        {
+          provide: BookingApiService,
+          useValue: {
+            getConfig: () => CABIN_CONFIG,
+            fetchAvailability: vi.fn(() => of({ cabins: [sampleQuote(1)], bookingEnabled: false })),
+            createCheckout: vi.fn(),
+            getBookingStatus: vi.fn(),
+          },
+        },
+      ],
+    });
+    group = TestBed.inject(BookingStateService);
+    channel = TestBed.inject(BookingChannelStateService);
+  });
+
+  it('stores per-cabin guest counts from channel occupancy', () => {
+    channel.channelPayload.set(channelPayload());
+    channel.setDates(parseDateKey('2026-12-07'), parseDateKey('2026-12-09'));
+    channel.selectedProductIds.set([BOOKINGMOOD_PRODUCT_IDS[1]]);
+    channel.seedOccupancy(BOOKINGMOOD_PRODUCT_IDS[1]);
+    channel.changeOccupancy(BOOKINGMOOD_PRODUCT_IDS[1], GROUP_ID, 1);
+    group.availabilityMap.set({ 1: sampleQuote(1) });
+
+    expect(syncGroupFromChannelBooking(channel, group)).toBe(true);
+    expect(group.cabinGuestCounts()[1]).toBe(2);
+    expect(group.cartItems()[0].guests).toBe(2);
+    expect(group.guestCount()).toBe(2);
   });
 });

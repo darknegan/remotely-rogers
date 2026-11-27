@@ -1,12 +1,33 @@
 import { describe, expect, it } from 'vitest';
 
-import { nightCount, parseDateKey, startOfDay, validateDateRange } from './date-utils';
+import {
+  formatDateRangeLabel,
+  nightCount,
+  parseDateKey,
+  startOfDay,
+  validateDateRange,
+} from './date-utils';
 
 describe('nightCount', () => {
   it('treats check-out as exclusive (Dec 7 → Dec 9 is 2 nights)', () => {
     const arrival = parseDateKey('2026-12-07');
     const departure = parseDateKey('2026-12-09');
     expect(nightCount(arrival, departure)).toBe(2);
+  });
+});
+
+describe('formatDateRangeLabel', () => {
+  it('shows the check-out day (exclusive end) in the label', () => {
+    const arrival = parseDateKey('2026-12-07');
+    const departure = parseDateKey('2026-12-09');
+    expect(formatDateRangeLabel(arrival, departure)).toBe('Dec 7 – Dec 9 (2 nights)');
+  });
+
+  it('legacy grid: labels exclusive departure after last occupied night (Dec 7–9 nights → Dec 10)', () => {
+    const arrival = parseDateKey('2026-12-07');
+    const departure = parseDateKey('2026-12-10');
+    expect(nightCount(arrival, departure)).toBe(3);
+    expect(formatDateRangeLabel(arrival, departure)).toBe('Dec 7 – Dec 10 (3 nights)');
   });
 });
 

@@ -13,6 +13,7 @@ export interface CabinCartItem {
   cabin: CabinConfig;
   selection: CabinSelection;
   nights: number;
+  guests: number;
   totalPrice: number;
   currency: string;
 }
